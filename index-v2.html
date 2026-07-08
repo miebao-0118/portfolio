@@ -11,7 +11,6 @@
 <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/gsap.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/ScrollTrigger.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/CustomEase.min.js"></script>
-
 <style>
 /* ===== RESET & BASE ===== */
 *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
@@ -25,7 +24,7 @@
   --text-primary: #f5f5f5;
   --text-muted: #888888;
   --text-dim: #555555;
-  --accent: #c8ff00;
+  --accent: #ff8a1f;
   --border: #222222;
   --font-display: 'Syne', sans-serif;
   --font-body: 'Inter', sans-serif;
@@ -70,7 +69,7 @@ button { border: none; background: none; cursor: pointer; color: inherit; font-f
   position: fixed;
   width: 40px;
   height: 40px;
-  border: 1.5px solid rgba(200, 255, 0, 0.5);
+  border: 1.5px solid rgba(255, 138, 31, 0.5);
   border-radius: 50%;
   pointer-events: none;
   z-index: 10000;
@@ -237,20 +236,19 @@ button { border: none; background: none; cursor: pointer; color: inherit; font-f
 }
 
 .hero-img {
-  width: 110svh;
-  height: 110vw;
-  min-width: 110svh;
-  min-height: 110vw;
-  object-fit: cover;
+  width: auto;
+  height: min(120vw, 228svh);
+  max-width: none;
+  max-height: none;
+  object-fit: contain;
   opacity: 0.5;
-  filter: grayscale(0.4);
+  filter: grayscale(0.4) blur(2.4px);
   will-change: transform;
-  transform: rotate(-90deg);
+  transform: translate(-50%, -50%) rotate(90deg);
+  transform-origin: center;
   position: absolute;
   top: 50%;
   left: 50%;
-  margin-top: calc(-55vw);
-  margin-left: calc(-55svh);
 }
 
 /* Layer 6: Canvas animation effect */
@@ -468,80 +466,212 @@ button { border: none; background: none; cursor: pointer; color: inherit; font-f
 
 /* ===== ABOUT SECTION ===== */
 .about {
-  padding: 10rem 3rem;
+  min-height: 100svh;
+  padding: 7rem clamp(3rem, 5vw, 6rem) 8rem;
   display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 4rem;
+  grid-template-columns: minmax(260px, 0.68fr) minmax(460px, 1fr) minmax(420px, 1.05fr);
+  gap: clamp(2rem, 4vw, 5rem);
+  align-items: center;
   border-top: 1px solid var(--border);
+  overflow: hidden;
+  position: relative;
+}
+
+.about-profile {
+  display: flex;
+  flex-direction: column;
+  gap: 1.4rem;
+  position: relative;
+  z-index: 2;
+  padding-left: clamp(1rem, 3vw, 3.5rem);
 }
 
 .about-label {
-  font-size: 0.75rem;
-  letter-spacing: 0.15em;
-  text-transform: uppercase;
-  color: var(--text-muted);
-  margin-bottom: 2rem;
-}
-
-.about-text {
-  font-size: clamp(1.1rem, 2vw, 1.4rem);
-  line-height: 1.8;
-  color: var(--text-muted);
-}
-
-.about-text strong {
-  color: var(--text);
-  font-weight: 500;
-}
-
-.about-meta {
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-}
-
-.about-meta-items {
-  display: flex;
-  flex-direction: column;
-  gap: 1rem;
-}
-
-.about-meta-item {
   font-family: var(--font-display);
-  font-size: 0.85rem;
-  letter-spacing: 0.1em;
+  font-size: clamp(2.4rem, 4.8vw, 5.6rem);
+  font-weight: 800;
+  line-height: 0.92;
+  letter-spacing: 0;
   text-transform: uppercase;
+  color: var(--text);
+  max-width: 6.8ch;
+}
+
+.about-info {
+  display: grid;
+  gap: 1.1rem;
+  max-width: 340px;
+  margin-top: 1.8rem;
+}
+
+.about-info-row {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 0.18rem;
+  padding-top: 0.9rem;
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.about-info-cn {
+  font-family: var(--font-display);
+  font-size: clamp(1.05rem, 1.6vw, 1.35rem);
+  font-weight: 700;
+  color: var(--text);
+  line-height: 1.25;
+}
+
+.about-info-en {
+  font-size: 0.78rem;
+  color: var(--text-muted);
+  font-weight: 400;
+  letter-spacing: 0;
+  line-height: 1.4;
+}
+
+.about-lanyard-stage {
+  min-height: clamp(620px, 78svh, 860px);
+  position: relative;
+  display: grid;
+  place-items: center;
+  isolation: isolate;
+  z-index: 2;
+}
+
+.about-lanyard-stage::before {
+  content: '';
+  position: absolute;
+  top: 9%;
+  left: 50%;
+  width: min(58vw, 620px);
+  height: min(58vw, 620px);
+  border-radius: 999px;
+  background:
+    radial-gradient(circle at 50% 50%, rgba(255, 138, 31, 0.14), transparent 58%),
+    radial-gradient(circle at 64% 34%, rgba(245, 245, 245, 0.1), transparent 36%);
+  filter: blur(4px);
+  transform: translateX(-50%);
+  z-index: 0;
+  pointer-events: none;
+}
+
+.about-lanyard-stage::after {
+  content: '';
+  position: absolute;
+  inset: 12% 8% 10%;
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  background:
+    linear-gradient(90deg, rgba(255, 255, 255, 0.045) 1px, transparent 1px),
+    linear-gradient(180deg, rgba(255, 255, 255, 0.045) 1px, transparent 1px);
+  background-size: 48px 48px;
+  mask-image: radial-gradient(ellipse at center, #000 0 42%, transparent 72%);
+  opacity: 0.5;
+  z-index: 0;
+  pointer-events: none;
+}
+
+#reactbits-lanyard-root {
+  width: min(860px, 128%);
+  height: clamp(660px, 82svh, 900px);
+  position: relative;
+  z-index: 1;
+  transform: translateY(0);
+}
+
+.lanyard-wrapper {
+  width: 100%;
+  height: 100%;
+  position: relative;
+  z-index: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transform: scale(1);
+  transform-origin: center;
+}
+
+.lanyard-wrapper canvas {
+  touch-action: none;
+}
+
+.about-experience {
+  display: flex;
+  flex-direction: column;
+  gap: 2.2rem;
+  position: relative;
+  z-index: 2;
+}
+
+.experience-group {
+  display: grid;
+  grid-template-columns: minmax(7.6rem, 0.34fr) minmax(0, 1fr);
+  gap: clamp(1rem, 2vw, 2rem);
+  padding-top: 1.6rem;
+  border-top: 1px solid rgba(255, 255, 255, 0.12);
+}
+
+.experience-date {
+  font-family: var(--font-body);
+  font-size: 1rem;
+  font-weight: 400;
+  line-height: 1.15;
+  color: var(--text);
+  letter-spacing: 0;
+}
+
+.experience-date-start {
+  display: block;
+  font-size: clamp(1.2rem, 1.55vw, 1.55rem);
+  font-weight: 600;
+}
+
+.experience-date-end {
+  display: block;
+  margin-top: 0.25rem;
+  font-size: 0.9rem;
+  color: var(--text-muted);
+}
+
+.experience-company {
+  margin-top: 0.6rem;
+  font-size: 0.82rem;
   color: var(--text-dim);
-  padding: 1rem 0;
-  border-bottom: 1px solid var(--border);
-  display: flex;
-  justify-content: space-between;
+  font-weight: 400;
+  line-height: 1.45;
 }
 
-.about-meta-item span:last-child {
+.experience-list {
+  display: grid;
+  gap: 1.8rem;
+}
+
+.experience-item h3 {
+  font-family: var(--font-display);
+  font-size: clamp(1.05rem, 1.5vw, 1.35rem);
+  line-height: 1.25;
+  font-weight: 800;
+  color: var(--text);
+  margin-bottom: 0.55rem;
+}
+
+.experience-item h3.experience-title-en {
+  font-family: var(--font-body);
+  font-weight: 600;
+  letter-spacing: 0;
+}
+
+.experience-title-normal {
+  font-family: var(--font-body);
+  font-weight: 600;
+  letter-spacing: 0;
+}
+
+.experience-item p {
+  font-size: 0.9rem;
   color: var(--text-muted);
+  line-height: 1.8;
 }
 
-.about-keywords {
-  display: flex;
-  gap: 1rem;
-  margin-top: 3rem;
-  flex-wrap: wrap;
-}
-
-.about-keyword {
-  padding: 0.5rem 1.2rem;
-  border: 1px solid var(--border);
-  border-radius: 100px;
-  font-size: 0.8rem;
-  letter-spacing: 0.05em;
-  text-transform: lowercase;
-  color: var(--text-muted);
-  transition: border-color 0.3s ease, color 0.3s ease;
-}
-
-.about-keyword:hover {
-  border-color: var(--accent);
+.experience-note {
   color: var(--accent);
 }
 
@@ -889,39 +1019,120 @@ button { border: none; background: none; cursor: pointer; color: inherit; font-f
   letter-spacing: 0.01em;
 }
 
-/* 图片画廊 — 居中单容器，clipPath 展开 */
-.gap-cover {
-  width: clamp(12rem, 25vw, 20rem);
-  max-width: 16rem;
-  aspect-ratio: 4/5;
-  border-radius: 0.25rem;
-  transform-origin: 50% 0;
+/* 文件夹 — 3层结构，SVG前盖 + 背盖 */
+.gap-folder {
+  width: clamp(14rem, 28vw, 22rem);
+  /* 高度与背盖同高：40×36 */
+  aspect-ratio: 40/36;
   position: absolute;
   inset: 50% 0% 0% 50%;
   transform: translate(-50%, -50%);
-  overflow: hidden;
   z-index: 2;
   pointer-events: none;
+  /* 透视点在底边中点正下方 */
+  perspective: 800px;
+  perspective-origin: 50% 100%;
 }
 
-.gap-gradient {
-  z-index: 4;
-  background-color: rgba(0,0,0,0.3);
-  position: absolute;
-  inset: 0;
-}
-
-.gap-image {
+/* 背盖 — 渐变 + 内发光 + 投影 */
+.gap-folder-back {
   width: 100%;
   height: 100%;
-  object-fit: cover;
+  /* 渐变：左上偏亮，右下偏暗，模拟顶部光源 */
+  background: linear-gradient(135deg, #4a4550 0%, #39363D 40%, #2d2a31 100%);
+  border-radius: 40px;
+  box-shadow:
+    0 8px 32px rgba(0,0,0,0.4),
+    /* 柔和内发光：顶部偏亮 */
+    inset 0 1px 0 rgba(255,255,255,0.06),
+    inset 0 -1px 0 rgba(0,0,0,0.2);
   position: absolute;
-  inset: 0;
-  opacity: 0;
+  top: 0;
+  left: 0;
+  z-index: 1;
 }
 
-.gap-image:first-child {
+/* 纸张文件 — 3张，顶部高出文件夹，底边与文件夹底边齐平 */
+.gap-paper {
+  position: absolute;
+  width: 70%;
+  left: 15%;
+  height: 100%;
+  top: -10%;
+  background: #f0ece4;
+  border-radius: 20px;
+  /* 轻柔投影：纸张之间、纸张与背盖之间的距离感 */
+  box-shadow:
+    0 1px 3px rgba(0,0,0,0.08),
+    0 3px 8px rgba(0,0,0,0.06);
+  transform-origin: bottom center;
+  will-change: transform;
+  z-index: 5;
   opacity: 1;
+}
+
+.gap-paper-content {
+  padding: 0.8rem 0.9rem;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+.gap-paper-header {
+  font-family: var(--font-body);
+  font-size: 0.55rem;
+  font-weight: 600;
+  color: #444;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  margin-bottom: 0.5rem;
+}
+
+.gap-paper-line {
+  height: 2px;
+  background: #ccc5b9;
+  border-radius: 1px;
+  margin-bottom: 0.35rem;
+}
+
+.gap-paper-line.short {
+  width: 55%;
+}
+
+.gap-paper-line.medium {
+  width: 80%;
+}
+
+/* 前盖 — SVG形状 + 背景模糊 + 渐变透明度 + 光影 */
+.gap-folder-cover {
+  position: absolute;
+  top: 17%;
+  left: 0;
+  width: 101%;
+  height: 85%;
+  z-index: 10;
+  will-change: transform;
+  transform-origin: bottom center;
+  overflow: visible;
+  /* 背景模糊：仅覆盖 clip-path 裁剪后的 SVG 形状区域 */
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+  /* 引用隐藏SVG中的clipPath，严格按 cover.svg 的贝塞尔曲线形状裁剪 */
+  /* clipPathUnits="objectBoundingBox" 保证响应式缩放 */
+  clip-path: url(#folderCoverClip);
+}
+
+.gap-folder-cover svg {
+  width: 100%;
+  height: 100%;
+  display: block;
+  overflow: visible;
+}
+
+/* 响应式 */
+@media (max-width: 768px) {
+  .gap-folder { width: clamp(10rem, 50vw, 16rem); }
+  .gap-paper-header { font-size: 0.48rem; }
 }
 
 /* ===== HOW I FOUND MY WAY IN ===== */
@@ -931,33 +1142,38 @@ button { border: none; background: none; cursor: pointer; color: inherit; font-f
 .journey-wrap {
   border-top: 1px solid var(--border);
   background-color: var(--bg);
+  padding-bottom: 10vh;
 }
 
 .journey-inner {
   display: flex;
+  flex-wrap: wrap;
   gap: 4%;
   max-width: 1400px;
   margin: 0 auto;
   padding: 0 3rem;
+  align-items: flex-start;
+}
+
+/* ── 标题：横贯整个容器 ── */
+.journey-header {
+  width: 100%;
+  padding: 6rem 0 1rem;
+}
+
+.journey-title {
+  font-family: var(--font-display);
+  font-size: clamp(2.5rem, 5.5vw, 4.5rem);
+  font-weight: 800;
+  line-height: 1.05;
+  letter-spacing: -0.03em;
+  color: var(--text-primary);
 }
 
 /* ── 左侧文案列：正常文档流 ── */
 .journey-col-text {
   width: 46%;
   flex-shrink: 0;
-}
-
-.journey-header {
-  padding: 6rem 0 3rem;
-}
-
-.journey-title {
-  font-family: var(--font-display);
-  font-size: clamp(2rem, 4vw, 3.5rem);
-  font-weight: 800;
-  line-height: 1.1;
-  letter-spacing: -0.03em;
-  color: var(--text-primary);
 }
 
 /* 每个 step 用 min-height 撑开滚动距离 */
@@ -1034,6 +1250,7 @@ button { border: none; background: none; cursor: pointer; color: inherit; font-f
   top: 0;
   height: 100vh;
   align-self: flex-start;
+  padding-top: 8rem;
 }
 
 .journey-photo-stage {
@@ -1065,39 +1282,39 @@ button { border: none; background: none; cursor: pointer; color: inherit; font-f
 
 /* 照片1：最大，居中偏左上 */
 .jp-1 {
-  width: 34%;
-  max-width: 200px;
+  width: 49%;
+  max-width: 288px;
   aspect-ratio: 4/5;
-  top: 25%;
-  left: 28%;
+  top: 20%;
+  left: 24%;
   z-index: 3;
 }
 
 /* 照片2：中等，居中偏右上 */
 .jp-2 {
-  width: 28%;
-  max-width: 170px;
+  width: 41%;
+  max-width: 245px;
   aspect-ratio: 3/4;
-  top: 22%;
+  top: 18%;
   left: 42%;
   z-index: 2;
 }
 
 /* 照片3：较小，居中偏下 */
 .jp-3 {
-  width: 26%;
-  max-width: 160px;
+  width: 37%;
+  max-width: 230px;
   aspect-ratio: 3/4;
-  top: 42%;
-  left: 32%;
+  top: 32%;
+  left: 30%;
   z-index: 1;
 }
 
 /* 响应式 */
 @media (max-width: 1024px) {
-  .jp-1 { width: 38%; max-width: 190px; top: 25%; left: 26%; }
-  .jp-2 { width: 32%; max-width: 160px; top: 22%; left: 40%; }
-  .jp-3 { width: 28%; max-width: 150px; top: 42%; left: 30%; }
+  .jp-1 { width: 55%; max-width: 274px; top: 20%; left: 22%; }
+  .jp-2 { width: 46%; max-width: 230px; top: 18%; left: 40%; }
+  .jp-3 { width: 41%; max-width: 216px; top: 32%; left: 28%; }
 }
 
 @media (max-width: 768px) {
@@ -1106,9 +1323,9 @@ button { border: none; background: none; cursor: pointer; color: inherit; font-f
   .journey-col-photo { width: 100%; height: 50vh; position: relative; }
   .journey-title { font-size: clamp(1.8rem, 8vw, 2.5rem); }
   .journey-step { min-height: 50vh; }
-  .jp-1 { width: 36%; max-width: 160px; top: 25%; left: 24%; }
-  .jp-2 { width: 30%; max-width: 140px; top: 22%; left: 40%; }
-  .jp-3 { width: 26%; max-width: 120px; top: 42%; left: 28%; }
+  .jp-1 { width: 52%; max-width: 230px; top: 20%; left: 20%; }
+  .jp-2 { width: 43%; max-width: 202px; top: 18%; left: 38%; }
+  .jp-3 { width: 37%; max-width: 173px; top: 32%; left: 26%; }
 }
 
 /* ===== CLIENTS ===== */
@@ -1691,7 +1908,7 @@ button { border: none; background: none; cursor: pointer; color: inherit; font-f
 
 .cta-button:hover {
   transform: translateY(-2px);
-  box-shadow: 0 10px 40px rgba(200, 255, 0, 0.2);
+  box-shadow: 0 10px 40px rgba(255, 138, 31, 0.2);
 }
 
 .cta-button svg {
@@ -1759,7 +1976,15 @@ button { border: none; background: none; cursor: pointer; color: inherit; font-f
 
 /* ===== RESPONSIVE ===== */
 @media (max-width: 1024px) {
-  .about { grid-template-columns: 1fr; gap: 2rem; }
+  .about {
+    grid-template-columns: minmax(240px, 0.82fr) minmax(380px, 1.18fr);
+    gap: 3rem;
+  }
+  .about-lanyard-stage {
+    grid-column: 1 / -1;
+    order: 2;
+  }
+  .about-experience { order: 3; }
   .awards-grid { grid-template-columns: 1fr; }
   .award-item:nth-child(odd) { padding-right: 0; border-right: none; }
   .stats { grid-template-columns: 1fr; }
@@ -1783,6 +2008,11 @@ button { border: none; background: none; cursor: pointer; color: inherit; font-f
   .hero-logo-svg { max-width: 140px; }
   .hero-content-icon { max-width: 2.5em; margin-bottom: 1.5rem; }
   .about, .principles, .testimonials, .services, .process, .faq, .cta { padding: 5rem 1.5rem; }
+  .about { min-height: auto; grid-template-columns: 1fr; gap: 2.5rem; }
+  .about-label { max-width: 6ch; }
+  .about-lanyard-stage { min-height: clamp(500px, 66svh, 620px); }
+  #reactbits-lanyard-root { width: min(620px, 120%); height: clamp(520px, 68svh, 660px); }
+  .experience-group { grid-template-columns: 1fr; gap: 1rem; }
   .gap-wrap { padding: 0; }
   .gap-contain { padding: 1.5rem; }
   .gap-heading { font-size: clamp(2.5rem, 14vw, 5rem); }
@@ -1811,6 +2041,14 @@ button { border: none; background: none; cursor: pointer; color: inherit; font-f
 </style>
 </head>
 <body>
+<!-- 隐藏SVG：定义前盖的clipPath，使用objectBoundingBox坐标保证响应式 -->
+<svg width="0" height="0" style="position:absolute;pointer-events:none">
+  <defs>
+    <clipPath id="folderCoverClip" clipPathUnits="objectBoundingBox">
+      <path d="M0 0.13793 C0 0.06175 0.04363 0 0.09751 0 C0.17372 0 0.28108 0 0.36888 0 C0.39156 0 0.43426 0.00024 0.4557 0.01183 C0.48644 0.02845 0.5186 0.10345 0.5515 0.10345 H0.89386 C0.9477 0.10345 0.99142 0.1652 0.99142 0.24138 V0.82967 C0.99142 0.90619 0.9477 0.96794 0.89386 0.96794 H0.09756 C0.04368 0.96794 0 0.90619 0 0.82967 L0 0.13793 Z"/>
+    </clipPath>
+  </defs>
+</svg>
 
 <!-- Scroll Progress -->
 <div class="scroll-progress" id="scrollProgress"></div>
@@ -1848,7 +2086,7 @@ button { border: none; background: none; cursor: pointer; color: inherit; font-f
 
   <!-- Layer 2: Background cover (image + canvas) -->
   <div class="hero-cover">
-    <img src="huaban-6489933316.png" alt="" class="hero-img" data-translate-hero>
+    <img src="banner2.jpg" alt="" class="hero-img" data-translate-hero>
     <!-- Layer 6: Canvas animation effect -->
     <canvas class="hero-canvas" id="heroCanvas"></canvas>
   </div>
@@ -1916,31 +2154,92 @@ button { border: none; background: none; cursor: pointer; color: inherit; font-f
 
 <!-- About -->
 <section class="about" id="about">
-  <div>
-    <div class="about-label reveal">About the studio</div>
-    <div class="about-text reveal reveal-delay-1">
-      <strong>Hey I'm Huy.</strong> I started MONOLOG because I watched exceptional founders stay invisible because their presence never caught up to who they'd become despite the scale of their ambition.<br><br>
-      That gap became an obsession. I've spent years breaking down what separates forgettable digital presence from work that actually moves people, thinking that's reached over <strong>60,000 creatives</strong> and shapes every project we take on.<br><br>
-      When we work with founders, we are immersed in your story, ruthless about what moves people, and built to close the gap between who you are and how the world sees you.
+  <div class="about-profile">
+    <div class="about-label reveal">About me</div>
+    <div class="about-info reveal reveal-delay-1">
+      <div class="about-info-row">
+        <div class="about-info-cn">王宇洋</div>
+        <div class="about-info-en">Wang Yuyang</div>
+      </div>
+      <div class="about-info-row">
+        <div class="about-info-cn">UI设计师</div>
+        <div class="about-info-en">UI Designer</div>
+      </div>
+      <div class="about-info-row">
+        <div class="about-info-cn">7年工作经验</div>
+        <div class="about-info-en">7 Years Experience</div>
+      </div>
+      <div class="about-info-row">
+        <div class="about-info-cn">158-8027-8967</div>
+        <div class="about-info-en">Phone</div>
+      </div>
     </div>
   </div>
-  <div class="about-meta">
-    <div class="about-meta-items reveal reveal-delay-2">
-      <div class="about-meta-item">
-        <span>Est.</span>
-        <span>2022</span>
+  <div class="about-lanyard-stage reveal reveal-delay-1" aria-label="Interactive 3D lanyard badge">
+    <div id="reactbits-lanyard-root"></div>
+  </div>
+  <div class="about-experience reveal reveal-delay-2">
+    <article class="experience-group">
+      <div>
+        <div class="experience-date">
+          <span class="experience-date-start">2025.08</span>
+          <span class="experience-date-end">至今</span>
+        </div>
+        <div class="experience-company">福建点石科技有限公司</div>
       </div>
-      <div class="about-meta-item">
-        <span>Based in</span>
-        <span>Melbourne & Hanoi</span>
+      <div class="experience-list">
+        <div class="experience-item">
+          <h3>点石智能<span class="experience-title-normal">BOX</span></h3>
+          <p>产品旗下多个应用的视觉迭代。</p>
+        </div>
+        <div class="experience-item">
+          <h3 class="experience-title-en">DENEX</h3>
+          <p>企业级AI中台产品的主视觉。</p>
+        </div>
+        <div class="experience-item">
+          <h3 class="experience-title-en">DENEX H5</h3>
+          <p>AI中台H5的视觉迭代。</p>
+        </div>
       </div>
-    </div>
-    <div class="about-keywords reveal reveal-delay-3">
-      <span class="about-keyword">listen</span>
-      <span class="about-keyword">create</span>
-      <span class="about-keyword">obsess</span>
-      <span class="about-keyword">inspire</span>
-    </div>
+    </article>
+    <article class="experience-group">
+      <div>
+        <div class="experience-date">
+          <span class="experience-date-start">2022.01</span>
+          <span class="experience-date-end">2024.03</span>
+        </div>
+        <div class="experience-company">超享买（厦门）网络科技有限公司</div>
+      </div>
+      <div class="experience-list">
+        <div class="experience-item">
+          <h3>奇遇宇宙<span class="experience-title-normal">APP UI</span></h3>
+          <p>负责APP主视觉，大部分设计规范以及后期迭代；负责需求对接和拆解，协调团队；负责运营活动内容视觉以及简单动效。</p>
+        </div>
+        <div class="experience-item">
+          <h3>心享商城 <span class="experience-title-normal">UI</span></h3>
+          <p>参与项目产品设计，产品目标转化为视觉输出；负责设计审核与主视觉设计；协调团队短时间内容输出。</p>
+        </div>
+      </div>
+    </article>
+    <article class="experience-group">
+      <div>
+        <div class="experience-date">
+          <span class="experience-date-start">2019.03</span>
+          <span class="experience-date-end">2021.12</span>
+        </div>
+      </div>
+      <div class="experience-list">
+        <div class="experience-item">
+          <h3>信用家<span class="experience-title-normal">APP UI</span></h3>
+          <p>主要负责重做旧APP的主视觉；制定UI视觉方向以及设计规范；包括APP关联的web UI设计。</p>
+        </div>
+        <div class="experience-item">
+          <h3>财苗小程序 <span class="experience-title-normal">UI</span></h3>
+          <p>负责APP主视觉，参与产品的功能与交互设计；负责需求对接拆解与实际评估，保证落地效果；负责线上线下运营活动内容视觉。</p>
+          <p class="experience-note">2021站酷编辑推荐</p>
+        </div>
+      </div>
+    </article>
   </div>
 </section>
 
@@ -2097,14 +2396,57 @@ button { border: none; background: none; cursor: pointer; color: inherit; font-f
       </div>
     </div>
 
-    <!-- 图片画廊：居中单容器，5张图堆叠切换 -->
-    <div class="gap-cover">
-      <img src="https://trae-api-cn.mchost.guru/api/ide/v1/text_to_image?prompt=modern%20architecture%20luxury%20house%20interior%20design%2C%20dark%20moody%20aesthetic%2C%20minimalist%2C%20portrait%20orientation&image_size=portrait_4_3" class="gap-image" alt="OH Architecture"/>
-      <img src="https://trae-api-cn.mchost.guru/api/ide/v1/text_to_image?prompt=premium%20dairy%20product%20packaging%20design%2C%20clean%20minimal%20milk%20bottle%2C%20studio%20photography%2C%20portrait%20orientation&image_size=portrait_4_3" class="gap-image" alt="Moc Chau Creamery"/>
-      <img src="https://trae-api-cn.mchost.guru/api/ide/v1/text_to_image?prompt=creative%20agency%20brand%20identity%20design%2C%20bold%20typography%2C%20dark%20theme%2C%20portrait%20orientation&image_size=portrait_4_3" class="gap-image" alt="Brand Identity"/>
-      <img src="https://trae-api-cn.mchost.guru/api/ide/v1/text_to_image?prompt=urban%20street%20art%20mural%20on%20building%20wall%2C%20colorful%20contemporary%20art%2C%20portrait%20orientation&image_size=portrait_4_3" class="gap-image" alt="Mammoth Murals"/>
-      <img src="https://trae-api-cn.mchost.guru/api/ide/v1/text_to_image?prompt=modern%20tech%20startup%20website%20design%2C%20dark%20UI%2C%20sleek%20interface%2C%20portrait%20orientation&image_size=portrait_4_3" class="gap-image" alt="Tech Startup"/>
-      <div class="gap-gradient"></div>
+      <!-- 文件夹：3层结构，SVG前盖 -->
+    <div class="gap-folder">
+      <!-- 第3层：底盖 -->
+      <div class="gap-folder-back"></div>
+      <!-- 第2层：3张纸张 -->
+      <div class="gap-paper" data-paper="0">
+        <div class="gap-paper-content">
+          <div class="gap-paper-header">OH Architecture</div>
+          <div class="gap-paper-line"></div>
+          <div class="gap-paper-line short"></div>
+          <div class="gap-paper-line medium"></div>
+        </div>
+      </div>
+      <div class="gap-paper" data-paper="1">
+        <div class="gap-paper-content">
+          <div class="gap-paper-header">Moc Chau Creamery</div>
+          <div class="gap-paper-line"></div>
+          <div class="gap-paper-line short"></div>
+          <div class="gap-paper-line medium"></div>
+        </div>
+      </div>
+      <div class="gap-paper" data-paper="2">
+        <div class="gap-paper-content">
+          <div class="gap-paper-header">Brand Identity</div>
+          <div class="gap-paper-line"></div>
+          <div class="gap-paper-line short"></div>
+          <div class="gap-paper-line medium"></div>
+        </div>
+      </div>
+      <!-- 第1层：前盖 SVG，渐变透明度 + 光影 -->
+      <div class="gap-folder-cover">
+        <svg viewBox="0 0 41 29" preserveAspectRatio="none" aria-hidden="true">
+          <defs>
+            <!-- 渐变透明度：顶部较透明，底部较不透明 -->
+            <linearGradient id="coverGrad" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0%" stop-color="#9793A7" stop-opacity="0.3"/>
+              <stop offset="60%" stop-color="#9793A7" stop-opacity="0.45"/>
+              <stop offset="100%" stop-color="#9793A7" stop-opacity="0.55"/>
+            </linearGradient>
+            <!-- 顶部高光 -->
+            <linearGradient id="coverHighlight" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0%" stop-color="#ffffff" stop-opacity="0.08"/>
+              <stop offset="30%" stop-color="#ffffff" stop-opacity="0"/>
+            </linearGradient>
+          </defs>
+          <!-- 主体填充：渐变透明度 -->
+          <path d="M0 4C0 1.79086 1.78888 0 3.99802 0C7.1226 0 11.5245 0 15.1242 0C16.0539 0 17.8045 0.00700486 18.6835 0.343104C19.9439 0.825058 21.2626 3 22.612 3H36.6484C38.8576 3 40.6484 4.79086 40.6484 7V24.0703C40.6484 26.2795 38.8576 28.0703 36.6484 28.0703H4C1.79086 28.0703 0 26.2795 0 24.0703L0 4Z" fill="url(#coverGrad)"/>
+          <!-- 顶部高光层 -->
+          <path d="M0 4C0 1.79086 1.78888 0 3.99802 0C7.1226 0 11.5245 0 15.1242 0C16.0539 0 17.8045 0.00700486 18.6835 0.343104C19.9439 0.825058 21.2626 3 22.612 3H36.6484C38.8576 3 40.6484 4.79086 40.6484 7V24.0703C40.6484 26.2795 38.8576 28.0703 36.6484 28.0703H4C1.79086 28.0703 0 26.2795 0 24.0703L0 4Z" fill="url(#coverHighlight)"/>
+        </svg>
+      </div>
     </div>
 
   </div>
@@ -2113,11 +2455,13 @@ button { border: none; background: none; cursor: pointer; color: inherit; font-f
 <!-- How I Found My Way In -->
 <section class="journey-wrap" id="personal">
   <div class="journey-inner">
+    <!-- 标题：横贯整个容器 -->
+    <div class="journey-header">
+      <h2 class="journey-title">How I found<br>my way in</h2>
+    </div>
+
     <!-- 左侧：文案自然文档流，min-height 撑开滚动距离 -->
     <div class="journey-col-text">
-      <div class="journey-header">
-        <h2 class="journey-title">How I found<br>my way in</h2>
-      </div>
       <div class="journey-step" data-journey-step="0">
         <span class="journey-label">Origins</span>
         <h3 class="journey-step-title">Kerch, Ukraine. 1994.</h3>
@@ -3036,6 +3380,7 @@ window.addEventListener('scroll', () => {
         heroOverlay.style.opacity = 0;
       }
     }
+
   });
 })();
 
@@ -3043,7 +3388,7 @@ window.addEventListener('scroll', () => {
 // Lag smoothing disabled for precise scroll-driven animation timing
 gsap.ticker.lagSmoothing(0);
 
-// === GAP SECTION: Scroll-driven animation (matching bymonolog.com) ===
+// === GAP SECTION: Scroll-driven animation (文件夹打开 + 纸张错开) ===
 (function() {
   gsap.registerPlugin(ScrollTrigger, CustomEase);
 
@@ -3055,9 +3400,6 @@ gsap.ticker.lagSmoothing(0);
   if (!gapWrap || !gapContain) return;
 
   // ── 1. Stacking Cards: scrub-smoothed rate differential ──
-  // yPercent:50 moves element DOWN, counteracting natural upward scroll.
-  // scrub:0.08 adds 80ms smoothing to eliminate native-scroll vs GSAP jitter,
-  // without the phase-lag "bounce" that manual lerp interpolation causes.
   var stackingItems = document.querySelectorAll('[data-stacking-cards-item]');
   if (stackingItems.length >= 2) {
     stackingItems.forEach(function(item, n) {
@@ -3081,56 +3423,21 @@ gsap.ticker.lagSmoothing(0);
     });
   }
 
-  // ── 2. Image crossfade: 5 images stacked, cycle every 800ms ──
-  var images = gapWrap.querySelectorAll('.gap-image');
-  var currentIdx = 0;
-  var isRunning = false;
-  var intervalId;
+  // ── 2. 文件夹前盖3D透视翻转 + 纸张同步错开 ──
+  var folderCover = gapWrap.querySelector('.gap-folder-cover');
+  var papers = gapWrap.querySelectorAll('.gap-paper');
+  var headingContains = gapWrap.querySelectorAll('.gap-heading-contain');
 
-  images.forEach(function(img, i) {
-    gsap.set(img, { opacity: i === 0 ? 1 : 0 });
+  // 初始化：前盖关闭
+  gsap.set(folderCover, { rotateX: 0 });
+
+  // 纸张初始状态：3张叠在一起，始终可见
+  papers.forEach(function(paper) {
+    gsap.set(paper, { x: 0, y: 0, rotate: 0, scale: 1, opacity: 1 });
   });
 
-  function cycleImage() {
-    if (!isRunning || images.length <= 1) return;
-    gsap.set(images[currentIdx], { opacity: 0 });
-    currentIdx = (currentIdx + 1) % images.length;
-    gsap.set(images[currentIdx], { opacity: 1 });
-  }
-
-  function startCycle() {
-    if (!intervalId) {
-      isRunning = true;
-      intervalId = setInterval(cycleImage, 800);
-    }
-  }
-
-  function stopCycle() {
-    if (intervalId) {
-      clearInterval(intervalId);
-      intervalId = null;
-    }
-    isRunning = false;
-  }
-
-  if (images.length > 0) {
-    ScrollTrigger.create({
-      trigger: gapWrap,
-      start: 'top bottom',
-      end: 'bottom top',
-      onEnter: startCycle,
-      onLeave: stopCycle,
-      onEnterBack: startCycle,
-      onLeaveBack: stopCycle
-    });
-  }
-
-  // ── 3. Main scroll-driven timeline ──
-  // Matching bymonolog.com: trigger=".gap_home_wrap", start="top 50%", end="bottom top"
-  var headingContains = gapWrap.querySelectorAll('.gap-heading-contain');
-  var cover = gapWrap.querySelector('.gap-cover');
-
-  gsap.timeline({
+  // 主 timeline
+  var mainTl = gsap.timeline({
     scrollTrigger: {
       trigger: gapWrap,
       start: 'top 50%',
@@ -3138,22 +3445,40 @@ gsap.ticker.lagSmoothing(0);
       scrub: true,
       invalidateOnRefresh: true
     }
-  })
-  .to(headingContains, {
+  });
+
+  // 文字从两侧收拢
+  mainTl.to(headingContains, {
     x: '0vw',
     duration: 1.075,
     ease: 'ease-transition',
     force3D: true
-  })
-  .fromTo(cover, {
-    clipPath: 'inset(50% 50% 50% 50% round 0.25rem)'
-  }, {
-    clipPath: 'inset(0% 0% 0% 0% round 0.25rem)',
-    duration: 1.075,
-    ease: 'ease-transition'
-  }, '<');
+  }, 0);
 
-  // ── 4. Character-level animation ──
+  // 前盖以底边中点为轴，3D反向透视翻转打开（只翻50%）
+  // rotateX 负值：上边向后翻（远离观察者），底边固定
+  mainTl.to(folderCover, {
+    rotateX: -45,
+    duration: 1.2,
+    ease: 'ease-transition'
+  }, 0.15);
+
+  // 纸张与前盖联动：在前盖翻转过程中同步逐渐错开
+  papers.forEach(function(paper, i) {
+    var angle = (i - 1) * 7;    // -7, 0, 7
+    var xOffset = (i - 1) * 14; // -14, 0, 14
+    var yOffset = -i * 8;       // 向上偏移递增
+
+    mainTl.to(paper, {
+      y: yOffset,
+      x: xOffset,
+      rotate: angle,
+      duration: 1.0,
+      ease: 'ease-transition'
+    }, 0.2 + i * 0.08);
+  });
+
+  // ── 3. Character-level animation ──
   var headings = gapWrap.querySelectorAll('.gap-heading[data-split-reveal]');
   headings.forEach(function(el) {
     var isLeft = el.closest('.is-left') !== null;
@@ -3216,21 +3541,26 @@ gsap.ticker.lagSmoothing(0);
 
   // ── 每张照片的最终位置（展开状态）和收拢状态 ──
   var fanOut = [
-    // jp-1: 左上，微左旋
-    { rotation: -3, y: 0, x: 0, scale: 1, opacity: 1 },
+    // jp-1: 左上，大左旋
+    { rotation: -8, y: 0, x: 0, scale: 1, opacity: 1 },
     // jp-2: 右上，微右旋
     { rotation: 4, y: 0, x: 0, scale: 1, opacity: 1 },
-    // jp-3: 下方偏左，微左旋
-    { rotation: -2, y: 0, x: 0, scale: 1, opacity: 1 }
+    // jp-3: 下方偏左，大左旋
+    { rotation: -7, y: 0, x: 0, scale: 1, opacity: 1 }
   ];
 
-  var fanIn = [
-    // jp-1: 收拢到中心，大角度旋转，大幅偏移
+  // 下滑收拢：照片向下方散开消失
+  var fanInDown = [
     { rotation: -25, y: 200, x: 80, scale: 0.7, opacity: 0 },
-    // jp-2: 收拢到中心，大角度旋转，大幅偏移
     { rotation: 30, y: 240, x: -60, scale: 0.65, opacity: 0 },
-    // jp-3: 收拢到中心，大角度旋转，大幅偏移
     { rotation: -18, y: 220, x: 40, scale: 0.68, opacity: 0 }
+  ];
+
+  // 上滑收拢：照片向上方散开消失（与下滑相反方向）
+  var fanInUp = [
+    { rotation: 25, y: -200, x: -80, scale: 0.7, opacity: 0 },
+    { rotation: -30, y: -240, x: 60, scale: 0.65, opacity: 0 },
+    { rotation: 18, y: -220, x: -40, scale: 0.68, opacity: 0 }
   ];
 
   // ── 初始化：第一组展开，其余收拢隐藏 ──
@@ -3244,17 +3574,22 @@ gsap.ticker.lagSmoothing(0);
     } else {
       gsap.set(group, { autoAlpha: 0 });
       photos.forEach(function(photo, pi) {
-        gsap.set(photo, fanIn[pi]);
+        gsap.set(photo, fanInDown[pi]);
       });
     }
   });
 
   // ── 滚动驱动：找到最近的 step，控制扇形展开/收拢 ──
   var activeIndex = 0;
+  var lastScrollY = window.scrollY;
   var ticking = false;
 
   function update() {
     ticking = false;
+    var currentScrollY = window.scrollY;
+    var scrollDir = currentScrollY > lastScrollY ? 'down' : 'up';
+    lastScrollY = currentScrollY;
+
     var viewMid = window.innerHeight / 2;
     var closest = 0;
     var closestDist = Infinity;
@@ -3278,6 +3613,12 @@ gsap.ticker.lagSmoothing(0);
         if (i === closest) s.classList.add('is-active');
         else s.classList.remove('is-active');
       });
+
+      // 根据滚动方向选择收拢方向
+      // 下滑时：旧组向上方散开，新组从下方飞入
+      // 上滑时：旧组向下方散开，新组从上方飞入
+      var fanIn = scrollDir === 'down' ? fanInUp : fanInDown;
+      var fanInFrom = scrollDir === 'down' ? fanInDown : fanInUp;
 
       // 旧组：扇形收拢 + 淡出
       var oldGroup = groups[oldIndex];
@@ -3304,10 +3645,14 @@ gsap.ticker.lagSmoothing(0);
         });
       }
 
-      // 新组：扇形展开 + 淡入
+      // 新组：从反方向扇形展开 + 淡入
       var newGroup = groups[closest];
       if (newGroup) {
         var newPhotos = newGroup.querySelectorAll('.journey-photo');
+        // 先设置到反方向的收拢位置
+        newPhotos.forEach(function(photo, pi) {
+          gsap.set(photo, fanInFrom[pi]);
+        });
         gsap.to(newGroup, {
           autoAlpha: 1,
           duration: 0.5,
@@ -3342,5 +3687,6 @@ gsap.ticker.lagSmoothing(0);
   update();
 })();
 </script>
+<script type="module" src="./reactbits-lanyard-bundle.js"></script>
 </body>
 </html>

@@ -1,0 +1,405 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Journey Reference Demo</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #060606;
+      --panel: #0d0d0d;
+      --line: rgba(255, 255, 255, 0.08);
+      --text: #f5f2ea;
+      --muted: rgba(245, 242, 234, 0.64);
+      --soft: rgba(245, 242, 234, 0.24);
+      --radius: 18px;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    html {
+      background: var(--bg);
+      color: var(--text);
+    }
+
+    body {
+      font-family: "Inter", sans-serif;
+      background:
+        radial-gradient(circle at top left, rgba(255, 255, 255, 0.06), transparent 30%),
+        linear-gradient(180deg, #050505 0%, #090909 100%);
+      min-height: 100vh;
+    }
+
+    .page-shell {
+      max-width: 1440px;
+      margin: 0 auto;
+      padding: 48px 0 120px;
+    }
+
+    .section-kicker {
+      padding: 0 56px 28px;
+      color: var(--soft);
+      font-size: 12px;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+    }
+
+    .journey {
+      border-top: 1px solid var(--line);
+      border-bottom: 1px solid var(--line);
+      padding: 40px 56px 120px;
+    }
+
+    .journey-grid {
+      display: grid;
+      grid-template-columns: minmax(460px, 520px) minmax(360px, 460px);
+      justify-content: space-between;
+      column-gap: 88px;
+      align-items: start;
+    }
+
+    .journey-copy {
+      min-width: 0;
+    }
+
+    .journey-title {
+      font-family: "Instrument Serif", serif;
+      font-size: clamp(4.5rem, 7.2vw, 6rem);
+      line-height: 1.02;
+      letter-spacing: -0.04em;
+      font-weight: 400;
+      max-width: 5.5ch;
+      margin-bottom: 72px;
+    }
+
+    .journey-step {
+      padding: 0 0 56px;
+      margin-bottom: 56px;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+    }
+
+    .journey-step:last-child {
+      margin-bottom: 0;
+      border-bottom: none;
+    }
+
+    .journey-step h3 {
+      font-size: clamp(2.2rem, 3.8vw, 3rem);
+      line-height: 1.05;
+      font-weight: 500;
+      letter-spacing: -0.04em;
+      margin-bottom: 20px;
+    }
+
+    .journey-meta {
+      display: block;
+      margin-bottom: 20px;
+      color: var(--muted);
+      font-size: 14px;
+      letter-spacing: 0.02em;
+    }
+
+    .journey-step p {
+      max-width: 42ch;
+      color: var(--muted);
+      font-size: 16px;
+      line-height: 1.75;
+      margin-bottom: 16px;
+    }
+
+    .journey-step p:last-of-type {
+      margin-bottom: 0;
+    }
+
+    .journey-side {
+      position: sticky;
+      top: 180px;
+      height: 420px;
+    }
+
+    .journey-collage {
+      position: relative;
+      width: 100%;
+      height: 100%;
+      transform: translateY(10px);
+      opacity: 0.78;
+      transition: transform 700ms cubic-bezier(0.22, 1, 0.36, 1), opacity 700ms ease;
+    }
+
+    .journey-side.is-visible .journey-collage {
+      transform: translateY(0);
+      opacity: 1;
+    }
+
+    .journey-card {
+      position: absolute;
+      overflow: hidden;
+      background: #111;
+      box-shadow: 0 28px 80px rgba(0, 0, 0, 0.34);
+    }
+
+    .journey-card img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+      filter: saturate(0.95) contrast(1.02);
+      transform: scale(1.01);
+    }
+
+    .journey-card.card-1 {
+      width: 308px;
+      height: 352px;
+      top: 20px;
+      left: 44px;
+      border-radius: 10px;
+      z-index: 5;
+    }
+
+    .journey-card.card-2 {
+      width: 280px;
+      height: 244px;
+      top: 182px;
+      left: 0;
+      z-index: 4;
+    }
+
+    .journey-card.card-3 {
+      width: 198px;
+      height: 214px;
+      top: 168px;
+      right: 8px;
+      z-index: 6;
+    }
+
+    .journey-card.card-4 {
+      width: 174px;
+      height: 148px;
+      top: 4px;
+      right: 18px;
+      z-index: 3;
+    }
+
+    .journey-card.card-5 {
+      width: 248px;
+      height: 158px;
+      top: 88px;
+      left: 112px;
+      z-index: 2;
+    }
+
+    .journey-card.card-6 {
+      width: 148px;
+      height: 170px;
+      bottom: 12px;
+      left: 164px;
+      border-radius: 10px;
+      z-index: 7;
+    }
+
+    .journey-card.card-7 {
+      width: 128px;
+      height: 128px;
+      bottom: 40px;
+      right: 28px;
+      z-index: 1;
+    }
+
+    .journey-note {
+      position: absolute;
+      left: 0;
+      bottom: -46px;
+      color: var(--soft);
+      font-size: 12px;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+    }
+
+    .spacer {
+      height: 36vh;
+      border-bottom: 1px solid var(--line);
+      margin: 0 56px;
+    }
+
+    @media (max-width: 1100px) {
+      .journey-grid {
+        grid-template-columns: 1fr;
+        row-gap: 48px;
+      }
+
+      .journey-title {
+        max-width: none;
+        margin-bottom: 48px;
+      }
+
+      .journey-side {
+        position: relative;
+        top: 0;
+        width: min(460px, 100%);
+        height: 420px;
+      }
+    }
+
+    @media (max-width: 720px) {
+      .page-shell {
+        padding-top: 24px;
+      }
+
+      .section-kicker,
+      .journey,
+      .spacer {
+        margin: 0;
+        padding-left: 20px;
+        padding-right: 20px;
+      }
+
+      .journey {
+        padding-top: 28px;
+        padding-bottom: 80px;
+      }
+
+      .journey-step {
+        padding-bottom: 36px;
+        margin-bottom: 36px;
+      }
+
+      .journey-side {
+        height: 360px;
+      }
+
+      .journey-card.card-1 {
+        width: 220px;
+        height: 260px;
+        left: 18px;
+      }
+
+      .journey-card.card-2 {
+        width: 190px;
+        height: 170px;
+        top: 150px;
+      }
+
+      .journey-card.card-3 {
+        width: 140px;
+        height: 152px;
+        top: 140px;
+        right: 0;
+      }
+
+      .journey-card.card-4 {
+        width: 126px;
+        height: 110px;
+      }
+
+      .journey-card.card-5 {
+        width: 182px;
+        height: 118px;
+        left: 86px;
+      }
+
+      .journey-card.card-6 {
+        width: 112px;
+        height: 132px;
+        left: 112px;
+      }
+
+      .journey-card.card-7 {
+        width: 92px;
+        height: 92px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="page-shell">
+    <div class="section-kicker">Reference Direction Demo</div>
+
+    <section class="journey">
+      <div class="journey-grid">
+        <div class="journey-copy">
+          <h2 class="journey-title">How I found my way in</h2>
+
+          <article class="journey-step">
+            <h3>Origins</h3>
+            <span class="journey-meta">Kerch, Ukraine. 1994.</span>
+            <p>Born between two seas, one landline, and zero patience for being bored.</p>
+            <p>In 2001, a 56K dialup screamed its way into our house and into my life. Mom hated it. I thought it felt magical.</p>
+            <p>An entire universe on the other end of a cable, and me, impatient to break into it.</p>
+          </article>
+
+          <article class="journey-step">
+            <h3>Going places</h3>
+            <span class="journey-meta">Rapid City, SD. 2009.</span>
+            <p>As a teen: soldering robots, DC++ swaps, IRC friends I would never meet, pirated game discs, and a habit of poking at systems until they gave something back.</p>
+            <p>Then came the move, the first job, American high school strangeness, weekends in the snow, and a sharper sense that the internet was not just a place to hide in.</p>
+            <p>It was where identity, work, and access were all starting to blur together.</p>
+          </article>
+
+          <article class="journey-step">
+            <h3>The turning point</h3>
+            <span class="journey-meta">Porto, PT. 2020.</span>
+            <p>Years later, after product, sales, support, and too many messy client conversations, one thing became obvious: the best work happens when you stop performing and start solving.</p>
+            <p>I moved to Porto, went remote-first, and started building the kind of client relationships I always wished existed. Clear thinking, product depth, no theater.</p>
+            <p>Still the same curious kid with the modem, just on the other side of the connection now.</p>
+          </article>
+        </div>
+
+        <aside class="journey-side" id="journeySide">
+          <div class="journey-collage">
+            <figure class="journey-card card-1">
+              <img src="https://images.unsplash.com/photo-1516321318423-f06f85e504b3?auto=format&fit=crop&w=900&q=80" alt="CRT monitor and desk">
+            </figure>
+            <figure class="journey-card card-2">
+              <img src="https://images.unsplash.com/photo-1518770660439-4636190af475?auto=format&fit=crop&w=900&q=80" alt="Electronics and wires">
+            </figure>
+            <figure class="journey-card card-3">
+              <img src="https://images.unsplash.com/photo-1526374965328-7f61d4dc18c5?auto=format&fit=crop&w=900&q=80" alt="Code closeup">
+            </figure>
+            <figure class="journey-card card-4">
+              <img src="https://images.unsplash.com/photo-1484417894907-623942c8ee29?auto=format&fit=crop&w=900&q=80" alt="Notebook and keyboard">
+            </figure>
+            <figure class="journey-card card-5">
+              <img src="https://images.unsplash.com/photo-1500530855697-b586d89ba3ee?auto=format&fit=crop&w=900&q=80" alt="Coastline view">
+            </figure>
+            <figure class="journey-card card-6">
+              <img src="https://images.unsplash.com/photo-1498050108023-c5249f4df085?auto=format&fit=crop&w=900&q=80" alt="Workspace">
+            </figure>
+            <figure class="journey-card card-7">
+              <img src="https://images.unsplash.com/photo-1504384308090-c894fdcc538d?auto=format&fit=crop&w=900&q=80" alt="Team conversation">
+            </figure>
+            <div class="journey-note">Single sticky collage, not step-swapped</div>
+          </div>
+        </aside>
+      </div>
+    </section>
+
+    <div class="spacer"></div>
+  </div>
+
+  <script>
+    (function() {
+      var side = document.getElementById("journeySide");
+      if (!side || !("IntersectionObserver" in window)) return;
+
+      var observer = new IntersectionObserver(function(entries) {
+        entries.forEach(function(entry) {
+          if (entry.isIntersecting) {
+            side.classList.add("is-visible");
+          }
+        });
+      }, {
+        threshold: 0.35
+      });
+
+      observer.observe(side);
+    })();
+  </script>
+</body>
+</html>

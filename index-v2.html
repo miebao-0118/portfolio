@@ -574,6 +574,8 @@ button { border: none; background: none; cursor: pointer; color: inherit; font-f
 
 .about-badge-card {
   --badge-anchor-x: 50%;
+  --badge-hole-top: clamp(1.6rem, 3vw, 2.4rem);
+  --badge-hole-half: clamp(17px, 1.6vw, 21px);
   width: min(1280px, 100%);
   min-height: clamp(660px, 78svh, 860px);
   position: relative;
@@ -582,21 +584,23 @@ button { border: none; background: none; cursor: pointer; color: inherit; font-f
   gap: clamp(2.2rem, 4.8vw, 6rem);
   align-items: center;
   padding: clamp(5.4rem, 8vw, 7.8rem) clamp(2rem, 5vw, 5rem) clamp(3rem, 5vw, 4.8rem);
-  border: 1px solid rgba(255, 255, 255, 0.13);
+  border: 1px solid rgba(255, 255, 255, 0.18);
   border-radius: 30px;
   background:
-    radial-gradient(circle at var(--badge-anchor-x) -8%, rgba(255, 138, 31, 0.26), transparent 31%),
+    radial-gradient(circle at var(--badge-anchor-x) -8%, rgba(255, 138, 31, 0.28), transparent 31%),
     radial-gradient(circle at 18% 22%, rgba(255, 138, 31, 0.14), transparent 29%),
     radial-gradient(circle at 74% 70%, rgba(255, 188, 104, 0.11), transparent 28%),
-    linear-gradient(145deg, rgba(24, 22, 20, 0.82), rgba(9, 10, 10, 0.9) 62%, rgba(18, 13, 9, 0.86));
-  backdrop-filter: blur(18px) saturate(1.18);
-  -webkit-backdrop-filter: blur(18px) saturate(1.18);
+    linear-gradient(145deg, rgba(28, 22, 17, 0.68), rgba(7, 9, 9, 0.76) 62%, rgba(18, 13, 9, 0.7));
+  backdrop-filter: blur(28px) saturate(1.38) brightness(1.08);
+  -webkit-backdrop-filter: blur(28px) saturate(1.38) brightness(1.08);
   box-shadow:
     0 34px 90px rgba(0, 0, 0, 0.52),
     inset 0 1px 0 rgba(255, 255, 255, 0.1),
     inset 0 -1px 0 rgba(255, 138, 31, 0.08);
   isolation: isolate;
   overflow: visible;
+  transform-style: preserve-3d;
+  will-change: transform;
 }
 
 .about-badge-card::before {
@@ -616,7 +620,7 @@ button { border: none; background: none; cursor: pointer; color: inherit; font-f
 
 .about-badge-hole {
   position: absolute;
-  top: clamp(1.6rem, 3vw, 2.4rem);
+  top: var(--badge-hole-top);
   left: var(--badge-anchor-x);
   width: clamp(96px, 9vw, 132px);
   height: clamp(34px, 3.2vw, 42px);
@@ -633,10 +637,10 @@ button { border: none; background: none; cursor: pointer; color: inherit; font-f
 
 .about-strap-cap {
   position: absolute;
-  top: calc(-1 * var(--about-top-pad) - 4px);
+  top: -4px;
   left: var(--badge-anchor-x);
   width: clamp(74px, 6.2vw, 94px);
-  height: calc(var(--about-top-pad) + clamp(1.6rem, 3vw, 2.4rem) + clamp(17px, 1.6vw, 21px) + 4px);
+  height: calc(var(--badge-hole-top) + var(--badge-hole-half) + 4px);
   object-fit: cover;
   object-position: center bottom;
   transform: translateX(-50%) rotate(180deg);
@@ -646,6 +650,12 @@ button { border: none; background: none; cursor: pointer; color: inherit; font-f
   filter:
     drop-shadow(0 10px 18px rgba(0, 0, 0, 0.45))
     drop-shadow(0 0 18px rgba(255, 138, 31, 0.18));
+}
+
+.about-content-reveal {
+  opacity: 0;
+  transform: translateY(30px);
+  filter: blur(8px);
 }
 
 .about-profile {
@@ -2162,7 +2172,7 @@ button { border: none; background: none; cursor: pointer; color: inherit; font-f
     border-radius: 22px;
   }
   .about-label { max-width: 6ch; }
-  .about-strap-cap { width: 72px; top: calc(-1 * var(--about-top-pad) - 4px); height: calc(var(--about-top-pad) + 5.6rem + 17px + 4px); }
+  .about-strap-cap { width: 72px; top: -4px; height: calc(var(--badge-hole-top) + var(--badge-hole-half) + 4px); }
   .about-badge-hole { width: 96px; height: 34px; }
   .experience-group { grid-template-columns: 1fr; gap: 1rem; }
   .gap-wrap { padding: 0; }
@@ -2295,10 +2305,10 @@ button { border: none; background: none; cursor: pointer; color: inherit; font-f
 
 <!-- About -->
 <section class="about" id="about">
-  <div class="about-badge-card reveal">
+  <div class="about-badge-card">
     <img src="assets/about-strap-cap.png" alt="" class="about-strap-cap">
     <div class="about-badge-hole" aria-hidden="true"></div>
-    <div class="about-profile">
+    <div class="about-profile about-content-reveal">
       <div class="about-label">About me</div>
       <div class="about-portrait">
         <img src="assets/about-portrait.jpg" alt="王宇洋 portrait">
@@ -2330,7 +2340,7 @@ button { border: none; background: none; cursor: pointer; color: inherit; font-f
         </div>
       </div>
     </div>
-    <div class="about-experience">
+    <div class="about-experience about-content-reveal">
       <article class="experience-group">
         <div>
           <div class="experience-date">
@@ -3028,6 +3038,69 @@ const revealObserver = new IntersectionObserver((entries) => {
 }, { threshold: 0.1, rootMargin: '0px 0px -50px 0px' });
 
 revealElements.forEach(el => revealObserver.observe(el));
+
+// ===== ABOUT CARD: CONTENT REVEAL + CURSOR PERSPECTIVE =====
+(function() {
+  const card = document.querySelector('.about-badge-card');
+  const content = document.querySelectorAll('.about-content-reveal');
+  if (!card || !window.gsap) return;
+
+  if (window.ScrollTrigger) {
+    gsap.registerPlugin(ScrollTrigger);
+  }
+
+  const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const hasFinePointer = window.matchMedia('(pointer: fine)').matches;
+
+  if (content.length) {
+    if (reduceMotion || !window.ScrollTrigger) {
+      gsap.set(content, { autoAlpha: 1, y: 0, filter: 'blur(0px)' });
+    } else {
+      gsap.fromTo(content,
+        { autoAlpha: 0, y: 34, filter: 'blur(8px)' },
+        {
+          autoAlpha: 1,
+          y: 0,
+          filter: 'blur(0px)',
+          duration: 0.9,
+          ease: 'power3.out',
+          stagger: 0.16,
+          scrollTrigger: {
+            trigger: card,
+            start: 'top 38%',
+            once: true
+          }
+        }
+      );
+    }
+  }
+
+  if (!reduceMotion && hasFinePointer) {
+    gsap.set(card, { transformPerspective: 1200, transformOrigin: '50% 50%' });
+
+    const rotateXTo = gsap.quickTo(card, 'rotationX', { duration: 0.55, ease: 'power3.out' });
+    const rotateYTo = gsap.quickTo(card, 'rotationY', { duration: 0.55, ease: 'power3.out' });
+    const xTo = gsap.quickTo(card, 'x', { duration: 0.55, ease: 'power3.out' });
+    const yTo = gsap.quickTo(card, 'y', { duration: 0.55, ease: 'power3.out' });
+
+    card.addEventListener('pointermove', (event) => {
+      const rect = card.getBoundingClientRect();
+      const x = ((event.clientX - rect.left) / rect.width - 0.5) * 2;
+      const y = ((event.clientY - rect.top) / rect.height - 0.5) * 2;
+      rotateYTo(x * 4.5);
+      rotateXTo(y * -3.5);
+      xTo(x * 6);
+      yTo(y * 4);
+    }, { passive: true });
+
+    card.addEventListener('pointerleave', () => {
+      rotateXTo(0);
+      rotateYTo(0);
+      xTo(0);
+      yTo(0);
+    }, { passive: true });
+  }
+})();
 
 // ===== COUNTER ANIMATION =====
 const statNumbers = document.querySelectorAll('.stat-number[data-count]');

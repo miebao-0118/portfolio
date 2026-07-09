@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>MONOLOG — We design change-making digital experiences</title>
+<title>WYY'S Portfolio</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
@@ -100,6 +100,12 @@ button { border: none; background: none; cursor: pointer; color: inherit; font-f
   font-size: clamp(2rem, 5vw, 4rem);
   font-weight: 800;
   letter-spacing: -0.02em;
+  line-height: 0.95;
+  text-align: center;
+  text-transform: uppercase;
+}
+
+.loader-line {
   overflow: hidden;
 }
 
@@ -161,6 +167,7 @@ button { border: none; background: none; cursor: pointer; color: inherit; font-f
   gap: 2.5rem;
   align-items: center;
   list-style: none;
+  margin-left: auto;
 }
 
 .nav-links a {
@@ -185,22 +192,6 @@ button { border: none; background: none; cursor: pointer; color: inherit; font-f
 
 .nav-links a:hover::after {
   width: 100%;
-}
-
-.nav-cta {
-  font-size: 0.85rem;
-  font-weight: 500;
-  letter-spacing: 0.05em;
-  text-transform: uppercase;
-  padding: 0.6rem 1.5rem;
-  border: 1px solid var(--text);
-  border-radius: 100px;
-  transition: background 0.3s ease, color 0.3s ease;
-}
-
-.nav-cta:hover {
-  background: var(--text);
-  color: var(--bg);
 }
 
 /* ===== HERO — 6-LAYER STRUCTURE ===== */
@@ -300,6 +291,21 @@ button { border: none; background: none; cursor: pointer; color: inherit; font-f
   z-index: 4;
   pointer-events: none;
   transition: filter 0.2s ease;
+}
+
+.hero-portfolio-word {
+  position: absolute;
+  left: 50%;
+  bottom: clamp(5.5rem, 12svh, 8rem);
+  width: min(88vw, 1050px);
+  height: auto;
+  transform: translateX(-50%);
+  z-index: 3;
+  pointer-events: none;
+  opacity: 0.92;
+  filter:
+    drop-shadow(0 22px 34px rgba(0, 0, 0, 0.38))
+    drop-shadow(0 0 22px rgba(255, 128, 24, 0.16));
 }
 
 .hero-light {
@@ -482,6 +488,11 @@ button { border: none; background: none; cursor: pointer; color: inherit; font-f
 }
 
 .hero-logo-svg {
+  font-family: var(--font-display);
+  font-size: clamp(1.4rem, 2.6vw, 2.2rem);
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
   opacity: 0.5;
   color: var(--text-dim);
   max-width: 200px;
@@ -884,106 +895,6 @@ button { border: none; background: none; cursor: pointer; color: inherit; font-f
 @keyframes marquee {
   0% { transform: translateX(0); }
   100% { transform: translateX(-50%); }
-}
-
-/* ===== AWARDS ===== */
-.awards {
-  padding: 8rem 3rem;
-  border-top: 1px solid var(--border);
-}
-
-.awards-label {
-  font-size: 0.75rem;
-  letter-spacing: 0.15em;
-  text-transform: uppercase;
-  color: var(--text-muted);
-  margin-bottom: 3rem;
-}
-
-.awards-grid {
-  display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  gap: 0;
-}
-
-.award-item {
-  padding: 1.5rem 0;
-  border-bottom: 1px solid var(--border);
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding-right: 2rem;
-}
-
-.award-item:nth-child(odd) {
-  padding-right: 4rem;
-  border-right: 1px solid var(--border);
-}
-
-.award-name {
-  font-family: var(--font-display);
-  font-size: clamp(1rem, 2vw, 1.3rem);
-  font-weight: 600;
-}
-
-.award-count {
-  font-size: 0.85rem;
-  color: var(--text-muted);
-  font-variant-numeric: tabular-nums;
-}
-
-/* ===== PRINCIPLES ===== */
-.principles {
-  padding: 10rem 3rem;
-  border-top: 1px solid var(--border);
-  will-change: transform, opacity;
-  backface-visibility: hidden;
-  -webkit-backface-visibility: hidden;
-}
-
-.principles-label {
-  font-size: 0.75rem;
-  letter-spacing: 0.15em;
-  text-transform: uppercase;
-  color: var(--text-muted);
-  margin-bottom: 4rem;
-}
-
-.principles-list {
-  display: flex;
-  flex-direction: column;
-  gap: 0;
-}
-
-.principle-item {
-  padding: 3rem 0;
-  border-bottom: 1px solid var(--border);
-  display: grid;
-  grid-template-columns: 1fr 2fr;
-  gap: 3rem;
-  cursor: pointer;
-  transition: padding-left 0.4s ease;
-}
-
-.principle-item:first-child {
-  border-top: 1px solid var(--border);
-}
-
-.principle-item:hover {
-  padding-left: 1rem;
-}
-
-.principle-title {
-  font-family: var(--font-display);
-  font-size: clamp(1.2rem, 2.5vw, 1.8rem);
-  font-weight: 700;
-  line-height: 1.3;
-}
-
-.principle-desc {
-  font-size: 1rem;
-  color: var(--text-muted);
-  line-height: 1.8;
 }
 
 /* ===== WE CLOSE THAT GAP ===== */
@@ -2142,8 +2053,6 @@ button { border: none; background: none; cursor: pointer; color: inherit; font-f
   .about-profile {
     max-width: 420px;
   }
-  .awards-grid { grid-template-columns: 1fr; }
-  .award-item:nth-child(odd) { padding-right: 0; border-right: none; }
   .stats { grid-template-columns: 1fr; }
   .clients-grid { grid-template-columns: repeat(2, 1fr); }
   .client-item:nth-child(4n) { border-right: none; }
@@ -2163,9 +2072,13 @@ button { border: none; background: none; cursor: pointer; color: inherit; font-f
   .hero { padding: 0 1.5rem 3rem; }
   .hero-bottom-grid { grid-template-columns: 1fr; gap: 1.5rem; }
   .hero-logo-svg { max-width: 140px; }
+  .hero-portfolio-word {
+    bottom: clamp(7rem, 18svh, 10rem);
+    width: min(118vw, 820px);
+  }
   .hero-character { height: clamp(526px, 90svh, 790px); max-width: 105vw; }
   .hero-content-icon { max-width: 2.5em; margin-bottom: 1.5rem; }
-  .about, .principles, .testimonials, .services, .process, .faq, .cta { padding: 5rem 1.5rem; }
+  .about, .testimonials, .services, .process, .faq, .cta { padding: 5rem 1.5rem; }
   .about { --about-top-pad: 2.75rem; --about-overlap: 56px; min-height: auto; padding-top: var(--about-top-pad); }
   .about-badge-card {
     min-height: auto;
@@ -2180,7 +2093,7 @@ button { border: none; background: none; cursor: pointer; color: inherit; font-f
   .gap-contain { padding: 1.5rem; }
   .gap-heading { font-size: clamp(2.5rem, 14vw, 5rem); }
   .gap-cover { width: clamp(10rem, 50vw, 16rem); }
-  .awards, .stories-header, .clients, .marquee-label { padding-left: 1.5rem; padding-right: 1.5rem; }
+  .stories-header, .clients, .marquee-label { padding-left: 1.5rem; padding-right: 1.5rem; }
   .clients-grid { grid-template-columns: 1fr; }
   .client-item { border-right: none !important; }
   .services-grid { grid-template-columns: 1fr; }
@@ -2223,7 +2136,12 @@ button { border: none; background: none; cursor: pointer; color: inherit; font-f
 <!-- Loader -->
 <div class="loader" id="loader">
   <div class="loader-text">
-    <span style="animation-delay: 0s">M</span><span style="animation-delay: 0.05s">O</span><span style="animation-delay: 0.1s">N</span><span style="animation-delay: 0.15s">O</span><span style="animation-delay: 0.2s">L</span><span style="animation-delay: 0.25s">O</span><span style="animation-delay: 0.3s">G</span>
+    <div class="loader-line">
+      <span style="animation-delay: 0s">W</span><span style="animation-delay: 0.04s">Y</span><span style="animation-delay: 0.08s">Y</span><span style="animation-delay: 0.12s">'</span><span style="animation-delay: 0.16s">S</span>
+    </div>
+    <div class="loader-line">
+      <span style="animation-delay: 0.2s">P</span><span style="animation-delay: 0.24s">o</span><span style="animation-delay: 0.28s">r</span><span style="animation-delay: 0.32s">t</span><span style="animation-delay: 0.36s">f</span><span style="animation-delay: 0.4s">o</span><span style="animation-delay: 0.44s">l</span><span style="animation-delay: 0.48s">i</span><span style="animation-delay: 0.52s">o</span>
+    </div>
   </div>
   <div class="loader-bar">
     <div class="loader-bar-fill"></div>
@@ -2232,14 +2150,13 @@ button { border: none; background: none; cursor: pointer; color: inherit; font-f
 
 <!-- Navigation -->
 <nav class="nav">
-  <a href="#" class="nav-logo">MONOLOG</a>
+  <a href="#" class="nav-logo">Portfolio</a>
   <ul class="nav-links">
     <li><a href="#about">About</a></li>
     <li><a href="#work">Work</a></li>
     <li><a href="#services">Services</a></li>
     <li><a href="#process">Process</a></li>
   </ul>
-  <a href="#contact" class="nav-cta">Start a Project</a>
 </nav>
 
 <!-- Hero — 6-Layer Structure -->
@@ -2261,6 +2178,7 @@ button { border: none; background: none; cursor: pointer; color: inherit; font-f
   <div class="hero-overlay" id="heroOverlay"></div>
 
   <div class="hero-light" aria-hidden="true"></div>
+  <img src="assets/hero-portfolio-word.png" alt="" class="hero-portfolio-word">
   <img src="creative-hero-character-refined.png" alt="" class="hero-character">
 
   <!-- Layer 5: Content container -->
@@ -2272,26 +2190,14 @@ button { border: none; background: none; cursor: pointer; color: inherit; font-f
       <!-- Bottom: logo + stats -->
       <div class="hero-bottom">
         <div class="hero-bottom-grid">
-          <div class="hero-logo-svg">
-            <svg xmlns="http://www.w3.org/2000/svg" width="100%" viewBox="0 0 349 83" fill="none">
-              <path d="M0 80.6956V15.5527H17.6842L23.2782 47.3121C23.4586 48.3948 24.0902 49.1166 25.1729 49.1166C26.2556 49.1166 26.8872 48.3948 27.0677 47.3121L32.6617 15.5527H50.3459V80.6956H39.3383V49.2971C39.3383 48.0339 38.5263 47.2219 37.4436 47.2219C36.2707 47.2219 35.6391 48.0339 35.4586 49.0264L29.8647 80.6956H20.4812L14.8872 49.0264C14.7068 48.0339 14.0752 47.2219 12.9023 47.2219C11.8195 47.2219 11.0075 48.0339 11.0075 49.2971V80.6956H0Z" fill="currentColor"/>
-              <path d="M60.5 80.6956V15.5527H85.5V26.5603H72.5V41.5527H82.5V52.5603H72.5V69.688H85.5V80.6956H60.5Z" fill="currentColor"/>
-              <path d="M94 80.6956V15.5527H105.8V69.688H118.8V80.6956H94Z" fill="currentColor"/>
-              <path d="M127 80.6956V26.5603H117V15.5527H149V26.5603H139V80.6956H127Z" fill="currentColor"/>
-              <path d="M157 80.6956V15.5527H180.5C186.5 15.5527 191 17.5 194 21.5C197 25.5 198.5 30.5 198.5 36.5C198.5 42.5 197 47.5 194 51.5C191 55.5 186.5 57.5 180.5 57.5H169V80.6956H157ZM169 46.5H177C179.5 46.5 181.3 45.5 182.5 43.5C183.7 41.5 184.3 39.2 184.3 36.5C184.3 33.8 183.7 31.5 182.5 29.5C181.3 27.5 179.5 26.5 177 26.5H169V46.5Z" fill="currentColor"/>
-              <path d="M220 15.5527L233 80.6956H221L218.5 66.6956H205.5L203 80.6956H191L204 15.5527H220ZM216.5 56.6956L212 33.5527L207.5 56.6956H216.5Z" fill="currentColor"/>
-              <path d="M242 80.6956V15.5527H253.8V69.688H266.8V80.6956H242Z" fill="currentColor"/>
-              <path d="M285 14.5527C291.5 14.5527 296.5 16.8 300 21.3C303.5 25.8 305.3 31.8 305.3 39.3V57C305.3 64.5 303.5 70.5 300 75C296.5 79.5 291.5 82 285 82C278.5 82 273.5 79.5 270 75C266.5 70.5 264.8 64.5 264.8 57V39.3C264.8 31.8 266.5 25.8 270 21.3C273.5 16.8 278.5 14.5527 285 14.5527ZM285 25.5527C282.5 25.5527 280.6 26.8 279.3 29.3C278 31.8 277.3 35 277.3 39V57.3C277.3 61.3 278 64.5 279.3 67C280.6 69.5 282.5 70.7 285 70.7C287.5 70.7 289.4 69.5 290.7 67C292 64.5 292.7 61.3 292.7 57.3V39C292.7 35 292 31.8 290.7 29.3C289.4 26.8 287.5 25.5527 285 25.5527Z" fill="currentColor"/>
-              <path d="M316 80.6956V15.5527H327.8L340 52.6956V15.5527H349V80.6956H337.2L325 43.5527V80.6956H316Z" fill="currentColor"/>
-            </svg>
+          <div class="hero-logo-svg">DESIGNER</div>
+          <div class="hero-stat">
+            <span class="hero-stat-value">10+</span>
+            <span class="hero-stat-label">Project</span>
           </div>
           <div class="hero-stat">
-            <span class="hero-stat-value">15+</span>
-            <span class="hero-stat-label">Founder-led brands from disruptive creative agencies to consumer brands</span>
-          </div>
-          <div class="hero-stat">
-            <span class="hero-stat-value">30+</span>
-            <span class="hero-stat-label">Globally recognized awards (Awwwards, FWA, CSSDA)</span>
+            <span class="hero-stat-value">2026</span>
+            <span class="hero-stat-label">Version</span>
           </div>
         </div>
       </div>
@@ -2448,60 +2354,6 @@ button { border: none; background: none; cursor: pointer; color: inherit; font-f
     <span class="marquee-separator">&mdash;</span>
     <span class="marquee-item">University of Sydney</span>
     <span class="marquee-separator">&mdash;</span>
-  </div>
-</section>
-
-<!-- Awards -->
-<section class="awards">
-  <div class="awards-label reveal">Awards</div>
-  <div class="awards-grid">
-    <div class="award-item reveal">
-      <span class="award-name">Awwwards SOTD</span>
-      <span class="award-count">x5</span>
-    </div>
-    <div class="award-item reveal reveal-delay-1">
-      <span class="award-name">FWA SOTD</span>
-      <span class="award-count">x4</span>
-    </div>
-    <div class="award-item reveal">
-      <span class="award-name">CSSDA SOTD</span>
-      <span class="award-count">x4</span>
-    </div>
-    <div class="award-item reveal reveal-delay-1">
-      <span class="award-name">Awwwards Honorable Mention</span>
-      <span class="award-count">x8</span>
-    </div>
-    <div class="award-item reveal">
-      <span class="award-name">Awwwards Typography Honors</span>
-      <span class="award-count">x1</span>
-    </div>
-    <div class="award-item reveal reveal-delay-1">
-      <span class="award-name">Awwwards Independent of the Year Nominee</span>
-      <span class="award-count">x1</span>
-    </div>
-  </div>
-</section>
-
-<!-- Principles -->
-<section class="principles" data-stacking-cards-item>
-  <div class="principles-label reveal">Our principles</div>
-  <div class="principles-list">
-    <div class="principle-item reveal">
-      <div class="principle-title">Outcomes first, taste second</div>
-      <div class="principle-desc">Every creative decision we make is interrogated against one question: does this actually serve your growth?</div>
-    </div>
-    <div class="principle-item reveal">
-      <div class="principle-title">All in or nothing</div>
-      <div class="principle-desc">We take on fewer projects so we can give each one everything. When we commit to your brand, we're fully present, fully invested, fully responsible for the result.</div>
-    </div>
-    <div class="principle-item reveal">
-      <div class="principle-title">Human-first, always</div>
-      <div class="principle-desc">Behind every brand is a person with a real story and real stakes. We never lose sight of that. The most powerful digital experiences are the ones that feel unmistakably human.</div>
-    </div>
-    <div class="principle-item reveal">
-      <div class="principle-title">Intention over speed</div>
-      <div class="principle-desc">Rushed work compounds into regret. We move at the pace the work demands. Every layer earns its place before we move to the next.</div>
-    </div>
   </div>
 </section>
 
@@ -2999,7 +2851,7 @@ function animateRing() {
 animateRing();
 
 // Hover effects for cursor
-const hoverElements = document.querySelectorAll('a, button, .client-item, .principle-item, .process-step, .story-card');
+const hoverElements = document.querySelectorAll('a, button, .client-item, .process-step, .story-card');
 hoverElements.forEach(el => {
   el.addEventListener('mouseenter', () => {
     cursorRing.style.width = '60px';
@@ -3214,7 +3066,7 @@ faqItems.forEach(item => {
 });
 
 // ===== SMOOTH NAV SCROLL =====
-document.querySelectorAll('.nav-links a, .nav-cta').forEach(link => {
+document.querySelectorAll('.nav-links a').forEach(link => {
   link.addEventListener('click', (e) => {
     const href = link.getAttribute('href');
     if (href.startsWith('#')) {

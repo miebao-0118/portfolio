@@ -207,10 +207,34 @@ button { border: none; background: none; cursor: pointer; color: inherit; font-f
 
 /* Layer 0: Main container */
 .hero {
+  --hero-x: 0;
+  --hero-y: 0;
+  --hero-light-x: 50%;
+  --hero-light-y: 42%;
+  --hero-intensity: 0;
+  --hero-glow-alpha: 0.12;
+  --hero-bg-x: 0px;
+  --hero-bg-y: 0px;
+  --hero-bg-blur: 2.4px;
+  --hero-bg-brightness: 1;
+  --hero-bg-scale: 1.01;
+  --hero-char-x: 0px;
+  --hero-char-y: 0px;
+  --hero-rot-x: 0deg;
+  --hero-rot-y: 0deg;
+  --hero-shadow-x: 0px;
+  --hero-shadow-y: 18px;
+  --hero-glow-x: 0px;
+  --hero-glow-y: 0px;
+  --hero-light-drift-x: 0px;
+  --hero-light-drift-y: 0px;
+  --hero-light-opacity: 0.16;
+  --hero-vignette-opacity: 0.28;
   height: 100svh;
   padding: 0 3rem;
   position: relative;
   overflow: hidden;
+  perspective: 1200px;
 }
 
 /* Layer 1: Bottom gradient — smooth transition to next section */
@@ -233,6 +257,7 @@ button { border: none; background: none; cursor: pointer; color: inherit; font-f
   position: absolute;
   inset: 0;
   overflow: hidden;
+  transform-style: preserve-3d;
 }
 
 .hero-img {
@@ -242,13 +267,17 @@ button { border: none; background: none; cursor: pointer; color: inherit; font-f
   max-height: none;
   object-fit: contain;
   opacity: 0.5;
-  filter: grayscale(0.4) blur(2.4px);
-  will-change: transform;
-  transform: translate(-50%, -50%) rotate(90deg);
+  filter: grayscale(0.4) blur(var(--hero-bg-blur)) brightness(var(--hero-bg-brightness));
+  will-change: transform, filter;
+  transform: translate(-50%, -50%)
+    translate3d(var(--hero-bg-x), var(--hero-bg-y), -80px)
+    rotate(90deg)
+    scale(var(--hero-bg-scale));
   transform-origin: center;
   position: absolute;
   top: 50%;
   left: 50%;
+  transition: filter 0.2s ease;
 }
 
 .hero-character {
@@ -260,12 +289,58 @@ button { border: none; background: none; cursor: pointer; color: inherit; font-f
   max-width: min(92vw, 980px);
   object-fit: contain;
   image-rendering: auto;
-  transform: translate3d(-50%, 0, 0);
+  transform: translate3d(calc(-50% + var(--hero-char-x)), var(--hero-char-y), 0)
+    rotateX(var(--hero-rot-x))
+    rotateY(var(--hero-rot-y));
   transform-origin: bottom center;
   backface-visibility: hidden;
-  will-change: transform;
+  will-change: transform, filter;
+  filter: drop-shadow(var(--hero-shadow-x) var(--hero-shadow-y) 34px rgba(0, 0, 0, 0.45))
+    drop-shadow(var(--hero-glow-x) var(--hero-glow-y) 26px rgba(255, 128, 24, var(--hero-glow-alpha)));
   z-index: 4;
   pointer-events: none;
+  transition: filter 0.2s ease;
+}
+
+.hero-light {
+  position: absolute;
+  inset: -12%;
+  z-index: 3;
+  pointer-events: none;
+  opacity: var(--hero-light-opacity);
+  background:
+    radial-gradient(circle at var(--hero-light-x) var(--hero-light-y), rgba(255, 135, 28, 0.34), rgba(255, 135, 28, 0.12) 18%, transparent 42%),
+    radial-gradient(circle at calc(100% - var(--hero-light-x)) calc(100% - var(--hero-light-y)), rgba(255, 198, 116, 0.12), transparent 38%);
+  mix-blend-mode: screen;
+  transform: translate3d(var(--hero-light-drift-x), var(--hero-light-drift-y), 0);
+  will-change: transform, opacity, background;
+}
+
+.hero::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 3;
+  pointer-events: none;
+  background: radial-gradient(circle at var(--hero-light-x) var(--hero-light-y), transparent 0, transparent 34%, rgba(0, 0, 0, 0.22) 78%);
+  opacity: var(--hero-vignette-opacity);
+  mix-blend-mode: multiply;
+}
+
+@media (prefers-reduced-motion: reduce), (pointer: coarse) {
+  .hero-img {
+    transform: translate(-50%, -50%) rotate(90deg);
+    filter: grayscale(0.4) blur(2.4px);
+  }
+
+  .hero-character {
+    transform: translate3d(-50%, 0, 0);
+  }
+
+  .hero-light,
+  .hero::after {
+    display: none;
+  }
 }
 
 /* Layer 6: Canvas animation effect */
@@ -2119,6 +2194,7 @@ button { border: none; background: none; cursor: pointer; color: inherit; font-f
   <!-- Layer 4: Scroll overlay -->
   <div class="hero-overlay" id="heroOverlay"></div>
 
+  <div class="hero-light" aria-hidden="true"></div>
   <img src="creative-hero-character-refined.png" alt="" class="hero-character">
 
   <!-- Layer 5: Content container -->
@@ -3359,6 +3435,92 @@ window.addEventListener('scroll', () => {
 
   // Expose for scroll-driven reveal control
   window._heroShader = { state, syncReveal, params };
+})();
+
+// ===== HERO POINTER: PSEUDO 3D LIGHTING =====
+(function() {
+  const heroSection = document.querySelector('.hero');
+  if (!heroSection) return;
+
+  const canHover = window.matchMedia('(pointer: fine)').matches;
+  const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  if (!canHover || reduceMotion) return;
+
+  const state = { x: 0, y: 0, intensity: 0 };
+  const target = { x: 0, y: 0, intensity: 0, lightX: 50, lightY: 42 };
+  let frame = null;
+
+  function updateFromPointer(event) {
+    const rect = heroSection.getBoundingClientRect();
+    const px = (event.clientX - rect.left) / rect.width;
+    const py = (event.clientY - rect.top) / rect.height;
+    const clampedX = Math.max(0, Math.min(1, px));
+    const clampedY = Math.max(0, Math.min(1, py));
+
+    target.x = (clampedX - 0.5) * 2;
+    target.y = (clampedY - 0.5) * 2;
+    target.intensity = 1;
+    target.lightX = clampedX * 100;
+    target.lightY = clampedY * 100;
+    startHeroPointerLoop();
+  }
+
+  function startHeroPointerLoop() {
+    if (frame) return;
+    frame = requestAnimationFrame(tickHeroPointer);
+  }
+
+  function tickHeroPointer() {
+    state.x += (target.x - state.x) * 0.12;
+    state.y += (target.y - state.y) * 0.12;
+    state.intensity += (target.intensity - state.intensity) * 0.1;
+
+    heroSection.style.setProperty('--hero-x', state.x.toFixed(4));
+    heroSection.style.setProperty('--hero-y', state.y.toFixed(4));
+    heroSection.style.setProperty('--hero-intensity', state.intensity.toFixed(4));
+    heroSection.style.setProperty('--hero-glow-alpha', (0.12 + state.intensity * 0.1).toFixed(3));
+    heroSection.style.setProperty('--hero-bg-x', `${(-state.x * 14).toFixed(2)}px`);
+    heroSection.style.setProperty('--hero-bg-y', `${(-state.y * 10).toFixed(2)}px`);
+    heroSection.style.setProperty('--hero-bg-blur', `${(2.4 - state.intensity * 0.25).toFixed(2)}px`);
+    heroSection.style.setProperty('--hero-bg-brightness', (1 + state.intensity * 0.08).toFixed(3));
+    heroSection.style.setProperty('--hero-bg-scale', (1.01 + state.intensity * 0.015).toFixed(4));
+    heroSection.style.setProperty('--hero-char-x', `${(state.x * 8).toFixed(2)}px`);
+    heroSection.style.setProperty('--hero-char-y', `${(state.y * 5).toFixed(2)}px`);
+    heroSection.style.setProperty('--hero-rot-x', `${(-state.y * 1.6).toFixed(3)}deg`);
+    heroSection.style.setProperty('--hero-rot-y', `${(state.x * 2.2).toFixed(3)}deg`);
+    heroSection.style.setProperty('--hero-shadow-x', `${(-state.x * 12).toFixed(2)}px`);
+    heroSection.style.setProperty('--hero-shadow-y', `${(18 + state.y * 5).toFixed(2)}px`);
+    heroSection.style.setProperty('--hero-glow-x', `${(state.x * 8).toFixed(2)}px`);
+    heroSection.style.setProperty('--hero-glow-y', `${(state.y * 3).toFixed(2)}px`);
+    heroSection.style.setProperty('--hero-light-drift-x', `${(state.x * 6).toFixed(2)}px`);
+    heroSection.style.setProperty('--hero-light-drift-y', `${(state.y * 4).toFixed(2)}px`);
+    heroSection.style.setProperty('--hero-light-opacity', (0.16 + state.intensity * 0.2).toFixed(3));
+    heroSection.style.setProperty('--hero-vignette-opacity', (0.28 + state.intensity * 0.08).toFixed(3));
+    heroSection.style.setProperty('--hero-light-x', `${target.lightX.toFixed(2)}%`);
+    heroSection.style.setProperty('--hero-light-y', `${target.lightY.toFixed(2)}%`);
+
+    const settled = Math.abs(target.x - state.x) < 0.002 &&
+      Math.abs(target.y - state.y) < 0.002 &&
+      Math.abs(target.intensity - state.intensity) < 0.002;
+
+    if (settled && target.intensity === 0) {
+      frame = null;
+      return;
+    }
+
+    frame = requestAnimationFrame(tickHeroPointer);
+  }
+
+  heroSection.addEventListener('pointermove', updateFromPointer, { passive: true });
+  heroSection.addEventListener('pointerenter', updateFromPointer, { passive: true });
+  heroSection.addEventListener('pointerleave', () => {
+    target.x = 0;
+    target.y = 0;
+    target.intensity = 0;
+    target.lightX = 50;
+    target.lightY = 42;
+    startHeroPointerLoop();
+  }, { passive: true });
 })();
 
 // ===== HERO SCROLL: FADE / OVERLAY / PARALLAX =====

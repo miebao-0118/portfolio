@@ -559,14 +559,14 @@ button { border: none; background: none; cursor: pointer; color: inherit; font-f
 /* ===== ABOUT SECTION ===== */
 .about {
   --about-top-pad: clamp(2.2rem, 3.6vw, 3.8rem);
-  --about-overlap: clamp(24px, 4vw, 42px);
+  --about-overlap: clamp(72px, 8vw, 96px);
   min-height: 100svh;
   margin-top: calc(-1 * var(--about-overlap));
   padding: var(--about-top-pad) clamp(1.5rem, 4vw, 5rem) clamp(5rem, 7vw, 7rem);
   display: flex;
   justify-content: center;
   align-items: center;
-  border-top: 1px solid var(--border);
+  border-top: 0;
   overflow: visible;
   position: relative;
   z-index: 6;
@@ -585,10 +585,12 @@ button { border: none; background: none; cursor: pointer; color: inherit; font-f
   border: 1px solid rgba(255, 255, 255, 0.13);
   border-radius: 30px;
   background:
-    radial-gradient(circle at var(--badge-anchor-x) -8%, rgba(255, 138, 31, 0.24), transparent 31%),
-    radial-gradient(circle at 18% 22%, rgba(255, 138, 31, 0.13), transparent 29%),
-    radial-gradient(circle at 74% 70%, rgba(255, 188, 104, 0.1), transparent 28%),
-    linear-gradient(145deg, rgba(24, 22, 20, 0.94), rgba(9, 10, 10, 0.98) 62%, rgba(18, 13, 9, 0.96));
+    radial-gradient(circle at var(--badge-anchor-x) -8%, rgba(255, 138, 31, 0.26), transparent 31%),
+    radial-gradient(circle at 18% 22%, rgba(255, 138, 31, 0.14), transparent 29%),
+    radial-gradient(circle at 74% 70%, rgba(255, 188, 104, 0.11), transparent 28%),
+    linear-gradient(145deg, rgba(24, 22, 20, 0.82), rgba(9, 10, 10, 0.9) 62%, rgba(18, 13, 9, 0.86));
+  backdrop-filter: blur(18px) saturate(1.18);
+  -webkit-backdrop-filter: blur(18px) saturate(1.18);
   box-shadow:
     0 34px 90px rgba(0, 0, 0, 0.52),
     inset 0 1px 0 rgba(255, 255, 255, 0.1),
@@ -639,7 +641,7 @@ button { border: none; background: none; cursor: pointer; color: inherit; font-f
   object-position: center bottom;
   transform: translateX(-50%) rotate(180deg);
   transform-origin: center;
-  z-index: 3;
+  z-index: 5;
   pointer-events: none;
   filter:
     drop-shadow(0 10px 18px rgba(0, 0, 0, 0.45))
@@ -2153,7 +2155,7 @@ button { border: none; background: none; cursor: pointer; color: inherit; font-f
   .hero-character { height: clamp(526px, 90svh, 790px); max-width: 105vw; }
   .hero-content-icon { max-width: 2.5em; margin-bottom: 1.5rem; }
   .about, .principles, .testimonials, .services, .process, .faq, .cta { padding: 5rem 1.5rem; }
-  .about { --about-top-pad: 2.75rem; --about-overlap: 24px; min-height: auto; padding-top: var(--about-top-pad); }
+  .about { --about-top-pad: 2.75rem; --about-overlap: 56px; min-height: auto; padding-top: var(--about-top-pad); }
   .about-badge-card {
     min-height: auto;
     padding: 5.6rem 1.25rem 2.2rem;

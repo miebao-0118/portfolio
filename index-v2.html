@@ -559,14 +559,85 @@ button { border: none; background: none; cursor: pointer; color: inherit; font-f
 /* ===== ABOUT SECTION ===== */
 .about {
   min-height: 100svh;
-  padding: 7rem clamp(3rem, 5vw, 6rem) 8rem;
-  display: grid;
-  grid-template-columns: minmax(260px, 0.68fr) minmax(460px, 1fr) minmax(420px, 1.05fr);
-  gap: clamp(2rem, 4vw, 5rem);
+  padding: clamp(5.5rem, 8vw, 8rem) clamp(1.5rem, 4vw, 5rem) clamp(5rem, 7vw, 7rem);
+  display: flex;
+  justify-content: center;
   align-items: center;
   border-top: 1px solid var(--border);
-  overflow: hidden;
+  overflow: visible;
   position: relative;
+}
+
+.about-badge-card {
+  --badge-anchor-x: 50%;
+  width: min(1280px, 100%);
+  min-height: clamp(660px, 78svh, 860px);
+  position: relative;
+  display: grid;
+  grid-template-columns: minmax(280px, 0.78fr) minmax(0, 1.42fr);
+  gap: clamp(2.2rem, 4.8vw, 6rem);
+  align-items: center;
+  padding: clamp(5.4rem, 8vw, 7.8rem) clamp(2rem, 5vw, 5rem) clamp(3rem, 5vw, 4.8rem);
+  border: 1px solid rgba(255, 255, 255, 0.13);
+  border-radius: 30px;
+  background:
+    radial-gradient(circle at var(--badge-anchor-x) -8%, rgba(255, 138, 31, 0.24), transparent 31%),
+    radial-gradient(circle at 18% 22%, rgba(255, 138, 31, 0.13), transparent 29%),
+    radial-gradient(circle at 74% 70%, rgba(255, 188, 104, 0.1), transparent 28%),
+    linear-gradient(145deg, rgba(24, 22, 20, 0.94), rgba(9, 10, 10, 0.98) 62%, rgba(18, 13, 9, 0.96));
+  box-shadow:
+    0 34px 90px rgba(0, 0, 0, 0.52),
+    inset 0 1px 0 rgba(255, 255, 255, 0.1),
+    inset 0 -1px 0 rgba(255, 138, 31, 0.08);
+  isolation: isolate;
+  overflow: visible;
+}
+
+.about-badge-card::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  background:
+    linear-gradient(90deg, rgba(255, 255, 255, 0.035) 1px, transparent 1px),
+    linear-gradient(180deg, rgba(255, 255, 255, 0.03) 1px, transparent 1px);
+  background-size: 54px 54px;
+  mask-image: linear-gradient(180deg, rgba(0, 0, 0, 0.75), transparent 86%);
+  opacity: 0.52;
+  z-index: 0;
+  pointer-events: none;
+}
+
+.about-badge-hole {
+  position: absolute;
+  top: clamp(1.6rem, 3vw, 2.4rem);
+  left: var(--badge-anchor-x);
+  width: clamp(96px, 9vw, 132px);
+  height: clamp(34px, 3.2vw, 42px);
+  border-radius: 14px;
+  transform: translateX(-50%);
+  background: var(--bg);
+  box-shadow:
+    inset 0 4px 12px rgba(0, 0, 0, 0.8),
+    inset 0 -1px 0 rgba(255, 255, 255, 0.08),
+    0 0 0 1px rgba(255, 255, 255, 0.08),
+    0 10px 24px rgba(255, 138, 31, 0.12);
+  z-index: 4;
+}
+
+.about-strap-cap {
+  position: absolute;
+  top: calc(clamp(1.6rem, 3vw, 2.4rem) - 185px);
+  left: var(--badge-anchor-x);
+  width: clamp(74px, 6.2vw, 94px);
+  height: auto;
+  transform: translateX(-50%) scale(1.05);
+  transform-origin: bottom center;
+  z-index: 5;
+  pointer-events: none;
+  filter:
+    drop-shadow(0 10px 18px rgba(0, 0, 0, 0.45))
+    drop-shadow(0 0 18px rgba(255, 138, 31, 0.18));
 }
 
 .about-profile {
@@ -575,7 +646,7 @@ button { border: none; background: none; cursor: pointer; color: inherit; font-f
   gap: 1.4rem;
   position: relative;
   z-index: 2;
-  padding-left: clamp(1rem, 3vw, 3.5rem);
+  padding-left: 0;
 }
 
 .about-label {
@@ -593,7 +664,24 @@ button { border: none; background: none; cursor: pointer; color: inherit; font-f
   display: grid;
   gap: 1.1rem;
   max-width: 340px;
-  margin-top: 1.8rem;
+  margin-top: 0.6rem;
+}
+
+.about-portrait {
+  width: min(100%, 340px);
+  aspect-ratio: 0.86;
+  border-radius: 22px;
+  overflow: hidden;
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  background: rgba(255, 255, 255, 0.04);
+  box-shadow: 0 20px 48px rgba(0, 0, 0, 0.34);
+}
+
+.about-portrait img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
 }
 
 .about-info-row {
@@ -620,70 +708,27 @@ button { border: none; background: none; cursor: pointer; color: inherit; font-f
   line-height: 1.4;
 }
 
-.about-lanyard-stage {
-  min-height: clamp(620px, 78svh, 860px);
-  position: relative;
+.about-tools {
+  display: flex;
+  gap: 0.85rem;
+  margin-top: 0.2rem;
+}
+
+.about-tool {
+  width: 48px;
+  height: 48px;
   display: grid;
   place-items: center;
-  isolation: isolate;
-  z-index: 2;
+  border-radius: 14px;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  background: rgba(255, 255, 255, 0.05);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.08);
 }
 
-.about-lanyard-stage::before {
-  content: '';
-  position: absolute;
-  top: 9%;
-  left: 50%;
-  width: min(58vw, 620px);
-  height: min(58vw, 620px);
-  border-radius: 999px;
-  background:
-    radial-gradient(circle at 50% 50%, rgba(255, 138, 31, 0.14), transparent 58%),
-    radial-gradient(circle at 64% 34%, rgba(245, 245, 245, 0.1), transparent 36%);
-  filter: blur(4px);
-  transform: translateX(-50%);
-  z-index: 0;
-  pointer-events: none;
-}
-
-.about-lanyard-stage::after {
-  content: '';
-  position: absolute;
-  inset: 12% 8% 10%;
-  border: 1px solid rgba(255, 255, 255, 0.06);
-  background:
-    linear-gradient(90deg, rgba(255, 255, 255, 0.045) 1px, transparent 1px),
-    linear-gradient(180deg, rgba(255, 255, 255, 0.045) 1px, transparent 1px);
-  background-size: 48px 48px;
-  mask-image: radial-gradient(ellipse at center, #000 0 42%, transparent 72%);
-  opacity: 0.5;
-  z-index: 0;
-  pointer-events: none;
-}
-
-#reactbits-lanyard-root {
-  width: min(860px, 128%);
-  height: clamp(660px, 82svh, 900px);
-  position: relative;
-  z-index: 2;
-  transform: translateY(clamp(14px, 2svh, 22px)) scale(1.1);
-  transform-origin: center;
-}
-
-.lanyard-wrapper {
-  width: 100%;
-  height: 100%;
-  position: relative;
-  z-index: 0;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  transform: scale(1);
-  transform-origin: center;
-}
-
-.lanyard-wrapper canvas {
-  touch-action: none;
+.about-tool img {
+  width: 28px;
+  height: 28px;
+  display: block;
 }
 
 .about-experience {
@@ -2070,15 +2115,14 @@ button { border: none; background: none; cursor: pointer; color: inherit; font-f
 
 /* ===== RESPONSIVE ===== */
 @media (max-width: 1024px) {
-  .about {
-    grid-template-columns: minmax(240px, 0.82fr) minmax(380px, 1.18fr);
+  .about-badge-card {
+    grid-template-columns: 1fr;
     gap: 3rem;
+    align-items: start;
   }
-  .about-lanyard-stage {
-    grid-column: 1 / -1;
-    order: 2;
+  .about-profile {
+    max-width: 420px;
   }
-  .about-experience { order: 3; }
   .awards-grid { grid-template-columns: 1fr; }
   .award-item:nth-child(odd) { padding-right: 0; border-right: none; }
   .stats { grid-template-columns: 1fr; }
@@ -2103,12 +2147,15 @@ button { border: none; background: none; cursor: pointer; color: inherit; font-f
   .hero-character { height: clamp(526px, 90svh, 790px); max-width: 105vw; }
   .hero-content-icon { max-width: 2.5em; margin-bottom: 1.5rem; }
   .about, .principles, .testimonials, .services, .process, .faq, .cta { padding: 5rem 1.5rem; }
-  .about { min-height: auto; grid-template-columns: 1fr; gap: 2.5rem; }
-  .about-label { max-width: 6ch; }
-  .about-lanyard-stage {
-    min-height: clamp(500px, 66svh, 620px);
+  .about { min-height: auto; }
+  .about-badge-card {
+    min-height: auto;
+    padding: 5.6rem 1.25rem 2.2rem;
+    border-radius: 22px;
   }
-  #reactbits-lanyard-root { width: min(620px, 120%); height: clamp(520px, 68svh, 660px); }
+  .about-label { max-width: 6ch; }
+  .about-strap-cap { width: 72px; top: -150px; }
+  .about-badge-hole { width: 96px; height: 34px; }
   .experience-group { grid-template-columns: 1fr; gap: 1rem; }
   .gap-wrap { padding: 0; }
   .gap-contain { padding: 1.5rem; }
@@ -2240,92 +2287,104 @@ button { border: none; background: none; cursor: pointer; color: inherit; font-f
 
 <!-- About -->
 <section class="about" id="about">
-  <div class="about-profile">
-    <div class="about-label reveal">About me</div>
-    <div class="about-info reveal reveal-delay-1">
-      <div class="about-info-row">
-        <div class="about-info-cn">王宇洋</div>
-        <div class="about-info-en">Wang Yuyang</div>
+  <div class="about-badge-card reveal">
+    <img src="assets/about-strap-cap.png" alt="" class="about-strap-cap">
+    <div class="about-badge-hole" aria-hidden="true"></div>
+    <div class="about-profile">
+      <div class="about-label">About me</div>
+      <div class="about-portrait">
+        <img src="assets/about-portrait.jpg" alt="王宇洋 portrait">
       </div>
-      <div class="about-info-row">
-        <div class="about-info-cn">UI设计师</div>
-        <div class="about-info-en">UI Designer</div>
+      <div class="about-info">
+        <div class="about-info-row">
+          <div class="about-info-cn">王宇洋</div>
+          <div class="about-info-en">Wang Yuyang</div>
+        </div>
+        <div class="about-info-row">
+          <div class="about-info-cn">UI设计师</div>
+          <div class="about-info-en">UI Designer</div>
+        </div>
+        <div class="about-info-row">
+          <div class="about-info-cn">10年工作经验</div>
+          <div class="about-info-en">10 Years Experience</div>
+        </div>
+        <div class="about-info-row">
+          <div class="about-info-cn">158-8027-8967</div>
+          <div class="about-info-en">Phone</div>
+        </div>
       </div>
-      <div class="about-info-row">
-        <div class="about-info-cn">7年工作经验</div>
-        <div class="about-info-en">7 Years Experience</div>
-      </div>
-      <div class="about-info-row">
-        <div class="about-info-cn">158-8027-8967</div>
-        <div class="about-info-en">Phone</div>
+      <div class="about-tools" aria-label="Design tools">
+        <div class="about-tool">
+          <img src="icon/Figma.svg" alt="Figma">
+        </div>
+        <div class="about-tool">
+          <img src="icon/Photoshop.svg" alt="Photoshop">
+        </div>
       </div>
     </div>
-  </div>
-  <div class="about-lanyard-stage reveal reveal-delay-1" aria-label="Interactive 3D lanyard badge">
-    <div id="reactbits-lanyard-root"></div>
-  </div>
-  <div class="about-experience reveal reveal-delay-2">
-    <article class="experience-group">
-      <div>
-        <div class="experience-date">
-          <span class="experience-date-start">2025.08</span>
-          <span class="experience-date-end">至今</span>
+    <div class="about-experience">
+      <article class="experience-group">
+        <div>
+          <div class="experience-date">
+            <span class="experience-date-start">2025.08</span>
+            <span class="experience-date-end">至今</span>
+          </div>
+          <div class="experience-company">福建点石科技有限公司</div>
         </div>
-        <div class="experience-company">福建点石科技有限公司</div>
-      </div>
-      <div class="experience-list">
-        <div class="experience-item">
-          <h3>点石智能<span class="experience-title-normal">BOX</span></h3>
-          <p>产品旗下多个应用的视觉迭代。</p>
+        <div class="experience-list">
+          <div class="experience-item">
+            <h3>点石智能<span class="experience-title-normal">BOX</span></h3>
+            <p>产品旗下多个应用的视觉迭代。</p>
+          </div>
+          <div class="experience-item">
+            <h3 class="experience-title-en">DENEX</h3>
+            <p>企业级AI中台产品的主视觉。</p>
+          </div>
+          <div class="experience-item">
+            <h3 class="experience-title-en">DENEX H5</h3>
+            <p>AI中台H5的视觉迭代。</p>
+          </div>
         </div>
-        <div class="experience-item">
-          <h3 class="experience-title-en">DENEX</h3>
-          <p>企业级AI中台产品的主视觉。</p>
+      </article>
+      <article class="experience-group">
+        <div>
+          <div class="experience-date">
+            <span class="experience-date-start">2022.01</span>
+            <span class="experience-date-end">2024.03</span>
+          </div>
+          <div class="experience-company">超享买（厦门）网络科技有限公司</div>
         </div>
-        <div class="experience-item">
-          <h3 class="experience-title-en">DENEX H5</h3>
-          <p>AI中台H5的视觉迭代。</p>
+        <div class="experience-list">
+          <div class="experience-item">
+            <h3>奇遇宇宙<span class="experience-title-normal">APP UI</span></h3>
+            <p>负责APP主视觉，大部分设计规范以及后期迭代；负责需求对接和拆解，协调团队；负责运营活动内容视觉以及简单动效。</p>
+          </div>
+          <div class="experience-item">
+            <h3>心享商城 <span class="experience-title-normal">UI</span></h3>
+            <p>参与项目产品设计，产品目标转化为视觉输出；负责设计审核与主视觉设计；协调团队短时间内容输出。</p>
+          </div>
         </div>
-      </div>
-    </article>
-    <article class="experience-group">
-      <div>
-        <div class="experience-date">
-          <span class="experience-date-start">2022.01</span>
-          <span class="experience-date-end">2024.03</span>
+      </article>
+      <article class="experience-group">
+        <div>
+          <div class="experience-date">
+            <span class="experience-date-start">2019.03</span>
+            <span class="experience-date-end">2021.12</span>
+          </div>
         </div>
-        <div class="experience-company">超享买（厦门）网络科技有限公司</div>
-      </div>
-      <div class="experience-list">
-        <div class="experience-item">
-          <h3>奇遇宇宙<span class="experience-title-normal">APP UI</span></h3>
-          <p>负责APP主视觉，大部分设计规范以及后期迭代；负责需求对接和拆解，协调团队；负责运营活动内容视觉以及简单动效。</p>
+        <div class="experience-list">
+          <div class="experience-item">
+            <h3>信用家<span class="experience-title-normal">APP UI</span></h3>
+            <p>主要负责重做旧APP的主视觉；制定UI视觉方向以及设计规范；包括APP关联的web UI设计。</p>
+          </div>
+          <div class="experience-item">
+            <h3>财苗小程序 <span class="experience-title-normal">UI</span></h3>
+            <p>负责APP主视觉，参与产品的功能与交互设计；负责需求对接拆解与实际评估，保证落地效果；负责线上线下运营活动内容视觉。</p>
+            <p class="experience-note">2021站酷编辑推荐</p>
+          </div>
         </div>
-        <div class="experience-item">
-          <h3>心享商城 <span class="experience-title-normal">UI</span></h3>
-          <p>参与项目产品设计，产品目标转化为视觉输出；负责设计审核与主视觉设计；协调团队短时间内容输出。</p>
-        </div>
-      </div>
-    </article>
-    <article class="experience-group">
-      <div>
-        <div class="experience-date">
-          <span class="experience-date-start">2019.03</span>
-          <span class="experience-date-end">2021.12</span>
-        </div>
-      </div>
-      <div class="experience-list">
-        <div class="experience-item">
-          <h3>信用家<span class="experience-title-normal">APP UI</span></h3>
-          <p>主要负责重做旧APP的主视觉；制定UI视觉方向以及设计规范；包括APP关联的web UI设计。</p>
-        </div>
-        <div class="experience-item">
-          <h3>财苗小程序 <span class="experience-title-normal">UI</span></h3>
-          <p>负责APP主视觉，参与产品的功能与交互设计；负责需求对接拆解与实际评估，保证落地效果；负责线上线下运营活动内容视觉。</p>
-          <p class="experience-note">2021站酷编辑推荐</p>
-        </div>
-      </div>
-    </article>
+      </article>
+    </div>
   </div>
 </section>
 
@@ -3859,6 +3918,5 @@ gsap.ticker.lagSmoothing(0);
   update();
 })();
 </script>
-<script type="module" src="./reactbits-lanyard-bundle.js"></script>
 </body>
 </html>

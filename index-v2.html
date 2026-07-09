@@ -558,8 +558,11 @@ button { border: none; background: none; cursor: pointer; color: inherit; font-f
 
 /* ===== ABOUT SECTION ===== */
 .about {
+  --about-top-pad: clamp(2.2rem, 3.6vw, 3.8rem);
+  --about-overlap: clamp(24px, 4vw, 42px);
   min-height: 100svh;
-  padding: clamp(2.2rem, 3.6vw, 3.8rem) clamp(1.5rem, 4vw, 5rem) clamp(5rem, 7vw, 7rem);
+  margin-top: calc(-1 * var(--about-overlap));
+  padding: var(--about-top-pad) clamp(1.5rem, 4vw, 5rem) clamp(5rem, 7vw, 7rem);
   display: flex;
   justify-content: center;
   align-items: center;
@@ -628,13 +631,15 @@ button { border: none; background: none; cursor: pointer; color: inherit; font-f
 
 .about-strap-cap {
   position: absolute;
-  top: calc(clamp(1.6rem, 3vw, 2.4rem) - 185px);
+  top: calc(-1 * var(--about-top-pad) - 4px);
   left: var(--badge-anchor-x);
   width: clamp(74px, 6.2vw, 94px);
-  height: auto;
-  transform: translateX(-50%) scale(1.05);
-  transform-origin: bottom center;
-  z-index: 5;
+  height: calc(var(--about-top-pad) + clamp(1.6rem, 3vw, 2.4rem) + clamp(17px, 1.6vw, 21px) + 4px);
+  object-fit: cover;
+  object-position: center bottom;
+  transform: translateX(-50%) rotate(180deg);
+  transform-origin: center;
+  z-index: 3;
   pointer-events: none;
   filter:
     drop-shadow(0 10px 18px rgba(0, 0, 0, 0.45))
@@ -2148,14 +2153,14 @@ button { border: none; background: none; cursor: pointer; color: inherit; font-f
   .hero-character { height: clamp(526px, 90svh, 790px); max-width: 105vw; }
   .hero-content-icon { max-width: 2.5em; margin-bottom: 1.5rem; }
   .about, .principles, .testimonials, .services, .process, .faq, .cta { padding: 5rem 1.5rem; }
-  .about { min-height: auto; padding-top: 2.75rem; }
+  .about { --about-top-pad: 2.75rem; --about-overlap: 24px; min-height: auto; padding-top: var(--about-top-pad); }
   .about-badge-card {
     min-height: auto;
     padding: 5.6rem 1.25rem 2.2rem;
     border-radius: 22px;
   }
   .about-label { max-width: 6ch; }
-  .about-strap-cap { width: 72px; top: -150px; }
+  .about-strap-cap { width: 72px; top: calc(-1 * var(--about-top-pad) - 4px); height: calc(var(--about-top-pad) + 5.6rem + 17px + 4px); }
   .about-badge-hole { width: 96px; height: 34px; }
   .experience-group { grid-template-columns: 1fr; gap: 1rem; }
   .gap-wrap { padding: 0; }

@@ -296,10 +296,11 @@ button { border: none; background: none; cursor: pointer; color: inherit; font-f
 .hero-portfolio-word {
   position: absolute;
   left: 50%;
-  bottom: clamp(5.5rem, 12svh, 8rem);
-  width: min(88vw, 1050px);
+  top: 50%;
+  bottom: auto;
+  width: min(92.4vw, 1103px);
   height: auto;
-  transform: translateX(-50%);
+  transform: translate(-50%, -50%);
   z-index: 3;
   pointer-events: none;
   opacity: 0.92;
@@ -2073,8 +2074,9 @@ button { border: none; background: none; cursor: pointer; color: inherit; font-f
   .hero-bottom-grid { grid-template-columns: 1fr; gap: 1.5rem; }
   .hero-logo-svg { max-width: 140px; }
   .hero-portfolio-word {
-    bottom: clamp(7rem, 18svh, 10rem);
-    width: min(118vw, 820px);
+    top: 50%;
+    bottom: auto;
+    width: min(124vw, 861px);
   }
   .hero-character { height: clamp(526px, 90svh, 790px); max-width: 105vw; }
   .hero-content-icon { max-width: 2.5em; margin-bottom: 1.5rem; }

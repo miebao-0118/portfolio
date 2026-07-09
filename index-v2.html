@@ -251,6 +251,23 @@ button { border: none; background: none; cursor: pointer; color: inherit; font-f
   left: 50%;
 }
 
+.hero-character {
+  position: absolute;
+  left: 50%;
+  bottom: 0;
+  width: auto;
+  height: clamp(546px, 92.4svh, 1029px);
+  max-width: min(92vw, 980px);
+  object-fit: contain;
+  image-rendering: auto;
+  transform: translate3d(-50%, 0, 0);
+  transform-origin: bottom center;
+  backface-visibility: hidden;
+  will-change: transform;
+  z-index: 4;
+  pointer-events: none;
+}
+
 /* Layer 6: Canvas animation effect */
 .hero-canvas {
   position: absolute;
@@ -573,8 +590,9 @@ button { border: none; background: none; cursor: pointer; color: inherit; font-f
   width: min(860px, 128%);
   height: clamp(660px, 82svh, 900px);
   position: relative;
-  z-index: 1;
-  transform: translateY(0);
+  z-index: 2;
+  transform: translateY(clamp(14px, 2svh, 22px)) scale(1.1);
+  transform-origin: center;
 }
 
 .lanyard-wrapper {
@@ -667,6 +685,7 @@ button { border: none; background: none; cursor: pointer; color: inherit; font-f
 
 .experience-item p {
   font-size: 0.9rem;
+  max-width: 35em;
   color: var(--text-muted);
   line-height: 1.8;
 }
@@ -2006,11 +2025,14 @@ button { border: none; background: none; cursor: pointer; color: inherit; font-f
   .hero { padding: 0 1.5rem 3rem; }
   .hero-bottom-grid { grid-template-columns: 1fr; gap: 1.5rem; }
   .hero-logo-svg { max-width: 140px; }
+  .hero-character { height: clamp(504px, 86.1svh, 756px); max-width: 105vw; }
   .hero-content-icon { max-width: 2.5em; margin-bottom: 1.5rem; }
   .about, .principles, .testimonials, .services, .process, .faq, .cta { padding: 5rem 1.5rem; }
   .about { min-height: auto; grid-template-columns: 1fr; gap: 2.5rem; }
   .about-label { max-width: 6ch; }
-  .about-lanyard-stage { min-height: clamp(500px, 66svh, 620px); }
+  .about-lanyard-stage {
+    min-height: clamp(500px, 66svh, 620px);
+  }
   #reactbits-lanyard-root { width: min(620px, 120%); height: clamp(520px, 68svh, 660px); }
   .experience-group { grid-template-columns: 1fr; gap: 1rem; }
   .gap-wrap { padding: 0; }
@@ -2097,25 +2119,13 @@ button { border: none; background: none; cursor: pointer; color: inherit; font-f
   <!-- Layer 4: Scroll overlay -->
   <div class="hero-overlay" id="heroOverlay"></div>
 
+  <img src="creative-hero-character-refined.png" alt="" class="hero-character">
+
   <!-- Layer 5: Content container -->
   <div class="hero-contain">
     <div class="hero-main">
       <!-- Centered content -->
-      <div class="hero-content">
-        <div class="hero-content-icon">
-          <svg xmlns="http://www.w3.org/2000/svg" width="100%" viewBox="0 0 57 25" fill="none">
-            <path d="M28.5 0.356445C36.3328 0.356445 43.407 1.74332 48.5098 3.97168C51.0617 5.08613 53.1051 6.40434 54.5049 7.84961C55.9028 9.29309 56.6436 10.846 56.6436 12.4463C56.6435 14.0465 55.9028 15.5995 54.5049 17.043C53.1051 18.4882 51.0617 19.8065 48.5098 20.9209C43.407 23.1492 36.3327 24.5361 28.5 24.5361C20.6673 24.5361 13.593 23.1492 8.49023 20.9209C5.93831 19.8065 3.8949 18.4882 2.49512 17.043C1.09715 15.5995 0.356472 14.0465 0.356445 12.4463C0.356445 10.846 1.09718 9.29309 2.49512 7.84961C3.8949 6.40434 5.93831 5.08613 8.49023 3.97168C13.593 1.74332 20.6672 0.356445 28.5 0.356445Z" stroke="currentColor" stroke-width="0.7125"/>
-            <path d="M56.6436 12.5C56.6436 12.6467 56.5489 12.8582 56.2031 13.125C55.8642 13.3865 55.3422 13.6542 54.6357 13.918C53.2265 14.444 51.1665 14.9243 48.5967 15.3301C43.4627 16.1407 36.3572 16.6436 28.5 16.6436C20.6428 16.6436 13.5373 16.1407 8.40332 15.3301C5.83351 14.9243 3.77352 14.444 2.36426 13.918C1.65778 13.6542 1.13579 13.3865 0.796875 13.125C0.451055 12.8582 0.356445 12.6467 0.356445 12.5C0.356446 12.3533 0.451056 12.1418 0.796875 11.875C1.13579 11.6135 1.65778 11.3458 2.36426 11.082C3.77352 10.5559 5.83351 10.0757 8.40332 9.66992C13.5373 8.85931 20.6428 8.35644 28.5 8.35644C36.3572 8.35644 43.4627 8.85931 48.5967 9.66992C51.1665 10.0757 53.2265 10.556 54.6357 11.082C55.3422 11.3458 55.8642 11.6135 56.2031 11.875C56.5489 12.1418 56.6436 12.3533 56.6436 12.5Z" stroke="currentColor" stroke-width="0.7125"/>
-            <path d="M28.5 0.356445C33.816 0.356645 38.2451 5.69623 38.2451 12.4463C38.2451 19.1963 33.816 24.5359 28.5 24.5361C23.1839 24.5361 18.7549 19.1964 18.7549 12.4463C18.7549 5.6961 23.1839 0.356445 28.5 0.356445Z" stroke="currentColor" stroke-width="0.7125"/>
-          </svg>
-        </div>
-        <h1 class="hero-title">
-          <span class="line"><span class="line-inner">We design change-making website</span></span>
-          <span class="line"><span class="line-inner">and brand experiences that finally</span></span>
-          <span class="line"><span class="line-inner">match the business behind them.</span></span>
-        </h1>
-        <p class="hero-subtitle">For established founder-led B2B brands whose presence hasn't caught up to what they've built.</p>
-      </div>
+      <div class="hero-content" aria-hidden="true"></div>
 
       <!-- Bottom: logo + stats -->
       <div class="hero-bottom">

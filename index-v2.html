@@ -576,6 +576,7 @@ button { border: none; background: none; cursor: pointer; color: inherit; font-f
   --badge-anchor-x: 50%;
   --badge-hole-top: clamp(1.6rem, 3vw, 2.4rem);
   --badge-hole-half: clamp(17px, 1.6vw, 21px);
+  --strap-overhang: 18px;
   width: min(1280px, 100%);
   min-height: clamp(660px, 78svh, 860px);
   position: relative;
@@ -637,10 +638,10 @@ button { border: none; background: none; cursor: pointer; color: inherit; font-f
 
 .about-strap-cap {
   position: absolute;
-  top: -4px;
+  top: calc(-1 * var(--strap-overhang));
   left: var(--badge-anchor-x);
   width: clamp(74px, 6.2vw, 94px);
-  height: calc(var(--badge-hole-top) + var(--badge-hole-half) + 4px);
+  height: calc(var(--badge-hole-top) + var(--badge-hole-half) + var(--strap-overhang));
   object-fit: cover;
   object-position: center bottom;
   transform: translateX(-50%) rotate(180deg);
@@ -2172,7 +2173,7 @@ button { border: none; background: none; cursor: pointer; color: inherit; font-f
     border-radius: 22px;
   }
   .about-label { max-width: 6ch; }
-  .about-strap-cap { width: 72px; top: -4px; height: calc(var(--badge-hole-top) + var(--badge-hole-half) + 4px); }
+  .about-strap-cap { width: 72px; }
   .about-badge-hole { width: 96px; height: 34px; }
   .experience-group { grid-template-columns: 1fr; gap: 1rem; }
   .gap-wrap { padding: 0; }

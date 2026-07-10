@@ -23620,16 +23620,17 @@ function GradualBlur(props) {
   );
 }
 function mountGradualBlur() {
-  const mount = document.getElementById("heroGradualBlur");
+  const mount = document.getElementById("globalGradualBlur");
   if (!mount) return;
   (0, import_client.createRoot)(mount).render(
     import_react.default.createElement(GradualBlur, {
       position: "bottom",
-      target: "parent",
-      height: "clamp(5rem, 12vh, 8.5rem)",
-      strength: 1.35,
+      target: "page",
+      height: "8rem",
+      strength: 1.5,
       divCount: 8,
       curve: "ease-out",
+      exponential: true,
       opacity: 1,
       animated: "scroll",
       duration: "0.45s",

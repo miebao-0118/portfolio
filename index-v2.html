@@ -341,10 +341,10 @@ button { border: none; background: none; cursor: pointer; color: inherit; font-f
   will-change: transform, opacity, background;
 }
 
-.hero-gradual-blur-mount {
-  position: absolute;
+.global-gradual-blur-mount {
+  position: fixed;
   inset: 0;
-  z-index: 5;
+  z-index: 900;
   pointer-events: none;
 }
 
@@ -395,7 +395,7 @@ button { border: none; background: none; cursor: pointer; color: inherit; font-f
 
   .hero-light,
   .hero::after,
-  .hero-gradual-blur-mount {
+  .global-gradual-blur-mount {
     display: none;
   }
 }
@@ -2212,6 +2212,8 @@ button { border: none; background: none; cursor: pointer; color: inherit; font-f
   </ul>
 </nav>
 
+<div id="globalGradualBlur" class="global-gradual-blur-mount" aria-hidden="true"></div>
+
 <!-- Hero — 6-Layer Structure -->
 <section class="hero">
   <!-- Layer 1: Bottom gradient -->
@@ -2233,7 +2235,6 @@ button { border: none; background: none; cursor: pointer; color: inherit; font-f
 
   <div class="hero-light" aria-hidden="true"></div>
   <img src="creative-hero-character-refined.png" alt="" class="hero-character">
-  <div id="heroGradualBlur" class="hero-gradual-blur-mount" aria-hidden="true"></div>
   <div class="hero-discipline-list" aria-label="Design disciplines">
     <span>APP</span>
     <span>Website</span>
@@ -3896,6 +3897,6 @@ gsap.ticker.lagSmoothing(0);
   update();
 })();
 </script>
-<script type="module" src="reactbits-gradual-blur-bundle.js"></script>
+<script type="module" src="reactbits-gradual-blur-bundle.js?v=2"></script>
 </body>
 </html>

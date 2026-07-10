@@ -23626,9 +23626,9 @@ function mountGradualBlur() {
     import_react.default.createElement(GradualBlur, {
       position: "bottom",
       target: "page",
-      height: "8rem",
-      strength: 1.5,
-      divCount: 8,
+      height: "14rem",
+      strength: 3.25,
+      divCount: 10,
       curve: "ease-out",
       exponential: true,
       opacity: 1,

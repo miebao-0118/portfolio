@@ -1,6 +1,7 @@
 {
   "scripts": {
-    "build:lanyard": "esbuild reactbits-lanyard-component.js --bundle --format=esm --outfile=reactbits-lanyard-bundle.js --loader:.glb=file --loader:.png=file"
+    "build:lanyard": "esbuild reactbits-lanyard-component.js --bundle --format=esm --outfile=reactbits-lanyard-bundle.js --loader:.glb=file --loader:.png=file",
+    "build:gradual-blur": "esbuild reactbits-gradual-blur-component.jsx --bundle --format=esm --outfile=reactbits-gradual-blur-bundle.js"
   },
   "dependencies": {
     "@react-three/drei": "^9.122.0",

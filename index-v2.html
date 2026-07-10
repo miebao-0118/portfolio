@@ -298,15 +298,33 @@ button { border: none; background: none; cursor: pointer; color: inherit; font-f
   left: 50%;
   top: 50%;
   bottom: auto;
-  width: min(92.4vw, 1103px);
+  width: min(97.02vw, 1158px);
   height: auto;
   transform: translate(-50%, -50%);
-  z-index: 3;
+  z-index: 0;
   pointer-events: none;
   opacity: 0.92;
   filter:
     drop-shadow(0 22px 34px rgba(0, 0, 0, 0.38))
     drop-shadow(0 0 22px rgba(255, 128, 24, 0.16));
+}
+
+.hero-discipline-list {
+  position: absolute;
+  left: 3rem;
+  top: 50%;
+  z-index: 5;
+  display: flex;
+  flex-direction: column;
+  gap: 0.7rem;
+  transform: translateY(-50%);
+  color: rgba(245, 245, 245, 0.54);
+  font-size: 0.65rem;
+  font-weight: 300;
+  letter-spacing: 0.14em;
+  line-height: 1;
+  text-transform: uppercase;
+  pointer-events: none;
 }
 
 .hero-light {
@@ -2076,8 +2094,9 @@ button { border: none; background: none; cursor: pointer; color: inherit; font-f
   .hero-portfolio-word {
     top: 50%;
     bottom: auto;
-    width: min(124vw, 861px);
+    width: min(130.2vw, 904px);
   }
+  .hero-discipline-list { display: none; }
   .hero-character { height: clamp(526px, 90svh, 790px); max-width: 105vw; }
   .hero-content-icon { max-width: 2.5em; margin-bottom: 1.5rem; }
   .about, .testimonials, .services, .process, .faq, .cta { padding: 5rem 1.5rem; }
@@ -2169,6 +2188,7 @@ button { border: none; background: none; cursor: pointer; color: inherit; font-f
   <!-- Layer 2: Background cover (image + canvas) -->
   <div class="hero-cover">
     <img src="banner2.jpg" alt="" class="hero-img" data-translate-hero>
+    <img src="assets/hero-portfolio-word.png" alt="" class="hero-portfolio-word">
     <!-- Layer 6: Canvas animation effect -->
     <canvas class="hero-canvas" id="heroCanvas"></canvas>
   </div>
@@ -2180,8 +2200,14 @@ button { border: none; background: none; cursor: pointer; color: inherit; font-f
   <div class="hero-overlay" id="heroOverlay"></div>
 
   <div class="hero-light" aria-hidden="true"></div>
-  <img src="assets/hero-portfolio-word.png" alt="" class="hero-portfolio-word">
   <img src="creative-hero-character-refined.png" alt="" class="hero-character">
+  <div class="hero-discipline-list" aria-label="Design disciplines">
+    <span>APP</span>
+    <span>Website</span>
+    <span>SaaS</span>
+    <span>Graphic</span>
+    <span>Vibe Coding</span>
+  </div>
 
   <!-- Layer 5: Content container -->
   <div class="hero-contain">

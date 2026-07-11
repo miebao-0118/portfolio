@@ -2573,21 +2573,6 @@ button { border: none; background: none; cursor: pointer; color: inherit; font-f
   </div>
 </section>
 
-<!-- Clients Grid -->
-<section class="clients">
-  <div class="clients-label reveal">Clients whose realities we've changed</div>
-  <div class="clients-grid">
-    <div class="client-item reveal">Vinamilk</div>
-    <div class="client-item reveal reveal-delay-1">Moc Chau Creamery</div>
-    <div class="client-item reveal reveal-delay-2">University of Sydney</div>
-    <div class="client-item reveal reveal-delay-3">OH Architecture</div>
-    <div class="client-item reveal">Supersolid Agency</div>
-    <div class="client-item reveal reveal-delay-1">SLIK Agency</div>
-    <div class="client-item reveal reveal-delay-2">Mammoth Murals</div>
-    <div class="client-item reveal reveal-delay-3">Backhouse</div>
-  </div>
-</section>
-
 <!-- Success Stories -->
 <section class="stories" id="stories">
   <div class="stories-header">
@@ -2704,30 +2689,6 @@ button { border: none; background: none; cursor: pointer; color: inherit; font-f
   </div>
 </section>
 
-<!-- Testimonials -->
-<section class="testimonials">
-  <div class="testimonials-label reveal">(Real client stories)</div>
-  <div class="testimonial-slider">
-    <div class="testimonial-slide active">
-      <p class="testimonial-text">"For years, our website struggled to showcase our work effectively and attract the right clients. Within just 30 days of launching the new site with MONOLOG, we generated $100k in new sales."</p>
-      <p class="testimonial-author"><strong>Andrew Tynes</strong> — Mammoth Murals</p>
-    </div>
-    <div class="testimonial-slide">
-      <p class="testimonial-text">"Huy and his team at MONOLOG are rare collaborators. They care about your vision as if it were their own and helped us win bigger opportunities. Talented, humble, and relentless in finding elegant solutions, they're the partner ambitious, mission-driven brands need."</p>
-      <p class="testimonial-author"><strong>Jonathon Shannon</strong> — Supersolid Agency</p>
-    </div>
-    <div class="testimonial-slide">
-      <p class="testimonial-text">"Within 3 months of launch we saw $2M+ in new project leads and saved us 20 hours a month filtering enquiries. The new site looks premium, qualifies clients better and shows our work at its best. Exactly what we needed."</p>
-      <p class="testimonial-author"><strong>Johnny Hyde</strong> — OH Architecture</p>
-    </div>
-  </div>
-  <div class="testimonial-dots">
-    <div class="testimonial-dot active" data-index="0"></div>
-    <div class="testimonial-dot" data-index="1"></div>
-    <div class="testimonial-dot" data-index="2"></div>
-  </div>
-</section>
-
 <!-- Services -->
 <section class="services" id="services">
   <div class="services-label reveal">What we can help with</div>
@@ -2785,59 +2746,6 @@ button { border: none; background: none; cursor: pointer; color: inherit; font-f
         <div class="step-title">We send it into the world</div>
         <div class="step-desc">Your brand and website goes live as a long-term asset that turns attention into opportunity, attracts the clients you're built for, and grows with you.</div>
         <a href="#" class="step-link">See step 03 in action &#8599;</a>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- FAQ -->
-<section class="faq">
-  <div class="faq-label reveal">FAQs</div>
-  <h2 class="faq-title reveal">We've heard every concern. Here's what you really need to know.</h2>
-  <div class="faq-list">
-    <div class="faq-item">
-      <button class="faq-question">
-        Who will actually be working on our project?
-        <span class="faq-icon"></span>
-      </button>
-      <div class="faq-answer">
-        <p>Huy leads every engagement from strategy, creative direction, and your primary point of contact throughout. Depending on scope, we bring in specialized collaborators for development, 3D, and motion design.</p>
-      </div>
-    </div>
-    <div class="faq-item">
-      <button class="faq-question">
-        What's your typical project timeline?
-        <span class="faq-icon"></span>
-      </button>
-      <div class="faq-answer">
-        <p>Most projects run between 8-12 weeks from kickoff to launch. This includes strategy, design, development, and QA. We never rush the process because quality compounds when every layer earns its place.</p>
-      </div>
-    </div>
-    <div class="faq-item">
-      <button class="faq-question">
-        How much does a project cost?
-        <span class="faq-icon"></span>
-      </button>
-      <div class="faq-answer">
-        <p>Our projects typically start from $15,000 AUD for a focused brand and web engagement. Every project is scoped individually based on your specific needs and goals. We'll provide a clear proposal before any commitment.</p>
-      </div>
-    </div>
-    <div class="faq-item">
-      <button class="faq-question">
-        Do you work with startups or only established brands?
-        <span class="faq-icon"></span>
-      </button>
-      <div class="faq-answer">
-        <p>We work primarily with established founder-led brands who have proven their concept and are ready to elevate their presence. If you're pre-revenue, we're probably not the right fit yet.</p>
-      </div>
-    </div>
-    <div class="faq-item">
-      <button class="faq-question">
-        What makes MONOLOG different from other agencies?
-        <span class="faq-icon"></span>
-      </button>
-      <div class="faq-answer">
-        <p>We're not a factory. We take on fewer projects so we can give each one everything. Huy leads every engagement personally, and our obsession with closing the gap between who you are and how the world sees you drives every decision.</p>
       </div>
     </div>
   </div>
@@ -3061,53 +2969,6 @@ storiesTrack.addEventListener('scroll', () => {
   const cardWidth = 420 + 24; // card + gap
   const index = Math.round(storiesTrack.scrollLeft / cardWidth) + 1;
   storyCurrent.textContent = String(index).padStart(2, '0');
-});
-
-// ===== TESTIMONIAL SLIDER =====
-const slides = document.querySelectorAll('.testimonial-slide');
-const dots = document.querySelectorAll('.testimonial-dot');
-let currentSlide = 0;
-let slideInterval;
-
-function showSlide(index) {
-  slides.forEach(s => s.classList.remove('active'));
-  dots.forEach(d => d.classList.remove('active'));
-  slides[index].classList.add('active');
-  dots[index].classList.add('active');
-  currentSlide = index;
-}
-
-dots.forEach(dot => {
-  dot.addEventListener('click', () => {
-    showSlide(parseInt(dot.dataset.index));
-    resetInterval();
-  });
-});
-
-function nextSlide() {
-  showSlide((currentSlide + 1) % slides.length);
-}
-
-function resetInterval() {
-  clearInterval(slideInterval);
-  slideInterval = setInterval(nextSlide, 5000);
-}
-
-slideInterval = setInterval(nextSlide, 5000);
-
-// ===== FAQ ACCORDION =====
-const faqItems = document.querySelectorAll('.faq-item');
-faqItems.forEach(item => {
-  const question = item.querySelector('.faq-question');
-  question.addEventListener('click', () => {
-    const isOpen = item.classList.contains('open');
-    // Close all
-    faqItems.forEach(i => i.classList.remove('open'));
-    // Toggle current
-    if (!isOpen) {
-      item.classList.add('open');
-    }
-  });
 });
 
 // ===== SMOOTH NAV SCROLL =====

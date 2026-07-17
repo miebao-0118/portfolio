@@ -6,7 +6,7 @@
 <title>WYY'S Portfolio</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Cal+Sans&display=swap" rel="stylesheet">
 <script src="https://cdn.jsdelivr.net/npm/three@0.160.1/build/three.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/gsap.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/ScrollTrigger.min.js"></script>
@@ -26,9 +26,10 @@
   --text-dim: #555555;
   --accent: #ff8a1f;
   --border: #222222;
-  --font-display: 'Syne', sans-serif;
-  --font-body: 'Inter', sans-serif;
+  --font-display: 'Cal Sans', Helvetica, Arial, 'PingFang SC', 'Microsoft YaHei', sans-serif;
+  --font-body: Helvetica, Arial, 'PingFang SC', 'Microsoft YaHei', sans-serif;
   --site-margin: 3rem;
+  --engineering-grid: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 300 300' preserveAspectRatio='none'%3E%3Cpath d='M0 0V300M100 0V300M200 0V300M300 0V300M0 0H300M0 100H300M0 200H300M0 300H300' fill='none' stroke='%23ffffff' stroke-opacity='.12' stroke-width='.7' vector-effect='non-scaling-stroke'/%3E%3Cpath d='M94 100H106M100 94V106M194 100H206M200 94V106M94 200H106M100 194V206M194 200H206M200 194V206' fill='none' stroke='%23ffffff' stroke-opacity='.5' stroke-width='1' vector-effect='non-scaling-stroke'/%3E%3C/svg%3E");
 }
 
 html {
@@ -383,6 +384,61 @@ button { border: none; background: none; cursor: pointer; color: inherit; font-f
   mix-blend-mode: multiply;
 }
 
+/* Fixed hero background stays behind the Hero, About and My Work content. */
+.site-hero-backdrop {
+  --hero-bg-x: 0px;
+  --hero-bg-y: 0px;
+  --hero-bg-blur: 2.4px;
+  --hero-bg-brightness: 1;
+  --hero-bg-scale: 1.01;
+  --hero-light-x: 50%;
+  --hero-light-y: 42%;
+  --hero-light-opacity: 0.16;
+  --hero-vignette-opacity: 0.28;
+  --hero-light-drift-x: 0px;
+  --hero-light-drift-y: 0px;
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  overflow: hidden;
+  pointer-events: none;
+  background: var(--bg);
+}
+
+.site-hero-backdrop .hero-cover {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+}
+
+.site-hero-backdrop .hero-light { position: absolute; }
+.site-hero-backdrop .hero-fade,
+.site-hero-backdrop .hero-overlay { position: absolute; }
+
+.site-hero-backdrop::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: 3;
+  background: radial-gradient(circle at var(--hero-light-x) var(--hero-light-y), transparent 0, transparent 34%, rgba(0, 0, 0, 0.22) 78%);
+  opacity: var(--hero-vignette-opacity);
+  mix-blend-mode: multiply;
+}
+
+body > section {
+  position: relative;
+  z-index: 1;
+}
+
+.hero {
+  overflow: visible;
+  perspective: none;
+  background: transparent;
+}
+
+.hero::after { display: none; }
+
 @media (prefers-reduced-motion: reduce), (pointer: coarse) {
   .hero-img {
     transform: translate(-50%, -50%) rotate(90deg);
@@ -558,6 +614,7 @@ button { border: none; background: none; cursor: pointer; color: inherit; font-f
   display: flex;
   flex-direction: column;
   gap: 0.25rem;
+  transform: translateY(clamp(-2rem, -1.4vw, -0.75rem));
 }
 
 .hero-stat-value {
@@ -621,10 +678,11 @@ button { border: none; background: none; cursor: pointer; color: inherit; font-f
 /* ===== ABOUT SECTION ===== */
 .about {
   --about-top-pad: clamp(2.2rem, 3.6vw, 3.8rem);
-  --about-overlap: clamp(72px, 8vw, 96px);
-  min-height: 100svh;
-  margin-top: calc(-1 * var(--about-overlap));
-  padding: var(--about-top-pad) clamp(1.5rem, 4vw, 5rem) clamp(5rem, 7vw, 7rem);
+  --about-card-overlap: clamp(84px, 8vw, 118px);
+  --about-bottom-clearance: clamp(3.25rem, 5vw, 5rem);
+  min-height: 0;
+  margin-top: 0;
+  padding: var(--about-top-pad) clamp(1.5rem, 4vw, 5rem) var(--about-bottom-clearance);
   display: flex;
   justify-content: center;
   align-items: center;
@@ -632,6 +690,28 @@ button { border: none; background: none; cursor: pointer; color: inherit; font-f
   overflow: visible;
   position: relative;
   z-index: 6;
+  isolation: isolate;
+  background: #030303;
+}
+
+.about::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  background-image: var(--engineering-grid);
+  background-position: center;
+  background-size: 100% 100%;
+  opacity: 0.9;
+}
+
+.about-card-overlap {
+  position: relative;
+  z-index: 1;
+  width: min(1280px, 100%);
+  margin-bottom: calc(-1 * var(--about-card-overlap));
+  transform: translateY(calc(-1 * var(--about-card-overlap)));
 }
 
 .about-badge-card {
@@ -639,14 +719,15 @@ button { border: none; background: none; cursor: pointer; color: inherit; font-f
   --badge-hole-top: clamp(1.6rem, 3vw, 2.4rem);
   --badge-hole-half: clamp(17px, 1.6vw, 21px);
   --strap-overhang: 18px;
-  width: min(1280px, 100%);
+  width: 100%;
   min-height: clamp(660px, 78svh, 860px);
   position: relative;
+  z-index: 1;
   display: grid;
-  grid-template-columns: minmax(280px, 0.78fr) minmax(0, 1.42fr);
-  gap: clamp(2.2rem, 4.8vw, 6rem);
+  grid-template-columns: minmax(280px, 0.68fr) minmax(0, 1.62fr);
+  gap: clamp(2.3rem, 4.2vw, 5.2rem);
   align-items: center;
-  padding: clamp(5.4rem, 8vw, 7.8rem) clamp(2rem, 5vw, 5rem) clamp(3rem, 5vw, 4.8rem);
+  padding: clamp(5.4rem, 8vw, 7.8rem) clamp(2rem, 3.5vw, 3.8rem) clamp(3rem, 5vw, 4.8rem);
   border: 1px solid rgba(255, 255, 255, 0.18);
   border-radius: 30px;
   background:
@@ -730,47 +811,119 @@ button { border: none; background: none; cursor: pointer; color: inherit; font-f
   padding-left: 0;
 }
 
-.about-label {
-  font-family: var(--font-display);
-  font-size: clamp(2.4rem, 4.8vw, 5.6rem);
-  font-weight: 800;
-  line-height: 0.92;
-  letter-spacing: 0;
-  text-transform: uppercase;
-  color: var(--text);
-  max-width: 6.8ch;
-}
-
 .about-info {
   display: grid;
   gap: 1.1rem;
-  max-width: 340px;
+  max-width: 440px;
   margin-top: 0.6rem;
 }
 
 .about-portrait {
   width: min(100%, 340px);
   aspect-ratio: 0.86;
+  position: relative;
   border-radius: 22px;
-  overflow: hidden;
+  overflow: visible;
   border: 1px solid rgba(255, 255, 255, 0.14);
   background: rgba(255, 255, 255, 0.04);
   box-shadow: 0 20px 48px rgba(0, 0, 0, 0.34);
 }
 
-.about-portrait img {
+.about-portrait > img {
   width: 100%;
   height: 100%;
   object-fit: cover;
   display: block;
+  border-radius: inherit;
+}
+
+.about-hello {
+  width: clamp(13rem, 20vw, 19rem);
+  margin: 0;
+  position: relative;
+  aspect-ratio: 1451 / 654;
+}
+
+.about-hello-image,
+.about-hello-trail {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+}
+
+.about-hello-image {
+  display: block;
+  object-fit: contain;
+  opacity: 0;
+  clip-path: inset(0 100% 0 0);
+  filter: drop-shadow(0 0 12px rgba(255, 106, 0, 0.28));
+}
+
+.about-hello-trail {
+  overflow: visible;
+  pointer-events: none;
+}
+
+.about-hello-trail-path {
+  stroke-dasharray: 0.045 0.955;
+  stroke-dashoffset: 1;
+  opacity: 0;
+  filter: drop-shadow(0 0 8px rgba(255, 194, 125, 0.82));
+}
+
+.about-badge-card.hello-visible .about-hello-trail-path {
+  animation: aboutHelloTrail 2.15s linear forwards;
+}
+
+.about-badge-card.hello-visible .about-hello-image {
+  animation: aboutHelloReveal 0.68s cubic-bezier(0.16, 1, 0.3, 1) 2.04s forwards;
+}
+
+@keyframes aboutHelloTrail {
+  0% {
+    opacity: 0;
+    stroke-dashoffset: 1;
+  }
+  7%, 86% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+    stroke-dashoffset: 0;
+  }
+}
+
+@keyframes aboutHelloReveal {
+  from {
+    opacity: 1;
+    clip-path: inset(0 100% 0 0);
+  }
+  to {
+    opacity: 1;
+    clip-path: inset(0 0 0 0);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .about-hello-image {
+    animation: none;
+    opacity: 1;
+    clip-path: none;
+  }
+  .about-hello-trail-path { display: none; }
 }
 
 .about-info-row {
   display: grid;
-  grid-template-columns: 1fr;
-  gap: 0.18rem;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: clamp(0.75rem, 1.7vw, 1.5rem);
   padding-top: 0.9rem;
   border-top: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.about-info-item {
+  min-width: 0;
 }
 
 .about-info-cn {
@@ -815,18 +968,64 @@ button { border: none; background: none; cursor: pointer; color: inherit; font-f
 .about-experience {
   display: flex;
   flex-direction: column;
-  gap: 2.2rem;
+  justify-content: space-between;
+  gap: clamp(1.5rem, 3vw, 3rem);
   position: relative;
   z-index: 2;
+  align-self: stretch;
+}
+
+.about-copy {
+  width: 100%;
+  max-width: none;
+  display: grid;
+  gap: clamp(0.75rem, 1.2vw, 1rem);
 }
 
 .about-bio {
-  max-width: 38em;
-  margin: auto 0;
-  font-size: clamp(1rem, 1.25vw, 1.2rem);
-  line-height: 2;
-  color: var(--text-muted);
+  margin: 0;
+  font-size: clamp(1.08rem, 1.45vw, 1.45rem);
+  line-height: 1.9;
+  color: var(--text);
+  font-family: var(--font-body);
+  font-weight: 400;
   letter-spacing: 0.01em;
+}
+
+.about-bio-secondary {
+  color: rgba(255, 255, 255, 0.48);
+}
+
+.about-company {
+  color: var(--text);
+  font-weight: 600;
+}
+
+.about-disciplines {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.55rem 0;
+  max-width: none;
+  padding-top: 1.4rem;
+  border-top: 1px solid rgba(255, 255, 255, 0.14);
+}
+
+.about-discipline-item,
+.about-discipline-separator {
+  font-family: var(--font-display);
+  font-size: clamp(1.2rem, 1.75vw, 1.65rem);
+  font-weight: 700;
+  line-height: 1.2;
+}
+
+.about-discipline-item {
+  color: var(--text-muted);
+}
+
+.about-discipline-separator {
+  color: var(--accent);
+  padding: 0 0.55rem;
 }
 
 .experience-group {
@@ -904,557 +1103,232 @@ button { border: none; background: none; cursor: pointer; color: inherit; font-f
   color: var(--accent);
 }
 
-/* ===== MARQUEE SECTION ===== */
-.marquee-section {
-  padding: 4rem 0;
-  border-top: 1px solid var(--border);
-  border-bottom: 1px solid var(--border);
-  overflow: hidden;
-}
-
-.marquee-label {
-  font-size: 0.75rem;
-  letter-spacing: 0.15em;
-  text-transform: uppercase;
-  color: var(--text-muted);
-  padding: 0 3rem;
-  margin-bottom: 2rem;
-}
-
-.marquee-track {
-  display: flex;
-  animation: marquee 30s linear infinite;
-  width: max-content;
-}
-
-.marquee-track:hover {
-  animation-play-state: paused;
-}
-
-.marquee-item {
-  font-family: var(--font-display);
-  font-size: clamp(2rem, 5vw, 4rem);
-  font-weight: 700;
-  white-space: nowrap;
-  padding: 0 2rem;
-  color: var(--text-dim);
-  transition: color 0.3s ease;
-}
-
-.marquee-item:hover {
-  color: var(--text);
-}
-
-.marquee-separator {
-  color: var(--accent);
-  padding: 0 1rem;
-  font-size: clamp(2rem, 5vw, 4rem);
-  font-weight: 700;
-}
-
-@keyframes marquee {
-  0% { transform: translateX(0); }
-  100% { transform: translateX(-50%); }
-}
-
-/* ===== WE CLOSE THAT GAP ===== */
-.gap-wrap {
+/* ===== MY WORK ===== */
+.my-work {
+  --work-gap: clamp(2rem, 6vw, 6rem);
+  border-top: 1px solid rgba(255, 255, 255, 0.16);
+  background: transparent;
+  overflow: clip;
   position: relative;
-  height: 200vh;
-  background-color: var(--bg-primary);
-  z-index: 2;
+  isolation: isolate;
 }
 
-.gap-contain {
-  height: 100vh;
-  position: sticky;
-  top: 0;
-  padding: var(--site-margin, 3rem);
-  background-color: var(--bg-primary);
-  will-change: transform;
-  backface-visibility: hidden;
-  -webkit-backface-visibility: hidden;
-}
-
-/* 背景网格装饰 */
-.gap-bg-overlay {
+.my-work::before {
+  content: '';
   position: absolute;
   inset: 0;
-  display: grid;
-  grid-template-rows: auto 1fr auto;
-  grid-template-columns: 1fr;
+  z-index: 0;
   pointer-events: none;
-  z-index: 1;
+  background-image: var(--engineering-grid);
+  background-position: center;
+  background-size: 100% 100%;
+  opacity: 0.82;
 }
 
-.gap-line-horizontal {
+.my-work-inner {
   display: flex;
-  justify-content: space-between;
-  width: 100%;
-  height: 1px;
-  background-color: rgba(255,255,255,0.06);
-  position: relative;
-}
-
-.gap-line-square {
-  background-color: rgba(255,255,255,0.15);
-  width: 6px;
-  height: 6px;
-  position: absolute;
-  top: -2px;
-}
-
-.gap-line-square.is-1 { left: -2px; }
-.gap-line-square.is-2 { left: 50%; transform: translateX(-50%); }
-.gap-line-square.is-3 { right: -2px; }
-
-.gap-overlay-grid {
-  display: grid;
-  grid-template-columns: repeat(12, 1fr);
-  justify-content: space-between;
-  align-items: stretch;
-}
-
-.gap-line {
-  background-color: rgba(255,255,255,0.04);
-  width: 1px;
-  height: 100%;
-}
-
-/* 主内容区 */
-.gap-inner {
-  position: relative;
-  z-index: 3;
-  height: 100%;
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-  align-items: center;
-  padding-top: 6rem;
-  padding-bottom: 4rem;
-}
-
-.gap-eyebrow {
-  max-width: 31ch;
-  color: var(--text-muted);
-  text-align: center;
-  font-size: 0.85rem;
-  line-height: 1.6;
-}
-
-.gap-inner-content {
-  z-index: 1;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 0;
-  position: absolute;
-  top: 50%;
-  left: 0;
-  right: 0;
-  max-width: 1200px;
+  gap: var(--work-gap);
+  max-width: 1440px;
   margin: 0 auto;
-  transform: translateY(-50%);
-}
-
-.gap-heading-contain {
-  overflow: hidden;
-  width: 100%;
-  transform: translate(0);
-}
-
-.gap-heading-contain.is-left {
-  overflow: visible;
-  text-align: left;
-  transform: translate(-30vw);
-}
-
-.gap-heading-contain.is-right {
-  overflow: visible;
-  text-align: right;
-  transform: translate(30vw);
-}
-
-.gap-heading {
-  font-family: var(--font-display);
-  font-size: clamp(3.3rem, 8.8vw, 7.7rem);
-  font-weight: 600;
-  line-height: 1;
-  letter-spacing: -0.03em;
-  color: var(--text-primary);
-  text-transform: none;
-  will-change: transform, opacity;
-  transform: translate(0);
-}
-
-.gap-heading-contain.is-right .gap-heading {
-  color: var(--accent);
-  font-style: italic;
-  white-space: nowrap;
-  transform: none;
-}
-
-.gap-heading-contain.is-left .gap-heading {
-  transform: none;
-}
-
-/* 字符级拆分 */
-.gap-heading .gap-char {
-  display: inline-block;
-  will-change: transform, opacity;
-}
-
-.gap-bottom {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 1.2rem;
-}
-
-.gap-quote-text {
-  font-size: 1rem;
-  color: var(--text-muted);
-  font-style: italic;
-  line-height: 1.6;
-  text-align: center;
-  max-width: 38ch;
-}
-
-.gap-testimonial {
-  display: flex;
-  align-items: center;
-  gap: 0.6em;
-}
-
-.gap-headshot {
-  width: 2rem;
-  height: 2rem;
-  border-radius: 50%;
-  object-fit: cover;
-  object-position: 50% 20%;
-  filter: grayscale(0.3);
-}
-
-.gap-testimonial-info {
-  display: flex;
-  flex-direction: column;
-  gap: 0.2em;
-}
-
-.gap-testimonial-name,
-.gap-testimonial-company {
-  font-size: 0.8rem;
-  color: var(--text-dim);
-  letter-spacing: 0.01em;
-}
-
-/* 文件夹 — 3层结构，SVG前盖 + 背盖 */
-.gap-folder {
-  width: clamp(14rem, 28vw, 22rem);
-  /* 高度与背盖同高：40×36 */
-  aspect-ratio: 40/36;
-  position: absolute;
-  inset: 50% 0% 0% 50%;
-  transform: translate(-50%, -50%);
-  z-index: 2;
-  pointer-events: none;
-  /* 透视点在底边中点正下方 */
-  perspective: 800px;
-  perspective-origin: 50% 100%;
-}
-
-/* 背盖 — 渐变 + 内发光 + 投影 */
-.gap-folder-back {
-  width: 100%;
-  height: 100%;
-  /* 渐变：左上偏亮，右下偏暗，模拟顶部光源 */
-  background: linear-gradient(135deg, #4a4550 0%, #39363D 40%, #2d2a31 100%);
-  border-radius: 40px;
-  box-shadow:
-    0 8px 32px rgba(0,0,0,0.4),
-    /* 柔和内发光：顶部偏亮 */
-    inset 0 1px 0 rgba(255,255,255,0.06),
-    inset 0 -1px 0 rgba(0,0,0,0.2);
-  position: absolute;
-  top: 0;
-  left: 0;
-  z-index: 1;
-}
-
-/* 纸张文件 — 3张，顶部高出文件夹，底边与文件夹底边齐平 */
-.gap-paper {
-  position: absolute;
-  width: 70%;
-  left: 15%;
-  height: 100%;
-  top: -10%;
-  background: #f0ece4;
-  border-radius: 20px;
-  /* 轻柔投影：纸张之间、纸张与背盖之间的距离感 */
-  box-shadow:
-    0 1px 3px rgba(0,0,0,0.08),
-    0 3px 8px rgba(0,0,0,0.06);
-  transform-origin: bottom center;
-  will-change: transform;
-  z-index: 5;
-  opacity: 1;
-}
-
-.gap-paper-content {
-  padding: 0.8rem 0.9rem;
-  height: 100%;
-  display: flex;
-  flex-direction: column;
-}
-
-.gap-paper-header {
-  font-family: var(--font-body);
-  font-size: 0.55rem;
-  font-weight: 600;
-  color: #444;
-  letter-spacing: 0.04em;
-  text-transform: uppercase;
-  margin-bottom: 0.5rem;
-}
-
-.gap-paper-line {
-  height: 2px;
-  background: #ccc5b9;
-  border-radius: 1px;
-  margin-bottom: 0.35rem;
-}
-
-.gap-paper-line.short {
-  width: 55%;
-}
-
-.gap-paper-line.medium {
-  width: 80%;
-}
-
-/* 前盖 — SVG形状 + 背景模糊 + 渐变透明度 + 光影 */
-.gap-folder-cover {
-  position: absolute;
-  top: 17%;
-  left: 0;
-  width: 101%;
-  height: 85%;
-  z-index: 10;
-  will-change: transform;
-  transform-origin: bottom center;
-  overflow: visible;
-  /* 背景模糊：仅覆盖 clip-path 裁剪后的 SVG 形状区域 */
-  backdrop-filter: blur(6px);
-  -webkit-backdrop-filter: blur(6px);
-  /* 引用隐藏SVG中的clipPath，严格按 cover.svg 的贝塞尔曲线形状裁剪 */
-  /* clipPathUnits="objectBoundingBox" 保证响应式缩放 */
-  clip-path: url(#folderCoverClip);
-}
-
-.gap-folder-cover svg {
-  width: 100%;
-  height: 100%;
-  display: block;
-  overflow: visible;
-}
-
-/* 响应式 */
-@media (max-width: 768px) {
-  .gap-folder { width: clamp(10rem, 50vw, 16rem); }
-  .gap-paper-header { font-size: 0.48rem; }
-}
-
-/* ===== HOW I FOUND MY WAY IN ===== */
-/* 左侧文案自然文档流撑开滚动距离，
-   右侧照片 sticky 固定 + 扇形展开/收拢 */
-
-.journey-wrap {
-  border-top: 1px solid var(--border);
-  background-color: var(--bg);
-  padding-bottom: 10vh;
-}
-
-.journey-inner {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 4%;
-  max-width: 1400px;
-  margin: 0 auto;
-  padding: 0 3rem;
+  padding: 0 clamp(1.5rem, 5vw, 5rem) 12vh;
   align-items: flex-start;
+  position: relative;
+  z-index: 1;
 }
 
-/* ── 标题：横贯整个容器 ── */
-.journey-header {
-  width: 100%;
-  padding: 6rem 0 1rem;
+.my-work-copy {
+  width: min(42%, 32rem);
+  flex: 0 0 auto;
 }
 
-.journey-title {
-  font-family: var(--font-display);
-  font-size: clamp(2.5rem, 5.5vw, 4.5rem);
-  font-weight: 800;
-  line-height: 1.05;
-  letter-spacing: -0.03em;
-  color: var(--text-primary);
-}
-
-/* ── 左侧文案列：正常文档流 ── */
-.journey-col-text {
-  width: 46%;
-  flex-shrink: 0;
-}
-
-/* 每个 step 用 min-height 撑开滚动距离 */
-.journey-step {
-  min-height: 85vh;
-  padding: 4rem 0;
+.my-work-step {
+  min-height: 100svh;
   display: flex;
   flex-direction: column;
-  justify-content: center;
-  gap: 0.8rem;
-  opacity: 0.25;
-  transition: opacity 0.5s cubic-bezier(0.4, 0, 0.2, 1);
-}
-
-.journey-step.is-active {
+  justify-content: flex-start;
+  gap: 0.9rem;
+  padding: 0;
   opacity: 1;
 }
 
-.journey-label {
-  font-size: 0.75rem;
-  letter-spacing: 0.15em;
-  text-transform: uppercase;
-  color: var(--accent);
-  margin-bottom: 0.3rem;
+.my-work-step.is-active { opacity: 1; }
+
+.my-work-case-copy {
+  display: flex;
+  flex-direction: column;
+  gap: 0.9rem;
+  margin-top: auto;
+  opacity: 1;
+  transform: translateY(var(--case-copy-shift, 0px));
+  transition: opacity 220ms linear;
 }
 
-.journey-step-title {
+.my-work-title {
+  margin: 0 0 clamp(3.5rem, 7vw, 6rem);
   font-family: var(--font-display);
-  font-size: clamp(1.3rem, 2.5vw, 2rem);
+  font-size: clamp(3.75rem, 6.2vw, 7.25rem);
+  font-weight: 800;
+  line-height: 0.92;
+  letter-spacing: 0;
+  text-transform: uppercase;
+  transform: translateY(var(--work-title-shift, 0px));
+}
+
+.my-work-date {
+  font-size: clamp(1.1rem, 1.6vw, 1.45rem);
   font-weight: 700;
-  line-height: 1.2;
-  letter-spacing: -0.01em;
-  color: var(--text-primary);
-  margin-bottom: 0.3rem;
+  color: var(--text);
+  line-height: 1.25;
 }
 
-.journey-desc {
-  font-size: 0.95rem;
+.my-work-date span {
+  display: block;
+  margin-top: 0.3rem;
+  font-size: 0.9rem;
+  font-weight: 400;
   color: var(--text-muted);
-  line-height: 1.7;
-  max-width: 40ch;
 }
 
-.journey-audio-prompt {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.5rem;
-  margin-top: 0.8rem;
-  padding: 0.4rem 0.8rem;
-  border: 1px solid var(--border);
-  border-radius: 100px;
-  cursor: pointer;
-  transition: border-color 0.3s ease;
+.my-work-label {
+  color: var(--accent);
+  font-size: 0.72rem;
+  letter-spacing: 0.14em;
+  line-height: 1;
+  text-transform: uppercase;
 }
 
-.journey-audio-prompt:hover {
-  border-color: var(--accent);
+.my-work-project-title {
+  margin: 0;
+  font-family: var(--font-display);
+  font-size: clamp(1.85rem, 3vw, 3.15rem);
+  font-weight: 700;
+  line-height: 1.08;
+  letter-spacing: 0;
 }
 
-.journey-audio-icon {
+.my-work-description {
+  max-width: 33ch;
+  margin: 0;
+  color: rgba(245, 245, 245, 0.72);
   font-size: 1rem;
+  line-height: 1.8;
 }
 
-.journey-audio-text {
-  font-size: 0.8rem;
-  color: var(--text-muted);
-}
-
-/* ── 右侧照片列：sticky 固定 ── */
-.journey-col-photo {
-  width: 50%;
-  flex-shrink: 0;
+.my-work-media {
   position: sticky;
   top: 0;
-  height: 100vh;
+  width: 1px;
+  flex: 1 1 auto;
+  height: 100svh;
   align-self: flex-start;
-  padding-top: 8rem;
 }
 
-.journey-photo-stage {
+.my-work-media-stage {
   position: relative;
-  width: 100%;
   height: 100%;
-  overflow: hidden;
 }
 
-/* 照片组：3组堆叠在同一位置，GSAP 控制扇形展开/收拢 */
-.journey-photo-group {
+.my-work-media-group {
   position: absolute;
   inset: 0;
   display: flex;
   align-items: center;
-  justify-content: center;
   visibility: hidden;
-  will-change: auto;
+  pointer-events: none;
 }
 
-/* 单张照片：集中成一簇，有交集重叠 */
-.journey-photo {
-  position: absolute;
+.my-work-media-frame {
+  --work-media-frame-gap: clamp(0.75rem, 1.5vw, 1.35rem);
+  position: relative;
+  width: 100%;
+  height: auto;
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: var(--work-media-frame-gap);
+  overflow: visible;
+}
+
+.my-work-media-frame--portrait-split {
+  height: var(--feature-frame-height, auto);
+  grid-template-rows: repeat(2, minmax(0, 1fr));
+}
+
+.my-work-media-frame--portrait-split .my-work-media-card--wide {
+  grid-column: 1;
+  grid-row: 1 / -1;
+  aspect-ratio: auto;
+}
+
+.my-work-media-frame--portrait-split .my-work-media-card--square {
+  grid-column: 2;
+  aspect-ratio: auto;
+}
+
+.my-work-media-frame--portrait-split .my-work-media-card--square:nth-child(2) { grid-row: 1; }
+.my-work-media-frame--portrait-split .my-work-media-card--square:nth-child(3) { grid-row: 2; }
+
+.my-work-media-group:first-child { visibility: visible; }
+.my-work-media-group.is-active { pointer-events: auto; }
+
+.my-work-media-card {
+  overflow: hidden;
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  background: rgba(10, 10, 10, 0.22);
+  box-shadow: 0 20px 52px rgba(0, 0, 0, 0.3);
+}
+
+.my-work-media-card--wide {
+  grid-column: 1 / -1;
+  aspect-ratio: 16 / 9;
+}
+
+.my-work-media-card--square { aspect-ratio: 1; }
+
+.my-work-media-card img {
+  width: 100%;
+  height: 100%;
   object-fit: cover;
-  border-radius: 0.4rem;
-  box-shadow: 0 4px 24px rgba(0,0,0,0.35);
-  will-change: transform, opacity;
 }
 
-/* 照片1：最大，居中偏左上 */
-.jp-1 {
-  width: 49%;
-  max-width: 288px;
-  aspect-ratio: 4/5;
-  top: 20%;
-  left: 24%;
-  z-index: 3;
+.my-work-media-card--type img,
+.my-work-media-card--palette img { object-position: center; }
+
+.my-work-media-group:hover .my-work-media-card img { transform: scale(1.02); }
+.my-work-media-card img { transition: transform 450ms cubic-bezier(0.16, 1, 0.3, 1); }
+
+.work-curl-canvas {
+  position: fixed;
+  inset: 0;
+  z-index: 20;
+  width: 100vw;
+  height: 100svh;
+  display: none;
+  pointer-events: none;
 }
 
-/* 照片2：中等，居中偏右上 */
-.jp-2 {
-  width: 41%;
-  max-width: 245px;
-  aspect-ratio: 3/4;
-  top: 18%;
-  left: 42%;
-  z-index: 2;
-}
-
-/* 照片3：较小，居中偏下 */
-.jp-3 {
-  width: 37%;
-  max-width: 230px;
-  aspect-ratio: 3/4;
-  top: 32%;
-  left: 30%;
-  z-index: 1;
-}
-
-/* 响应式 */
-@media (max-width: 1024px) {
-  .jp-1 { width: 55%; max-width: 274px; top: 20%; left: 22%; }
-  .jp-2 { width: 46%; max-width: 230px; top: 18%; left: 40%; }
-  .jp-3 { width: 41%; max-width: 216px; top: 32%; left: 28%; }
-}
+body.work-curl-ready .work-curl-canvas { display: block; }
+body.work-curl-ready .my-work-media-card img { opacity: 0; }
 
 @media (max-width: 768px) {
-  .journey-inner { flex-direction: column; gap: 0; }
-  .journey-col-text { width: 100%; }
-  .journey-col-photo { width: 100%; height: 50vh; position: relative; }
-  .journey-title { font-size: clamp(1.8rem, 8vw, 2.5rem); }
-  .journey-step { min-height: 50vh; }
-  .jp-1 { width: 52%; max-width: 230px; top: 20%; left: 20%; }
-  .jp-2 { width: 43%; max-width: 202px; top: 18%; left: 38%; }
-  .jp-3 { width: 37%; max-width: 173px; top: 32%; left: 26%; }
+  .my-work-inner { display: block; padding-bottom: 5rem; }
+  .my-work-copy { width: auto; }
+  .my-work-step { min-height: auto; padding: 5rem 0 2rem; opacity: 1; }
+  .my-work-title { margin-bottom: 3rem; }
+  .my-work-step:first-child { padding-top: 5rem; }
+  .my-work-case-copy { margin-top: 0; }
+  .my-work-media { position: static; width: auto; height: auto; }
+  .my-work-media-stage { height: auto; padding: 0; display: grid; gap: 2rem; }
+  .my-work-media-frame--portrait-split { height: auto !important; }
+  .my-work-media-group {
+    position: relative;
+    inset: auto;
+    visibility: visible !important;
+    padding: 0;
+    pointer-events: auto;
+  }
+  .hero-stat { transform: none; }
+  .work-curl-canvas { display: none !important; }
+  body.work-curl-ready .my-work-media-card img { opacity: 1; }
 }
 
 /* ===== CLIENTS ===== */
@@ -1496,401 +1370,6 @@ button { border: none; background: none; cursor: pointer; color: inherit; font-f
 .client-item:hover {
   color: var(--text);
   padding-left: 1.5rem;
-}
-
-/* ===== SUCCESS STORIES ===== */
-.stories {
-  padding: 8rem 0;
-  border-top: 1px solid var(--border);
-  overflow: hidden;
-}
-
-.stories-header {
-  padding: 0 3rem;
-  margin-bottom: 4rem;
-  display: flex;
-  justify-content: space-between;
-  align-items: flex-end;
-}
-
-.stories-label {
-  font-size: 0.75rem;
-  letter-spacing: 0.15em;
-  text-transform: uppercase;
-  color: var(--text-muted);
-  margin-bottom: 1rem;
-}
-
-.stories-title {
-  font-family: var(--font-display);
-  font-size: clamp(2rem, 4vw, 3rem);
-  font-weight: 800;
-}
-
-.stories-nav {
-  display: flex;
-  gap: 0.5rem;
-}
-
-.stories-nav button {
-  width: 48px;
-  height: 48px;
-  border: 1px solid var(--border);
-  border-radius: 50%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  transition: background 0.3s ease, border-color 0.3s ease;
-  font-size: 1.2rem;
-}
-
-.stories-nav button:hover {
-  background: var(--text);
-  color: var(--bg);
-  border-color: var(--text);
-}
-
-.stories-track {
-  display: flex;
-  gap: 1.5rem;
-  padding: 0 3rem;
-  overflow-x: auto;
-  scroll-snap-type: x mandatory;
-  scrollbar-width: none;
-  -ms-overflow-style: none;
-  cursor: grab;
-}
-
-.stories-track:active {
-  cursor: grabbing;
-}
-
-.stories-track::-webkit-scrollbar {
-  display: none;
-}
-
-.story-card {
-  min-width: 420px;
-  max-width: 420px;
-  scroll-snap-align: start;
-  background: var(--bg-card);
-  border-radius: 12px;
-  overflow: hidden;
-  transition: transform 0.3s ease;
-  flex-shrink: 0;
-}
-
-.story-card:hover {
-  transform: translateY(-4px);
-}
-
-.story-card-image {
-  width: 100%;
-  aspect-ratio: 16/10;
-  background: var(--bg-light);
-  overflow: hidden;
-  position: relative;
-}
-
-.story-card-image img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  transition: transform 0.6s ease;
-}
-
-.story-card:hover .story-card-image img {
-  transform: scale(1.05);
-}
-
-.story-card-badge {
-  position: absolute;
-  top: 1rem;
-  left: 1rem;
-  background: rgba(0,0,0,0.6);
-  backdrop-filter: blur(10px);
-  padding: 0.4rem 0.8rem;
-  border-radius: 100px;
-  font-size: 0.7rem;
-  letter-spacing: 0.1em;
-  text-transform: uppercase;
-}
-
-.story-card-number {
-  position: absolute;
-  top: 1rem;
-  right: 1rem;
-  font-family: var(--font-display);
-  font-size: 0.85rem;
-  color: var(--text-muted);
-}
-
-.story-card-content {
-  padding: 1.5rem;
-}
-
-.story-card-title {
-  font-family: var(--font-display);
-  font-size: 1.3rem;
-  font-weight: 700;
-  margin-bottom: 0.5rem;
-}
-
-.story-card-desc {
-  font-size: 0.9rem;
-  color: var(--text-muted);
-  line-height: 1.6;
-  margin-bottom: 1.5rem;
-}
-
-.story-card-stat {
-  display: flex;
-  align-items: baseline;
-  gap: 0.5rem;
-  padding-top: 1rem;
-  border-top: 1px solid var(--border);
-}
-
-.story-card-stat-value {
-  font-family: var(--font-display);
-  font-size: 1.8rem;
-  font-weight: 800;
-  color: var(--accent);
-}
-
-.story-card-stat-label {
-  font-size: 0.8rem;
-  color: var(--text-muted);
-}
-
-.stories-footer {
-  padding: 2rem 3rem 0;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-}
-
-.stories-counter {
-  font-family: var(--font-display);
-  font-size: 0.9rem;
-  color: var(--text-muted);
-}
-
-.stories-view-all {
-  font-size: 0.85rem;
-  letter-spacing: 0.05em;
-  text-transform: uppercase;
-  color: var(--text-muted);
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-  transition: color 0.3s ease;
-}
-
-.stories-view-all:hover {
-  color: var(--text);
-}
-
-/* ===== TESTIMONIALS ===== */
-.testimonials {
-  padding: 8rem 3rem;
-  border-top: 1px solid var(--border);
-}
-
-.testimonials-label {
-  font-size: 0.75rem;
-  letter-spacing: 0.15em;
-  text-transform: uppercase;
-  color: var(--text-muted);
-  margin-bottom: 3rem;
-}
-
-.testimonial-slider {
-  position: relative;
-  overflow: hidden;
-}
-
-.testimonial-slide {
-  display: none;
-}
-
-.testimonial-slide.active {
-  display: block;
-  animation: fadeIn 0.5s ease;
-}
-
-.testimonial-text {
-  font-size: clamp(1.2rem, 2.5vw, 1.8rem);
-  line-height: 1.7;
-  max-width: 800px;
-  margin-bottom: 2rem;
-  font-weight: 300;
-}
-
-.testimonial-author {
-  font-size: 0.9rem;
-  color: var(--text-muted);
-}
-
-.testimonial-author strong {
-  color: var(--text);
-  font-weight: 600;
-}
-
-.testimonial-dots {
-  display: flex;
-  gap: 0.5rem;
-  margin-top: 3rem;
-}
-
-.testimonial-dot {
-  width: 8px;
-  height: 8px;
-  border-radius: 50%;
-  background: var(--border);
-  cursor: pointer;
-  transition: background 0.3s ease, width 0.3s ease;
-}
-
-.testimonial-dot.active {
-  background: var(--accent);
-  width: 24px;
-  border-radius: 4px;
-}
-
-/* ===== SERVICES ===== */
-.services {
-  padding: 8rem 3rem;
-  border-top: 1px solid var(--border);
-}
-
-.services-label {
-  font-size: 0.75rem;
-  letter-spacing: 0.15em;
-  text-transform: uppercase;
-  color: var(--text-muted);
-  margin-bottom: 4rem;
-}
-
-.services-grid {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 0;
-}
-
-.service-item {
-  padding: 2.5rem 2rem;
-  border-bottom: 1px solid var(--border);
-  border-right: 1px solid var(--border);
-  transition: background 0.3s ease;
-  cursor: pointer;
-}
-
-.service-item:nth-child(3n) {
-  border-right: none;
-}
-
-.service-item:hover {
-  background: var(--bg-card);
-}
-
-.service-icon {
-  width: 40px;
-  height: 40px;
-  margin-bottom: 1.5rem;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 1.5rem;
-}
-
-.service-name {
-  font-family: var(--font-display);
-  font-size: 1.1rem;
-  font-weight: 700;
-  margin-bottom: 0.5rem;
-}
-
-.service-desc {
-  font-size: 0.85rem;
-  color: var(--text-muted);
-  line-height: 1.6;
-}
-
-/* ===== PROCESS ===== */
-.process {
-  padding: 8rem 3rem;
-  border-top: 1px solid var(--border);
-}
-
-.process-label {
-  font-size: 0.75rem;
-  letter-spacing: 0.15em;
-  text-transform: uppercase;
-  color: var(--text-muted);
-  margin-bottom: 4rem;
-}
-
-.process-steps {
-  display: flex;
-  flex-direction: column;
-  gap: 0;
-}
-
-.process-step {
-  padding: 3rem 0;
-  border-bottom: 1px solid var(--border);
-  display: grid;
-  grid-template-columns: 80px 1fr 1fr;
-  gap: 3rem;
-  align-items: start;
-  cursor: pointer;
-  transition: padding-left 0.4s ease;
-}
-
-.process-step:first-child {
-  border-top: 1px solid var(--border);
-}
-
-.process-step:hover {
-  padding-left: 1rem;
-}
-
-.step-number {
-  font-family: var(--font-display);
-  font-size: 0.85rem;
-  font-weight: 700;
-  color: var(--accent);
-  letter-spacing: 0.05em;
-  padding-top: 0.3rem;
-}
-
-.step-title {
-  font-family: var(--font-display);
-  font-size: clamp(1.2rem, 2.5vw, 1.8rem);
-  font-weight: 700;
-  line-height: 1.3;
-  margin-bottom: 1rem;
-}
-
-.step-desc {
-  font-size: 0.95rem;
-  color: var(--text-muted);
-  line-height: 1.7;
-}
-
-.step-link {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.5rem;
-  margin-top: 1rem;
-  font-size: 0.85rem;
-  color: var(--accent);
-  transition: gap 0.3s ease;
-}
-
-.step-link:hover {
-  gap: 0.8rem;
 }
 
 /* ===== FAQ ===== */
@@ -2048,61 +1527,6 @@ button { border: none; background: none; cursor: pointer; color: inherit; font-f
   transform: translateX(4px);
 }
 
-/* ===== FOOTER ===== */
-.footer {
-  padding: 4rem 3rem;
-  border-top: 1px solid var(--border);
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-}
-
-.footer-left {
-  font-family: var(--font-display);
-  font-size: 1.2rem;
-  font-weight: 800;
-  letter-spacing: 0.1em;
-  text-transform: uppercase;
-}
-
-.footer-center {
-  font-size: 0.8rem;
-  color: var(--text-dim);
-}
-
-.footer-links {
-  display: flex;
-  gap: 2rem;
-  list-style: none;
-}
-
-.footer-links a {
-  font-size: 0.85rem;
-  color: var(--text-muted);
-  transition: color 0.3s ease;
-}
-
-.footer-links a:hover {
-  color: var(--accent);
-}
-
-/* ===== SCROLL REVEAL ===== */
-.reveal {
-  opacity: 0;
-  transform: translateY(40px);
-  transition: opacity 0.8s cubic-bezier(0.16, 1, 0.3, 1), transform 0.8s cubic-bezier(0.16, 1, 0.3, 1);
-}
-
-.reveal.visible {
-  opacity: 1;
-  transform: translateY(0);
-}
-
-.reveal-delay-1 { transition-delay: 0.1s; }
-.reveal-delay-2 { transition-delay: 0.2s; }
-.reveal-delay-3 { transition-delay: 0.3s; }
-.reveal-delay-4 { transition-delay: 0.4s; }
-
 /* ===== RESPONSIVE ===== */
 @media (max-width: 1024px) {
   .about-badge-card {
@@ -2117,11 +1541,6 @@ button { border: none; background: none; cursor: pointer; color: inherit; font-f
   .clients-grid { grid-template-columns: repeat(2, 1fr); }
   .client-item:nth-child(4n) { border-right: none; }
   .client-item:nth-child(2n) { border-right: none; }
-  .services-grid { grid-template-columns: repeat(2, 1fr); }
-  .service-item:nth-child(3n) { border-right: auto; }
-  .service-item:nth-child(2n) { border-right: none; }
-  .process-step { grid-template-columns: 60px 1fr; }
-  .step-desc { grid-column: 2; }
   .hero-bottom-grid { grid-template-columns: 1fr 1fr; }
   .hero-logo-svg { grid-column: 1 / -1; }
 }
@@ -2140,29 +1559,31 @@ button { border: none; background: none; cursor: pointer; color: inherit; font-f
   .hero-discipline-list { display: none; }
   .hero-character { height: clamp(526px, 90svh, 790px); max-width: 105vw; }
   .hero-content-icon { max-width: 2.5em; margin-bottom: 1.5rem; }
-  .about, .testimonials, .services, .process, .faq, .cta { padding: 5rem 1.5rem; }
-  .about { --about-top-pad: 2.75rem; --about-overlap: 56px; min-height: auto; padding-top: var(--about-top-pad); }
+  .about, .testimonials, .faq, .cta { padding: 5rem 1.5rem; }
+  .about { --about-top-pad: 2.75rem; --about-card-overlap: 64px; --about-bottom-clearance: 3.25rem; min-height: auto; padding-top: var(--about-top-pad); padding-bottom: var(--about-bottom-clearance); }
   .about-badge-card {
     min-height: auto;
     padding: 5.6rem 1.25rem 2.2rem;
     border-radius: 22px;
   }
-  .about-label { max-width: 6ch; }
+  .about-info-row {
+    grid-template-columns: 1fr;
+    gap: 0.75rem;
+  }
+  .about-bio {
+    max-width: none;
+    font-size: clamp(1rem, 4.4vw, 1.2rem);
+    line-height: 1.8;
+  }
+  .about-hello { width: clamp(12rem, 52vw, 15rem); }
+  .about-copy { gap: 0.75rem; }
+  .about-disciplines { margin-top: 0.4rem; }
   .about-strap-cap { width: 72px; }
   .about-badge-hole { width: 96px; height: 34px; }
   .experience-group { grid-template-columns: 1fr; gap: 1rem; }
-  .gap-wrap { padding: 0; }
-  .gap-contain { padding: 1.5rem; }
-  .gap-heading { font-size: clamp(2.5rem, 14vw, 5rem); }
-  .gap-cover { width: clamp(10rem, 50vw, 16rem); }
-  .stories-header, .clients, .marquee-label { padding-left: 1.5rem; padding-right: 1.5rem; }
+  .clients { padding-left: 1.5rem; padding-right: 1.5rem; }
   .clients-grid { grid-template-columns: 1fr; }
   .client-item { border-right: none !important; }
-  .services-grid { grid-template-columns: 1fr; }
-  .service-item { border-right: none !important; }
-  .process-step { grid-template-columns: 1fr; gap: 1rem; }
-  .story-card { min-width: 300px; max-width: 300px; }
-  .footer { flex-direction: column; gap: 1.5rem; text-align: center; }
   .hero-scroll { display: none; }
 }
 
@@ -2216,33 +1637,27 @@ button { border: none; background: none; cursor: pointer; color: inherit; font-f
   <ul class="nav-links">
     <li><a href="#about">About</a></li>
     <li><a href="#work">Work</a></li>
-    <li><a href="#services">Services</a></li>
-    <li><a href="#process">Process</a></li>
   </ul>
 </nav>
 
 <div id="globalGradualBlur" class="global-gradual-blur-mount" aria-hidden="true"></div>
+
+<div class="site-hero-backdrop" aria-hidden="true">
+  <div class="hero-cover">
+    <img src="banner2.jpg" alt="" class="hero-img" data-translate-hero>
+    <canvas class="hero-canvas" id="heroCanvas"></canvas>
+  </div>
+  <div class="hero-fade" id="heroFade"></div>
+  <div class="hero-overlay" id="heroOverlay"></div>
+  <div class="hero-light"></div>
+</div>
 
 <!-- Hero — 6-Layer Structure -->
 <section class="hero">
   <!-- Layer 1: Bottom gradient -->
   <div class="hero-gradient"></div>
 
-  <!-- Layer 2: Background cover (image + canvas) -->
-  <div class="hero-cover">
-    <img src="banner2.jpg" alt="" class="hero-img" data-translate-hero>
-    <img src="assets/hero-portfolio-word.png" alt="" class="hero-portfolio-word">
-    <!-- Layer 6: Canvas animation effect -->
-    <canvas class="hero-canvas" id="heroCanvas"></canvas>
-  </div>
-
-  <!-- Layer 3: Fade mask (scroll-driven) -->
-  <div class="hero-fade" id="heroFade"></div>
-
-  <!-- Layer 4: Scroll overlay -->
-  <div class="hero-overlay" id="heroOverlay"></div>
-
-  <div class="hero-light" aria-hidden="true"></div>
+  <img src="assets/hero-portfolio-word.png" alt="" class="hero-portfolio-word">
   <img src="creative-hero-character-refined.png" alt="" class="hero-character">
   <div class="hero-discipline-list" aria-label="Design disciplines">
     <span>APP</span>
@@ -2283,30 +1698,28 @@ button { border: none; background: none; cursor: pointer; color: inherit; font-f
 
 <!-- About -->
 <section class="about" id="about">
-  <div class="about-badge-card">
+  <div class="about-card-overlap">
+    <div class="about-badge-card">
     <img src="assets/about-strap-cap.png" alt="" class="about-strap-cap">
     <div class="about-badge-hole" aria-hidden="true"></div>
     <div class="about-profile about-content-reveal">
-      <div class="about-label">About me</div>
       <div class="about-portrait">
         <img src="assets/about-portrait.jpg" alt="王宇洋 portrait">
       </div>
       <div class="about-info">
         <div class="about-info-row">
-          <div class="about-info-cn">王宇洋</div>
-          <div class="about-info-en">Wang Yuyang</div>
-        </div>
-        <div class="about-info-row">
-          <div class="about-info-cn">UI设计师</div>
-          <div class="about-info-en">UI Designer</div>
-        </div>
-        <div class="about-info-row">
-          <div class="about-info-cn">10年工作经验</div>
-          <div class="about-info-en">10 Years Experience</div>
-        </div>
-        <div class="about-info-row">
-          <div class="about-info-cn">158-8027-8967</div>
-          <div class="about-info-en">Phone</div>
+          <div class="about-info-item">
+            <div class="about-info-cn">王宇洋</div>
+            <div class="about-info-en">Wang Yuyang</div>
+          </div>
+          <div class="about-info-item">
+            <div class="about-info-cn">UI/UX</div>
+            <div class="about-info-en">Designer</div>
+          </div>
+          <div class="about-info-item">
+            <div class="about-info-cn">10年</div>
+            <div class="about-info-en">Experience</div>
+          </div>
         </div>
       </div>
       <div class="about-tools" aria-label="Design tools">
@@ -2316,385 +1729,116 @@ button { border: none; background: none; cursor: pointer; color: inherit; font-f
         <div class="about-tool">
           <img src="icon/Photoshop.svg" alt="Photoshop">
         </div>
+        <div class="about-tool">
+          <img src="icon/Adobe Ae.svg" alt="Adobe After Effects">
+        </div>
+        <div class="about-tool">
+          <img src="icon/Adobe Ai.svg" alt="Adobe Illustrator">
+        </div>
       </div>
     </div>
     <div class="about-experience about-content-reveal">
-      <p class="about-bio">Hello ，我是一名 UI/UX设计师，精通平面、APP、Website设计并逐渐转型产品经理。AI已经深度介入本人日常工作之中，涉及到各类前端展示（包括静态页面转各类交互输出）、PRD输出，现在在探索AI在视觉上的更多可能。</p>
+      <div class="about-copy">
+        <div class="about-hello" aria-label="Hello">
+          <img src="assets/about-hello-comma-gradient.png" alt="Hello" class="about-hello-image">
+          <svg class="about-hello-trail" viewBox="0 0 1451 654" aria-hidden="true" focusable="false">
+            <path class="about-hello-trail-path" pathLength="1" fill="none" stroke="#ffd2a1" stroke-width="13" stroke-linecap="round" stroke-linejoin="round" d="M 46 568 L 54 518 L 72 484 L 113 442 L 148 417 L 208 385 L 261 364 L 401 321 L 423 319 L 428 324 L 431 322 L 465 282 L 469 262 L 501 209 L 579 102 L 645 42 L 683 25 L 640 45 L 571 112 L 523 176 L 484 237 L 468 265 L 465 282 L 427 326 L 424 343 L 414 359 L 411 382 L 433 377 L 473 345 L 495 333 L 528 328 L 535 337 L 530 372 L 473 472 L 468 502 L 471 512 L 482 521 L 524 512 L 551 495 L 589 462 L 614 455 L 622 408 L 636 378 L 665 340 L 694 318 L 665 340 L 646 363 L 626 397 L 615 446 L 616 466 L 623 480 L 645 494 L 687 488 L 722 468 L 769 427 L 783 422 L 795 423 L 801 390 L 815 363 L 824 324 L 883 209 L 927 140 L 958 99 L 995 61 L 1022 44 L 1035 43 L 1017 46 L 992 63 L 935 129 L 894 191 L 842 286 L 818 340 L 815 363 L 805 379 L 798 402 L 796 448 L 802 463 L 813 474 L 827 479 L 867 470 L 904 446 L 943 410 L 960 404 L 968 405 L 976 366 L 989 345 L 993 319 L 1043 222 L 1087 155 L 1118 117 L 1158 79 L 1174 69 L 1190 66 L 1176 68 L 1147 88 L 1095 145 L 1027 250 L 994 317 L 989 345 L 978 362 L 970 387 L 967 417 L 974 446 L 993 460 L 1025 455 L 1046 444 L 1083 411 L 1105 407 L 1113 372 L 1127 346 L 1138 334 L 1155 330 L 1160 303 L 1180 285 L 1205 288 L 1219 306 L 1222 334 L 1217 374 L 1245 371 L 1273 361 L 1324 333 L 1342 316"></path>
+          </svg>
+        </div>
+        <p class="about-bio about-bio-primary">我是一名 UI/UX设计师，精通平面、APP、Website设计并参与多个产品的产品设计。现阶段AI已经深度介入本人日常工作之中，涉及到各类前端展示（包括静态页面转各类交互输出）、调研、PRD输出，现在在探索AI在视觉上的更多可能。</p>
+        <p class="about-bio about-bio-secondary">现就职于<span class="about-company">点石科技</span>，曾在<span class="about-company">信用家</span>、<span class="about-company">超享买</span>等企业就职并担任设计主视觉和设计主管。</p>
+      </div>
+      <div class="about-disciplines" aria-label="Design disciplines">
+        <span class="about-discipline-item">APP</span>
+        <span class="about-discipline-separator">-</span>
+        <span class="about-discipline-item">Website</span>
+        <span class="about-discipline-separator">-</span>
+        <span class="about-discipline-item">SaaS</span>
+        <span class="about-discipline-separator">-</span>
+        <span class="about-discipline-item">Graphic</span>
+        <span class="about-discipline-separator">-</span>
+        <span class="about-discipline-item">Vibe Coding</span>
+      </div>
+    </div>
     </div>
   </div>
 </section>
 
-<!-- Clients Marquee -->
-<section class="marquee-section">
-  <div class="marquee-track">
-    <span class="marquee-item">APP</span>
-    <span class="marquee-separator">-</span>
-    <span class="marquee-item">Website</span>
-    <span class="marquee-separator">-</span>
-    <span class="marquee-item">SaaS</span>
-    <span class="marquee-separator">-</span>
-    <span class="marquee-item">Graphic</span>
-    <span class="marquee-separator">-</span>
-    <span class="marquee-item">Vibe Coding</span>
-    <span class="marquee-separator">-</span>
-    <!-- Duplicate for seamless loop -->
-    <span class="marquee-item">APP</span>
-    <span class="marquee-separator">-</span>
-    <span class="marquee-item">Website</span>
-    <span class="marquee-separator">-</span>
-    <span class="marquee-item">SaaS</span>
-    <span class="marquee-separator">-</span>
-    <span class="marquee-item">Graphic</span>
-    <span class="marquee-separator">-</span>
-    <span class="marquee-item">Vibe Coding</span>
-    <span class="marquee-separator">-</span>
-  </div>
-</section>
-
-<!-- We Close That Gap -->
-<section class="gap-wrap" data-stacking-cards-item>
-  <div class="gap-contain">
-
-    <!-- 背景网格装饰层 -->
-    <div class="gap-bg-overlay">
-      <div class="gap-line-horizontal">
-        <div class="gap-line-square is-1"></div>
-        <div class="gap-line-square is-2"></div>
-        <div class="gap-line-square is-3"></div>
-      </div>
-      <div class="gap-overlay-grid">
-        <div class="gap-line"></div>
-        <div class="gap-line"></div>
-        <div class="gap-line"></div>
-        <div class="gap-line"></div>
-        <div class="gap-line"></div>
-        <div class="gap-line"></div>
-        <div class="gap-line"></div>
-        <div class="gap-line"></div>
-        <div class="gap-line"></div>
-        <div class="gap-line"></div>
-        <div class="gap-line"></div>
-        <div class="gap-line"></div>
-      </div>
-      <div class="gap-line-horizontal">
-        <div class="gap-line-square is-1"></div>
-        <div class="gap-line-square is-2"></div>
-        <div class="gap-line-square is-3"></div>
-      </div>
-    </div>
-
-    <!-- 主内容区 -->
-    <div class="gap-inner">
-      <div class="gap-eyebrow"></div>
-      <div class="gap-inner-content">
-        <div class="gap-heading-contain is-left">
-          <h2 class="gap-heading" data-split-reveal="lines">We close</h2>
+<!-- My Work -->
+<section class="my-work" id="work" aria-label="My work">
+  <div class="my-work-inner">
+    <div class="my-work-copy">
+      <article class="my-work-step is-active" data-work-step="0">
+        <h2 class="my-work-title">My<br>Work</h2>
+        <div class="my-work-case-copy">
+          <p class="my-work-date">2026.8<span>至今</span></p>
+          <p class="my-work-label">Brand identity / App design</p>
+          <h3 class="my-work-project-title">财苗 - 专注于孩童财商</h3>
+          <p class="my-work-description">围绕儿童财商启蒙打造的产品体验，通过任务、成长记录与亲子协作，让抽象的金钱认知转化为孩子能够理解、参与和持续积累的日常行动。</p>
         </div>
-        <div class="gap-heading-contain is-right">
-          <h2 class="gap-heading" data-split-reveal="lines">That gap</h2>
+      </article>
+      <article class="my-work-step" data-work-step="1">
+        <div class="my-work-case-copy">
+          <p class="my-work-date">2026.8<span>至今</span></p>
+          <p class="my-work-label">Visual system</p>
+          <h3 class="my-work-project-title">财苗 - 轻盈而可信赖的视觉语言</h3>
+          <p class="my-work-description">以橙色、青绿色和留白建立明快的品牌识别；将字体、插画与界面组件统一为适合儿童与家长共同使用的视觉系统。</p>
         </div>
-      </div>
-      <div class="gap-bottom">
-        <p class="gap-quote-text">"Our new presence has become a crucial first impression for potential clients. A clear, compelling asset that communicates our difference and expertise instantly."</p>
-        <div class="gap-testimonial">
-          <img src="https://trae-api-cn.mchost.guru/api/ide/v1/text_to_image?prompt=professional%20headshot%20portrait%20of%20a%20man%20in%20business%20casual%2C%20clean%20background%2C%20neutral%20tones&image_size=square_hd" alt="Jonathon Shannon" class="gap-headshot"/>
-          <div class="gap-testimonial-info">
-            <div class="gap-testimonial-name">Jonathon Shannon</div>
-            <div class="gap-testimonial-company">Supersolid Agency</div>
-          </div>
+      </article>
+      <article class="my-work-step" data-work-step="2">
+        <div class="my-work-case-copy">
+          <p class="my-work-date">2026.8<span>至今</span></p>
+          <p class="my-work-label">Product experience</p>
+          <h3 class="my-work-project-title">财苗 - 成长任务与亲子协作</h3>
+          <p class="my-work-description">以可完成的日常任务、成长记录和亲子共创机制，将抽象的财商教育转化为孩子能够参与、理解并持续积累的体验。</p>
         </div>
-      </div>
-    </div>
-
-      <!-- 文件夹：3层结构，SVG前盖 -->
-    <div class="gap-folder">
-      <!-- 第3层：底盖 -->
-      <div class="gap-folder-back"></div>
-      <!-- 第2层：3张纸张 -->
-      <div class="gap-paper" data-paper="0">
-        <div class="gap-paper-content">
-          <div class="gap-paper-header">OH Architecture</div>
-          <div class="gap-paper-line"></div>
-          <div class="gap-paper-line short"></div>
-          <div class="gap-paper-line medium"></div>
+      </article>
+      <article class="my-work-step" data-work-step="3">
+        <div class="my-work-case-copy">
+          <p class="my-work-date">2026.8<span>至今</span></p>
+          <p class="my-work-label">Brand application</p>
+          <h3 class="my-work-project-title">财苗 - 面向孩子的品牌应用系统</h3>
+          <p class="my-work-description">将品牌色彩、字体、图形和内容节奏延展到不同产品场景，建立兼顾趣味、可信度与成长感的完整应用体系。</p>
         </div>
-      </div>
-      <div class="gap-paper" data-paper="1">
-        <div class="gap-paper-content">
-          <div class="gap-paper-header">Moc Chau Creamery</div>
-          <div class="gap-paper-line"></div>
-          <div class="gap-paper-line short"></div>
-          <div class="gap-paper-line medium"></div>
-        </div>
-      </div>
-      <div class="gap-paper" data-paper="2">
-        <div class="gap-paper-content">
-          <div class="gap-paper-header">Brand Identity</div>
-          <div class="gap-paper-line"></div>
-          <div class="gap-paper-line short"></div>
-          <div class="gap-paper-line medium"></div>
-        </div>
-      </div>
-      <!-- 第1层：前盖 SVG，渐变透明度 + 光影 -->
-      <div class="gap-folder-cover">
-        <svg viewBox="0 0 41 29" preserveAspectRatio="none" aria-hidden="true">
-          <defs>
-            <!-- 渐变透明度：顶部较透明，底部较不透明 -->
-            <linearGradient id="coverGrad" x1="0" y1="0" x2="0" y2="1">
-              <stop offset="0%" stop-color="#9793A7" stop-opacity="0.3"/>
-              <stop offset="60%" stop-color="#9793A7" stop-opacity="0.45"/>
-              <stop offset="100%" stop-color="#9793A7" stop-opacity="0.55"/>
-            </linearGradient>
-            <!-- 顶部高光 -->
-            <linearGradient id="coverHighlight" x1="0" y1="0" x2="0" y2="1">
-              <stop offset="0%" stop-color="#ffffff" stop-opacity="0.08"/>
-              <stop offset="30%" stop-color="#ffffff" stop-opacity="0"/>
-            </linearGradient>
-          </defs>
-          <!-- 主体填充：渐变透明度 -->
-          <path d="M0 4C0 1.79086 1.78888 0 3.99802 0C7.1226 0 11.5245 0 15.1242 0C16.0539 0 17.8045 0.00700486 18.6835 0.343104C19.9439 0.825058 21.2626 3 22.612 3H36.6484C38.8576 3 40.6484 4.79086 40.6484 7V24.0703C40.6484 26.2795 38.8576 28.0703 36.6484 28.0703H4C1.79086 28.0703 0 26.2795 0 24.0703L0 4Z" fill="url(#coverGrad)"/>
-          <!-- 顶部高光层 -->
-          <path d="M0 4C0 1.79086 1.78888 0 3.99802 0C7.1226 0 11.5245 0 15.1242 0C16.0539 0 17.8045 0.00700486 18.6835 0.343104C19.9439 0.825058 21.2626 3 22.612 3H36.6484C38.8576 3 40.6484 4.79086 40.6484 7V24.0703C40.6484 26.2795 38.8576 28.0703 36.6484 28.0703H4C1.79086 28.0703 0 26.2795 0 24.0703L0 4Z" fill="url(#coverHighlight)"/>
-        </svg>
-      </div>
+      </article>
     </div>
-
-  </div>
-</section>
-
-<!-- How I Found My Way In -->
-<section class="journey-wrap" id="personal">
-  <div class="journey-inner">
-    <!-- 标题：横贯整个容器 -->
-    <div class="journey-header">
-      <h2 class="journey-title">How I found<br>my way in</h2>
-    </div>
-
-    <!-- 左侧：文案自然文档流，min-height 撑开滚动距离 -->
-    <div class="journey-col-text">
-      <div class="journey-step" data-journey-step="0">
-        <span class="journey-label">Origins</span>
-        <h3 class="journey-step-title">Kerch, Ukraine. 1994.</h3>
-        <p class="journey-desc">Born between two seas, one landline, and zero patience for being bored.</p>
-        <p class="journey-desc">In 2001, a 56K dialup screamed its way into our house and into my life. Mom hated it — I'd occupy our phone for hours. I thought it felt magical.</p>
-        <p class="journey-desc">An entire universe on the other end of a cable, and me, impatient to break into it.</p>
-        <div class="journey-audio-prompt">
-          <span class="journey-audio-icon">&#9835;</span>
-          <span class="journey-audio-text">Remember the sound?</span>
-        </div>
-      </div>
-      <div class="journey-step" data-journey-step="1">
-        <span class="journey-label">Going places</span>
-        <h3 class="journey-step-title">Rapid City, SD. 2009.</h3>
-        <p class="journey-desc">As a teen: soldering robots, DC++ swaps, IRC friends I'd never meet, trading pirated game discs. It was clunky, slow, but now that I look back — kind of amazing.</p>
-        <p class="journey-desc">In 2009, the family moved to Rapid City, SD. First real job at 16, American high school vibes, skiing on weekends, collecting rocks.</p>
-        <p class="journey-desc">Back to Kerch in 2014 — older, sharper, same instinct to poke at things until they made sense.</p>
-      </div>
-      <div class="journey-step" data-journey-step="2">
-        <span class="journey-label">The turning point</span>
-        <h3 class="journey-step-title">Porto, PT. 2020.</h3>
-        <p class="journey-desc">After years in product and sales, I realized the best work happens when you stop selling and start solving. That shift changed everything.</p>
-        <p class="journey-desc">I moved to Porto, went remote-first, and started building the kind of client relationships I always wished I had — ones built on trust, product depth, and zero BS.</p>
-        <p class="journey-desc">Now I help SaaS teams close deals, onboard clients, and grow accounts — without the chaos.</p>
-      </div>
-    </div>
-
-    <!-- 右侧：照片 sticky 固定，扇形展开/收拢 -->
-    <div class="journey-col-photo">
-      <div class="journey-photo-stage">
-        <div class="journey-photo-group" data-journey-step="0">
-          <img src="https://trae-api-cn.mchost.guru/api/ide/v1/text_to_image?prompt=old%20retro%20computer%20with%20CRT%20monitor%20and%20dialup%20modem%2C%20dark%20moody%20aesthetic%2C%20nostalgic%20photography&image_size=portrait_4_3" class="journey-photo jp-1" alt="Origins" />
-          <img src="https://trae-api-cn.mchost.guru/api/ide/v1/text_to_image?prompt=small%20ukrainian%20town%20by%20the%20sea%2C%20soviet%20era%20architecture%2C%20melancholic%20atmosphere%2C%20film%20photography&image_size=portrait_4_3" class="journey-photo jp-2" alt="Kerch" />
-          <img src="https://trae-api-cn.mchost.guru/api/ide/v1/text_to_image?prompt=56k%20dialup%20modem%20close%20up%2C%20retro%20technology%2C%20dark%20background%2C%20product%20photography&image_size=portrait_4_3" class="journey-photo jp-3" alt="Dialup" />
-        </div>
-        <div class="journey-photo-group" data-journey-step="1">
-          <img src="https://trae-api-cn.mchost.guru/api/ide/v1/text_to_image?prompt=american%20high%20school%20hallway%2C%20nostalgic%20photography%2C%20warm%20tones%2C%20film%20grain&image_size=portrait_4_3" class="journey-photo jp-1" alt="High School" />
-          <img src="https://trae-api-cn.mchost.guru/api/ide/v1/text_to_image?prompt=snowy%20mountain%20skiing%20resort%20in%20south%20dakota%2C%20winter%20sports%2C%20cold%20blue%20tones&image_size=portrait_4_3" class="journey-photo jp-2" alt="Skiing" />
-          <img src="https://trae-api-cn.mchost.guru/api/ide/v1/text_to_image?prompt=teenager%20bedroom%20with%20old%20computer%20and%20electronics%2C%20soldering%20kit%2C%20dark%20moody&image_size=portrait_4_3" class="journey-photo jp-3" alt="Teen Room" />
-        </div>
-        <div class="journey-photo-group" data-journey-step="2">
-          <img src="https://trae-api-cn.mchost.guru/api/ide/v1/text_to_image?prompt=porto%20portugal%20cityscape%20at%20dusk%2C%20colorful%20buildings%2C%20river%20douro%2C%20warm%20golden%20light&image_size=portrait_4_3" class="journey-photo jp-1" alt="Porto" />
-          <img src="https://trae-api-cn.mchost.guru/api/ide/v1/text_to_image?prompt=modern%20remote%20workspace%20with%20laptop%20and%20coffee%2C%20minimalist%20desk%2C%20warm%20lighting%2C%20cozy&image_size=portrait_4_3" class="journey-photo jp-2" alt="Remote Work" />
-          <img src="https://trae-api-cn.mchost.guru/api/ide/v1/text_to_image?prompt=person%20walking%20on%20portuguese%20cobblestone%20street%2C%20back%20view%2C%20golden%20hour%2C%20contemplative&image_size=portrait_4_3" class="journey-photo jp-3" alt="Walking" />
-        </div>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- Success Stories -->
-<section class="stories" id="stories">
-  <div class="stories-header">
-    <div>
-      <div class="stories-label reveal">Success Stories</div>
-      <h2 class="stories-title reveal reveal-delay-1">Success Stories</h2>
-    </div>
-    <div class="stories-nav reveal">
-      <button id="storyPrev" aria-label="Previous">&#8592;</button>
-      <button id="storyNext" aria-label="Next">&#8594;</button>
-    </div>
-  </div>
-  <div class="stories-track" id="storiesTrack">
-    <!-- Card 1 -->
-    <div class="story-card">
-      <div class="story-card-image">
-        <img src="https://trae-api-cn.mchost.guru/api/ide/v1/text_to_image?prompt=modern%20architecture%20firm%20website%20design%2C%20luxury%20homes%2C%20dark%20elegant%20aesthetic&image_size=landscape_16_9" alt="OH Architecture">
-        <span class="story-card-badge">SS</span>
-        <span class="story-card-number">/06</span>
-      </div>
-      <div class="story-card-content">
-        <div class="story-card-title">OH Architecture</div>
-        <div class="story-card-desc">Brand refresh and website for a practice with a decade of crafting high-end homes for Australian families.</div>
-        <div class="story-card-stat">
-          <span class="story-card-stat-value">$2M+</span>
-          <span class="story-card-stat-label">In new projects within 3 months of launch</span>
-        </div>
-      </div>
-    </div>
-    <!-- Card 2 -->
-    <div class="story-card">
-      <div class="story-card-image">
-        <img src="https://trae-api-cn.mchost.guru/api/ide/v1/text_to_image?prompt=creative%20agency%20website%20design%2C%20bold%20typography%2C%20vibrant%20colors%2C%20modern%20layout&image_size=landscape_16_9" alt="Supersolid">
-        <span class="story-card-badge">SS</span>
-        <span class="story-card-number">/06</span>
-      </div>
-      <div class="story-card-content">
-        <div class="story-card-title">Supersolid</div>
-        <div class="story-card-desc">Website for a 100% creative-owned Sydney agency built to merge commercial value with cultural impact.</div>
-        <div class="story-card-stat">
-          <span class="story-card-stat-value">58%</span>
-          <span class="story-card-stat-label">Increase in average session duration</span>
-        </div>
-      </div>
-    </div>
-    <!-- Card 3 -->
-    <div class="story-card">
-      <div class="story-card-image">
-        <img src="https://trae-api-cn.mchost.guru/api/ide/v1/text_to_image?prompt=mural%20art%20agency%20website%2C%20large%20scale%20public%20art%2C%20colorful%20street%20art&image_size=landscape_16_9" alt="Mammoth Murals">
-        <span class="story-card-badge">SS</span>
-        <span class="story-card-number">/06</span>
-      </div>
-      <div class="story-card-content">
-        <div class="story-card-title">Mammoth Murals</div>
-        <div class="story-card-desc">Brand strategy, identity and website for an established mural agency with a decade of large-scale public art behind it.</div>
-        <div class="story-card-stat">
-          <span class="story-card-stat-value">$100K+</span>
-          <span class="story-card-stat-label">In new work within 30 days of launch</span>
-        </div>
-      </div>
-    </div>
-    <!-- Card 4 -->
-    <div class="story-card">
-      <div class="story-card-image">
-        <img src="https://trae-api-cn.mchost.guru/api/ide/v1/text_to_image?prompt=university%20initiative%20website%2C%20queer%20education%20platform%2C%20modern%20inclusive%20design&image_size=landscape_16_9" alt="HISS">
-        <span class="story-card-badge">SS</span>
-        <span class="story-card-number">/06</span>
-      </div>
-      <div class="story-card-content">
-        <div class="story-card-title">HISS (University of Sydney)</div>
-        <div class="story-card-desc">Brand identity and website for a University of Sydney initiative challenging the norms of queer education on a global stage.</div>
-        <div class="story-card-stat">
-          <span class="story-card-stat-value">15+</span>
-          <span class="story-card-stat-label">Global universities united on a single platform</span>
-        </div>
-      </div>
-    </div>
-    <!-- Card 5 -->
-    <div class="story-card">
-      <div class="story-card-image">
-        <img src="https://trae-api-cn.mchost.guru/api/ide/v1/text_to_image?prompt=production%20agency%20website%2C%20film%20and%20entertainment%2C%20dark%20cinematic%20aesthetic&image_size=landscape_16_9" alt="Backhouse">
-        <span class="story-card-badge">SS</span>
-        <span class="story-card-number">/06</span>
-      </div>
-      <div class="story-card-content">
-        <div class="story-card-title">Backhouse</div>
-        <div class="story-card-desc">Website for an embedded production partner behind campaigns for Netflix, A24, HBO, Apple and Google.</div>
-        <div class="story-card-stat">
-          <span class="story-card-stat-value">4 days</span>
-          <span class="story-card-stat-label">To launch and reposition the agency</span>
-        </div>
-      </div>
-    </div>
-    <!-- Card 6 -->
-    <div class="story-card">
-      <div class="story-card-image">
-        <img src="https://trae-api-cn.mchost.guru/api/ide/v1/text_to_image?prompt=activation%20agency%20website%2C%20bold%20creative%20campaigns%2C%20energetic%20brand%20design&image_size=landscape_16_9" alt="SLIK">
-        <span class="story-card-badge">SS</span>
-        <span class="story-card-number">/06</span>
-      </div>
-      <div class="story-card-content">
-        <div class="story-card-title">SLIK</div>
-        <div class="story-card-desc">Website for an Australian activation agency pushing creativity further for some of the country's most ambitious brands.</div>
-        <div class="story-card-stat">
-          <span class="story-card-stat-value">&mdash;</span>
-          <span class="story-card-stat-label">Full brand & web transformation</span>
-        </div>
-      </div>
-    </div>
-  </div>
-  <div class="stories-footer">
-    <div class="stories-counter reveal"><span id="storyCurrent">01</span> / 06</div>
-    <a href="#" class="stories-view-all reveal">View All Stories (SOON) <span>&#8594;</span></a>
-  </div>
-</section>
-
-<!-- Services -->
-<section class="services" id="services">
-  <div class="services-label reveal">What we can help with</div>
-  <div class="services-grid">
-    <div class="service-item reveal">
-      <div class="service-icon">&#9670;</div>
-      <div class="service-name">Brand Strategy</div>
-    </div>
-    <div class="service-item reveal reveal-delay-1">
-      <div class="service-icon">&#9673;</div>
-      <div class="service-name">Visual Identity</div>
-    </div>
-    <div class="service-item reveal reveal-delay-2">
-      <div class="service-icon">&#9674;</div>
-      <div class="service-name">Website Strategy</div>
-    </div>
-    <div class="service-item reveal">
-      <div class="service-icon">&#9651;</div>
-      <div class="service-name">Website Design</div>
-    </div>
-    <div class="service-item reveal reveal-delay-1">
-      <div class="service-icon">&#9652;</div>
-      <div class="service-name">Website Development</div>
-    </div>
-    <div class="service-item reveal reveal-delay-2">
-      <div class="service-icon">&#9654;</div>
-      <div class="service-name">3D Development</div>
-    </div>
-  </div>
-</section>
-
-<!-- Process -->
-<section class="process" id="process">
-  <div class="process-label reveal">Project Process</div>
-  <div class="process-steps">
-    <div class="process-step reveal">
-      <div class="step-number">01</div>
-      <div>
-        <div class="step-title">We uncover your story</div>
-        <div class="step-desc">We dig deep into your brand, surface what makes you irreplaceable, and shape it into sharp positioning and a website strategy that connects in seconds.</div>
-        <a href="#" class="step-link">See step 01 in action &#8599;</a>
-      </div>
-    </div>
-    <div class="process-step reveal">
-      <div class="step-number">02</div>
-      <div>
-        <div class="step-title">We shape your digital presence</div>
-        <div class="step-desc">With your narrative locked, we design and direct a brand and website that feels premium, signals credibility, and gives your audience one clear reason to lean in and act.</div>
-        <a href="#" class="step-link">See step 02 in action &#8599;</a>
-      </div>
-    </div>
-    <div class="process-step reveal">
-      <div class="step-number">03</div>
-      <div>
-        <div class="step-title">We send it into the world</div>
-        <div class="step-desc">Your brand and website goes live as a long-term asset that turns attention into opportunity, attracts the clients you're built for, and grows with you.</div>
-        <a href="#" class="step-link">See step 03 in action &#8599;</a>
+    <div class="my-work-media" aria-label="Caimiao project previews">
+      <div class="my-work-media-stage">
+        <a class="my-work-media-group is-active" data-work-step="0" href="project.html?work=caimiao&amp;view=brand" aria-label="Open Caimiao project">
+          <span class="my-work-media-frame">
+            <span class="my-work-media-card my-work-media-card--wide"><img src="assets/caimiao-work/caimiao-phone.png" alt="Caimiao mobile product visual"></span>
+            <span class="my-work-media-card my-work-media-card--square my-work-media-card--type"><img src="assets/caimiao-work/caimiao-type.png" alt="Caimiao typography system"></span>
+            <span class="my-work-media-card my-work-media-card--square my-work-media-card--palette"><img src="assets/caimiao-work/caimiao-palette.png" alt="Caimiao color system"></span>
+          </span>
+        </a>
+        <a class="my-work-media-group" data-work-step="1" href="project.html?work=caimiao&amp;view=system" aria-label="Open Caimiao visual system">
+          <span class="my-work-media-frame">
+            <span class="my-work-media-card my-work-media-card--wide"><img src="project/caimiao/1.jpg" alt="Caimiao visual identity"></span>
+            <span class="my-work-media-card my-work-media-card--square"><img src="project/caimiao/6.jpg" alt="Caimiao visual planning"></span>
+            <span class="my-work-media-card my-work-media-card--square"><img src="project/caimiao/25.jpg" alt="Caimiao growth visual"></span>
+          </span>
+        </a>
+        <a class="my-work-media-group" data-work-step="2" href="project.html?work=caimiao&amp;view=experience" aria-label="Open Caimiao product experience">
+          <span class="my-work-media-frame my-work-media-frame--portrait-split">
+            <span class="my-work-media-card my-work-media-card--wide"><img src="project/caimiao/27.jpg" alt="Caimiao product experience"></span>
+            <span class="my-work-media-card my-work-media-card--square"><img src="project/caimiao/10.jpg" alt="Caimiao interaction detail"></span>
+            <span class="my-work-media-card my-work-media-card--square"><img src="project/caimiao/11.jpg" alt="Caimiao task detail"></span>
+          </span>
+        </a>
+        <a class="my-work-media-group" data-work-step="3" href="project.html?work=caimiao&amp;view=application" aria-label="Open Caimiao brand application">
+          <span class="my-work-media-frame">
+            <span class="my-work-media-card my-work-media-card--wide"><img src="project/caimiao/14.jpg" alt="Caimiao brand application"></span>
+            <span class="my-work-media-card my-work-media-card--square"><img src="project/caimiao/4.jpg" alt="Caimiao brand detail"></span>
+            <span class="my-work-media-card my-work-media-card--square"><img src="project/caimiao/12.jpg" alt="Caimiao visual detail"></span>
+          </span>
+        </a>
+        <a class="my-work-media-group" data-work-step="4" href="project.html?work=caimiao&amp;view=application-detail" aria-label="Open Caimiao application detail">
+          <span class="my-work-media-frame">
+            <span class="my-work-media-card my-work-media-card--wide"><img src="project/caimiao/5.jpg" alt="Caimiao application overview"></span>
+            <span class="my-work-media-card my-work-media-card--square"><img src="project/caimiao/17.jpg" alt="Caimiao mobile detail"></span>
+            <span class="my-work-media-card my-work-media-card--square"><img src="project/caimiao/18.jpg" alt="Caimiao mobile experience"></span>
+          </span>
+        </a>
       </div>
     </div>
   </div>
@@ -2702,7 +1846,7 @@ button { border: none; background: none; cursor: pointer; color: inherit; font-f
 
 <!-- CTA -->
 <section class="cta" id="contact">
-  <h2 class="cta-title reveal">Ready to close<br>the gap?</h2>
+  <h2 class="cta-title reveal">Thank You</h2>
   <p class="cta-desc reveal reveal-delay-1">Let's talk about how we can transform your digital presence into your most powerful asset.</p>
   <a href="#" class="cta-button reveal reveal-delay-2">
     Start a Project
@@ -2710,17 +1854,7 @@ button { border: none; background: none; cursor: pointer; color: inherit; font-f
   </a>
 </section>
 
-<!-- Footer -->
-<footer class="footer">
-  <div class="footer-left">MONOLOG</div>
-  <div class="footer-center">&copy; 2024 MONOLOG. All rights reserved.</div>
-  <ul class="footer-links">
-    <li><a href="#">Twitter</a></li>
-    <li><a href="#">Instagram</a></li>
-    <li><a href="#">LinkedIn</a></li>
-    <li><a href="#">Dribbble</a></li>
-  </ul>
-</footer>
+<canvas class="work-curl-canvas" id="workCurlCanvas" aria-hidden="true"></canvas>
 
 <script>
 // ===== LOADER =====
@@ -2753,7 +1887,7 @@ function animateRing() {
 animateRing();
 
 // Hover effects for cursor
-const hoverElements = document.querySelectorAll('a, button, .client-item, .process-step, .story-card');
+const hoverElements = document.querySelectorAll('a, button, .client-item');
 hoverElements.forEach(el => {
   el.addEventListener('mouseenter', () => {
     cursorRing.style.width = '60px';
@@ -2798,6 +1932,7 @@ revealElements.forEach(el => revealObserver.observe(el));
 (function() {
   const card = document.querySelector('.about-badge-card');
   const content = document.querySelectorAll('.about-content-reveal');
+
   if (!card || !window.gsap) return;
 
   if (window.ScrollTrigger) {
@@ -2806,6 +1941,18 @@ revealElements.forEach(el => revealObserver.observe(el));
 
   const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
   const hasFinePointer = window.matchMedia('(pointer: fine)').matches;
+  const showHelloTrace = () => card.classList.add('hello-visible');
+
+  if (reduceMotion || !window.ScrollTrigger) {
+    showHelloTrace();
+  } else {
+    ScrollTrigger.create({
+      trigger: card,
+      start: 'top 58%',
+      once: true,
+      onEnter: showHelloTrace
+    });
+  }
 
   if (content.length) {
     if (reduceMotion || !window.ScrollTrigger) {
@@ -2857,6 +2004,293 @@ revealElements.forEach(el => revealObserver.observe(el));
   }
 })();
 
+// ===== MY WORK: COPY-LED MEDIA SWITCHING =====
+(function() {
+  const wrap = document.querySelector('.my-work');
+  if (!wrap || !window.gsap) return;
+
+  const steps = wrap.querySelectorAll('.my-work-step');
+  const groups = wrap.querySelectorAll('.my-work-media-group');
+  const caseCopies = [...wrap.querySelectorAll('.my-work-case-copy')];
+  const workTitle = wrap.querySelector('.my-work-title');
+  const mediaFrame = wrap.querySelector('.my-work-media-frame');
+  const mediaStage = wrap.querySelector('.my-work-media-stage');
+  const featureFrame = wrap.querySelector('.my-work-media-frame--portrait-split');
+  const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const isMobile = window.matchMedia('(max-width: 768px)').matches;
+  if (!steps.length || !groups.length || !mediaFrame || !mediaStage || isMobile) return;
+
+  let activeIndex = 0;
+  let lastScrollY = window.scrollY;
+  let frame = null;
+
+  const syncFeatureFrameHeight = () => {
+    if (!featureFrame) return;
+    featureFrame.style.setProperty('--feature-frame-height', `${mediaFrame.getBoundingClientRect().height}px`);
+  };
+
+  const syncCaseCopyPositions = () => {
+    syncFeatureFrameHeight();
+    caseCopies.forEach(copy => copy.style.removeProperty('--case-copy-shift'));
+    workTitle?.style.removeProperty('--work-title-shift');
+
+    requestAnimationFrame(() => {
+      const frameBottom = mediaFrame.getBoundingClientRect().bottom - mediaStage.getBoundingClientRect().top;
+      if (!Number.isFinite(frameBottom)) return;
+
+      if (workTitle) {
+        const titleShift = mediaFrame.getBoundingClientRect().top - steps[0].getBoundingClientRect().top;
+        workTitle.style.setProperty('--work-title-shift', `${titleShift}px`);
+      }
+
+      caseCopies.forEach((copy, index) => {
+        const targetBottom = steps[index].getBoundingClientRect().top + frameBottom;
+        const shift = targetBottom - copy.getBoundingClientRect().bottom;
+        copy.style.setProperty('--case-copy-shift', `${shift}px`);
+      });
+    });
+  };
+
+  if (reduceMotion) {
+    steps[0].classList.add('is-active');
+    groups[0].classList.add('is-active');
+    caseCopies.forEach(copy => { copy.style.opacity = '1'; });
+    syncCaseCopyPositions();
+    return;
+  }
+
+  groups.forEach((group, index) => {
+    gsap.set(group, { autoAlpha: index === 0 ? 1 : 0, x: 0, y: 0 });
+  });
+
+  window.addEventListener('load', syncCaseCopyPositions, { once: true });
+  window.addEventListener('resize', syncCaseCopyPositions, { passive: true });
+  syncCaseCopyPositions();
+
+  const activate = (nextIndex, direction) => {
+    if (nextIndex === activeIndex || !groups[nextIndex]) return;
+    const previous = groups[activeIndex];
+    const next = groups[nextIndex];
+
+    const activeStepIndex = Math.max(0, nextIndex - 1);
+    steps.forEach((step, index) => step.classList.toggle('is-active', index === activeStepIndex));
+    groups.forEach((group, index) => group.classList.toggle('is-active', index === nextIndex));
+    gsap.to(previous, {
+      autoAlpha: 0,
+      x: direction === 'down' ? -24 : 24,
+      y: direction === 'down' ? -12 : 12,
+      duration: 0.42,
+      ease: 'power2.inOut',
+      overwrite: 'auto'
+    });
+    gsap.fromTo(next,
+      { autoAlpha: 0, x: direction === 'down' ? 34 : -34, y: direction === 'down' ? 14 : -14 },
+      { autoAlpha: 1, x: 0, y: 0, duration: 0.56, ease: 'power3.out', overwrite: 'auto' }
+    );
+    activeIndex = nextIndex;
+  };
+
+  const update = () => {
+    frame = null;
+    const direction = window.scrollY >= lastScrollY ? 'down' : 'up';
+    lastScrollY = window.scrollY;
+    const mediaTop = mediaFrame.getBoundingClientRect().top;
+    let nextIndex = 0;
+
+    caseCopies.forEach((copy, index) => {
+      const copyTop = copy.getBoundingClientRect().top;
+      const passedDistance = Math.max(0, mediaTop - copyTop);
+      const fadeProgress = Math.min(passedDistance / (window.innerHeight * 0.35), 1);
+      copy.style.opacity = (1 - fadeProgress * 0.68).toFixed(3);
+      if (copyTop <= mediaTop) nextIndex = Math.min(index + 1, groups.length - 1);
+    });
+    activate(nextIndex, direction);
+  };
+
+  window.addEventListener('scroll', () => {
+    if (!frame) frame = requestAnimationFrame(update);
+  }, { passive: true });
+  update();
+})();
+
+// ===== MY WORK: SCROLL-VELOCITY WEBGL CURL =====
+(function() {
+  const canvas = document.getElementById('workCurlCanvas');
+  const work = document.querySelector('.my-work');
+  const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  if (!canvas || !work || reduceMotion || window.matchMedia('(max-width: 768px)').matches) return;
+
+  const images = [...work.querySelectorAll('.my-work-media-card img')];
+  if (!images.length) return;
+
+  const gl = canvas.getContext('webgl', { alpha: true, premultipliedAlpha: false });
+  if (!gl) return;
+
+  const vertexSource = `
+    attribute vec2 aPosition;
+    uniform vec4 uRect;
+    uniform float uCurl;
+    varying vec2 vUv;
+
+    void main() {
+      float screenY = clamp(uRect.y + aPosition.y * uRect.w, 0.0, 1.0);
+      float profile = 1.0 - sqrt(max(0.0, 1.0 - pow(screenY * 2.0 - 1.0, 2.0)));
+      float scaleX = 1.0 - profile * uCurl;
+      float curvedX = 0.5 + (aPosition.x - 0.5) * scaleX;
+      vec2 screen = vec2(uRect.x + curvedX * uRect.z, uRect.y + aPosition.y * uRect.w);
+      vUv = aPosition;
+      gl_Position = vec4(screen * 2.0 - 1.0, 0.0, 1.0);
+    }
+  `;
+
+  const fragmentSource = `
+    precision mediump float;
+    uniform sampler2D uTexture;
+    uniform vec4 uRect;
+    uniform float uCurl;
+    uniform float uOpacity;
+    varying vec2 vUv;
+
+    void main() {
+      float screenY = clamp(uRect.y + vUv.y * uRect.w, 0.0, 1.0);
+      float profile = 1.0 - sqrt(max(0.0, 1.0 - pow(screenY * 2.0 - 1.0, 2.0)));
+      float sampleScale = max(0.72, 1.0 - profile * uCurl * 1.7);
+      float sampleX = 0.5 + (vUv.x - 0.5) / sampleScale;
+      if (sampleX < 0.0 || sampleX > 1.0) discard;
+      vec4 color = texture2D(uTexture, vec2(sampleX, vUv.y));
+      gl_FragColor = vec4(color.rgb, color.a * uOpacity);
+    }
+  `;
+
+  function compile(type, source) {
+    const shader = gl.createShader(type);
+    gl.shaderSource(shader, source);
+    gl.compileShader(shader);
+    if (!gl.getShaderParameter(shader, gl.COMPILE_STATUS)) {
+      gl.deleteShader(shader);
+      return null;
+    }
+    return shader;
+  }
+
+  const vertex = compile(gl.VERTEX_SHADER, vertexSource);
+  const fragment = compile(gl.FRAGMENT_SHADER, fragmentSource);
+  if (!vertex || !fragment) return;
+
+  const program = gl.createProgram();
+  gl.attachShader(program, vertex);
+  gl.attachShader(program, fragment);
+  gl.linkProgram(program);
+  if (!gl.getProgramParameter(program, gl.LINK_STATUS)) return;
+
+  const positionLocation = gl.getAttribLocation(program, 'aPosition');
+  const rectLocation = gl.getUniformLocation(program, 'uRect');
+  const curlLocation = gl.getUniformLocation(program, 'uCurl');
+  const opacityLocation = gl.getUniformLocation(program, 'uOpacity');
+  const textureLocation = gl.getUniformLocation(program, 'uTexture');
+  const quad = gl.createBuffer();
+  gl.bindBuffer(gl.ARRAY_BUFFER, quad);
+  gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([
+    0, 0, 1, 0,
+    0, 1, 1, 1
+  ]), gl.STATIC_DRAW);
+
+  const textures = new Map();
+  function uploadTexture(image) {
+    if (!image.complete || !image.naturalWidth) return false;
+    const texture = gl.createTexture();
+    gl.bindTexture(gl.TEXTURE_2D, texture);
+    gl.pixelStorei(gl.UNPACK_FLIP_Y_WEBGL, true);
+    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE);
+    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
+    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR);
+    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.LINEAR);
+    gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, image);
+    textures.set(image, texture);
+    return true;
+  }
+
+  function waitForImage(image) {
+    if (image.complete) return Promise.resolve();
+    return new Promise(resolve => {
+      image.addEventListener('load', resolve, { once: true });
+      image.addEventListener('error', resolve, { once: true });
+    });
+  }
+
+  Promise.all(images.map(waitForImage)).then(() => {
+    const hasTexture = images.some(uploadTexture);
+    if (!hasTexture) return;
+
+    document.body.classList.add('work-curl-ready');
+    gl.useProgram(program);
+    gl.enable(gl.BLEND);
+    gl.blendFunc(gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA);
+    gl.uniform1i(textureLocation, 0);
+    gl.bindBuffer(gl.ARRAY_BUFFER, quad);
+    gl.enableVertexAttribArray(positionLocation);
+    gl.vertexAttribPointer(positionLocation, 2, gl.FLOAT, false, 0, 0);
+
+    let width = 0;
+    let height = 0;
+    let lastScrollY = window.scrollY;
+    let lastTime = performance.now();
+    let curl = 0;
+
+    function resize() {
+      const dpr = Math.min(window.devicePixelRatio || 1, 1.5);
+      width = window.innerWidth;
+      height = window.innerHeight;
+      canvas.width = Math.round(width * dpr);
+      canvas.height = Math.round(height * dpr);
+      gl.viewport(0, 0, canvas.width, canvas.height);
+    }
+
+    function drawImage(image) {
+      const group = image.closest('.my-work-media-group');
+      if (!group || getComputedStyle(group).visibility === 'hidden') return;
+
+      const rect = image.getBoundingClientRect();
+      if (rect.bottom <= 0 || rect.top >= height || rect.right <= 0 || rect.left >= width) return;
+
+      const opacity = Number.parseFloat(getComputedStyle(group).opacity);
+      if (!Number.isFinite(opacity) || opacity <= 0.002) return;
+
+      const texture = textures.get(image);
+      if (!texture) return;
+      gl.activeTexture(gl.TEXTURE0);
+      gl.bindTexture(gl.TEXTURE_2D, texture);
+      gl.uniform4f(rectLocation,
+        rect.left / width,
+        1 - rect.bottom / height,
+        rect.width / width,
+        rect.height / height
+      );
+      gl.uniform1f(opacityLocation, opacity);
+      gl.drawArrays(gl.TRIANGLE_STRIP, 0, 4);
+    }
+
+    function render(now) {
+      const delta = Math.max((now - lastTime) / 1000, 1 / 120);
+      const speed = Math.abs(window.scrollY - lastScrollY) / delta;
+      const targetCurl = Math.min(speed / 1800, 1) * 0.065;
+      curl += (targetCurl - curl) * 0.14;
+      lastScrollY = window.scrollY;
+      lastTime = now;
+
+      gl.clearColor(0, 0, 0, 0);
+      gl.clear(gl.COLOR_BUFFER_BIT);
+      gl.uniform1f(curlLocation, curl);
+      if (!document.hidden && width && height) images.forEach(drawImage);
+      requestAnimationFrame(render);
+    }
+
+    window.addEventListener('resize', resize, { passive: true });
+    resize();
+    requestAnimationFrame(render);
+  });
+})();
+
 // ===== COUNTER ANIMATION =====
 const statNumbers = document.querySelectorAll('.stat-number[data-count]');
 const counterObserver = new IntersectionObserver((entries) => {
@@ -2880,45 +2314,6 @@ const counterObserver = new IntersectionObserver((entries) => {
 }, { threshold: 0.5 });
 
 statNumbers.forEach(el => counterObserver.observe(el));
-
-// ===== STORIES HORIZONTAL SCROLL =====
-const storiesTrack = document.getElementById('storiesTrack');
-const storyPrev = document.getElementById('storyPrev');
-const storyNext = document.getElementById('storyNext');
-const storyCurrent = document.getElementById('storyCurrent');
-
-let isDragging = false;
-let startX, scrollLeft;
-
-storiesTrack.addEventListener('mousedown', (e) => {
-  isDragging = true;
-  startX = e.pageX - storiesTrack.offsetLeft;
-  scrollLeft = storiesTrack.scrollLeft;
-});
-
-storiesTrack.addEventListener('mouseleave', () => { isDragging = false; });
-storiesTrack.addEventListener('mouseup', () => { isDragging = false; });
-storiesTrack.addEventListener('mousemove', (e) => {
-  if (!isDragging) return;
-  e.preventDefault();
-  const x = e.pageX - storiesTrack.offsetLeft;
-  const walk = (x - startX) * 1.5;
-  storiesTrack.scrollLeft = scrollLeft - walk;
-});
-
-storyNext.addEventListener('click', () => {
-  storiesTrack.scrollBy({ left: 440, behavior: 'smooth' });
-});
-
-storyPrev.addEventListener('click', () => {
-  storiesTrack.scrollBy({ left: -440, behavior: 'smooth' });
-});
-
-storiesTrack.addEventListener('scroll', () => {
-  const cardWidth = 420 + 24; // card + gap
-  const index = Math.round(storiesTrack.scrollLeft / cardWidth) + 1;
-  storyCurrent.textContent = String(index).padStart(2, '0');
-});
 
 // ===== SMOOTH NAV SCROLL =====
 document.querySelectorAll('.nav-links a').forEach(link => {
@@ -3288,6 +2683,7 @@ window.addEventListener('scroll', () => {
 // ===== HERO POINTER: PSEUDO 3D LIGHTING =====
 (function() {
   const heroSection = document.querySelector('.hero');
+  const heroBackdrop = document.querySelector('.site-hero-backdrop');
   if (!heroSection) return;
 
   const canHover = window.matchMedia('(pointer: fine)').matches;
@@ -3347,6 +2743,20 @@ window.addEventListener('scroll', () => {
     heroSection.style.setProperty('--hero-light-x', `${target.lightX.toFixed(2)}%`);
     heroSection.style.setProperty('--hero-light-y', `${target.lightY.toFixed(2)}%`);
 
+    if (heroBackdrop) {
+      heroBackdrop.style.setProperty('--hero-bg-x', `${(-state.x * 14).toFixed(2)}px`);
+      heroBackdrop.style.setProperty('--hero-bg-y', `${(-state.y * 10).toFixed(2)}px`);
+      heroBackdrop.style.setProperty('--hero-bg-blur', `${(2.4 - state.intensity * 0.25).toFixed(2)}px`);
+      heroBackdrop.style.setProperty('--hero-bg-brightness', (1 + state.intensity * 0.08).toFixed(3));
+      heroBackdrop.style.setProperty('--hero-bg-scale', (1.01 + state.intensity * 0.015).toFixed(4));
+      heroBackdrop.style.setProperty('--hero-light-drift-x', `${(state.x * 6).toFixed(2)}px`);
+      heroBackdrop.style.setProperty('--hero-light-drift-y', `${(state.y * 3).toFixed(2)}px`);
+      heroBackdrop.style.setProperty('--hero-light-opacity', (0.16 + state.intensity * 0.2).toFixed(3));
+      heroBackdrop.style.setProperty('--hero-vignette-opacity', (0.28 + state.intensity * 0.08).toFixed(3));
+      heroBackdrop.style.setProperty('--hero-light-x', `${target.lightX.toFixed(2)}%`);
+      heroBackdrop.style.setProperty('--hero-light-y', `${target.lightY.toFixed(2)}%`);
+    }
+
     const settled = Math.abs(target.x - state.x) < 0.002 &&
       Math.abs(target.y - state.y) < 0.002 &&
       Math.abs(target.intensity - state.intensity) < 0.002;
@@ -3376,336 +2786,34 @@ window.addEventListener('scroll', () => {
   const heroSection = document.querySelector('.hero');
   const heroFade = document.getElementById('heroFade');
   const heroOverlay = document.getElementById('heroOverlay');
-  const heroImg = document.querySelector('.hero-img[data-translate-hero]');
-  if (!heroSection) return;
+  const workSection = document.querySelector('.my-work');
+  if (!heroSection || !workSection) return;
 
-  window.addEventListener('scroll', () => {
+  const updateHeroFade = () => {
     const scrollY = window.scrollY;
     const heroH = heroSection.offsetHeight;
+    const workTop = workSection.offsetTop;
+    const releaseStart = Math.max(heroH * 0.8, workTop - window.innerHeight * 0.9);
+    const fadeIn = Math.min(scrollY / (heroH * 0.72), 1) * 0.62;
+    const release = Math.min(Math.max((scrollY - releaseStart) / Math.max(workTop - releaseStart, 1), 0), 1);
 
-    // Hero image stays fixed (no parallax)
-
-    // Fade mask: gradually covers hero as user scrolls
     if (heroFade) {
-      const fadeProgress = Math.min(scrollY / (heroH * 0.6), 1);
-      heroFade.style.opacity = fadeProgress;
+      heroFade.style.opacity = (fadeIn * (1 - release)).toFixed(3);
     }
-
-    // Scroll overlay: kicks in after 60% scroll
     if (heroOverlay) {
-      const overlayThreshold = heroH * 0.6;
-      if (scrollY > overlayThreshold) {
-        heroOverlay.style.opacity = Math.min((scrollY - overlayThreshold) / (heroH * 0.3), 1);
-      } else {
-        heroOverlay.style.opacity = 0;
-      }
+      heroOverlay.style.opacity = 0;
     }
+  };
 
-  });
+  window.addEventListener('scroll', updateHeroFade, { passive: true });
+  window.addEventListener('resize', updateHeroFade, { passive: true });
+  updateHeroFade();
 })();
 
 // === SCROLL SYNC (no Lenis) ===
 // Lag smoothing disabled for precise scroll-driven animation timing
 gsap.ticker.lagSmoothing(0);
 
-// === GAP SECTION: Scroll-driven animation (文件夹打开 + 纸张错开) ===
-(function() {
-  gsap.registerPlugin(ScrollTrigger, CustomEase);
-
-  CustomEase.create('ease-transition', '0.22, 1, 0.36, 1');
-  CustomEase.create('ease-secondary', '0.31, 0.75, 0.22, 1');
-
-  var gapWrap = document.querySelector('.gap-wrap');
-  var gapContain = document.querySelector('.gap-contain');
-  if (!gapWrap || !gapContain) return;
-
-  // ── 1. Stacking Cards: scrub-smoothed rate differential ──
-  var stackingItems = document.querySelectorAll('[data-stacking-cards-item]');
-  if (stackingItems.length >= 2) {
-    stackingItems.forEach(function(item, n) {
-      if (n === 0) return;
-      var prev = stackingItems[n - 1];
-      if (prev) {
-        gsap.timeline({
-          defaults: { ease: 'none', duration: 1 },
-          scrollTrigger: {
-            trigger: item,
-            start: 'top bottom',
-            end: 'top top',
-            scrub: 0.08,
-            invalidateOnRefresh: true
-          }
-        }).fromTo(prev, 
-          { yPercent: 0, opacity: 1 }, 
-          { yPercent: 50, opacity: 0, force3D: true }
-        );
-      }
-    });
-  }
-
-  // ── 2. 文件夹前盖3D透视翻转 + 纸张同步错开 ──
-  var folderCover = gapWrap.querySelector('.gap-folder-cover');
-  var papers = gapWrap.querySelectorAll('.gap-paper');
-  var headingContains = gapWrap.querySelectorAll('.gap-heading-contain');
-
-  // 初始化：前盖关闭
-  gsap.set(folderCover, { rotateX: 0 });
-
-  // 纸张初始状态：3张叠在一起，始终可见
-  papers.forEach(function(paper) {
-    gsap.set(paper, { x: 0, y: 0, rotate: 0, scale: 1, opacity: 1 });
-  });
-
-  // 主 timeline
-  var mainTl = gsap.timeline({
-    scrollTrigger: {
-      trigger: gapWrap,
-      start: 'top 50%',
-      end: 'bottom top',
-      scrub: true,
-      invalidateOnRefresh: true
-    }
-  });
-
-  // 文字从两侧收拢
-  mainTl.to(headingContains, {
-    x: '0vw',
-    duration: 1.075,
-    ease: 'ease-transition',
-    force3D: true
-  }, 0);
-
-  // 前盖以底边中点为轴，3D反向透视翻转打开（只翻50%）
-  // rotateX 负值：上边向后翻（远离观察者），底边固定
-  mainTl.to(folderCover, {
-    rotateX: -45,
-    duration: 1.2,
-    ease: 'ease-transition'
-  }, 0.15);
-
-  // 纸张与前盖联动：在前盖翻转过程中同步逐渐错开
-  papers.forEach(function(paper, i) {
-    var angle = (i - 1) * 7;    // -7, 0, 7
-    var xOffset = (i - 1) * 14; // -14, 0, 14
-    var yOffset = -i * 8;       // 向上偏移递增
-
-    mainTl.to(paper, {
-      y: yOffset,
-      x: xOffset,
-      rotate: angle,
-      duration: 1.0,
-      ease: 'ease-transition'
-    }, 0.2 + i * 0.08);
-  });
-
-  // ── 3. Character-level animation ──
-  var headings = gapWrap.querySelectorAll('.gap-heading[data-split-reveal]');
-  headings.forEach(function(el) {
-    var isLeft = el.closest('.is-left') !== null;
-    var text = el.textContent.trim();
-    el.innerHTML = '';
-    for (var i = 0; i < text.length; i++) {
-      var span = document.createElement('span');
-      span.className = 'gap-char';
-      if (text[i] === ' ') {
-        span.innerHTML = '&nbsp;';
-      } else {
-        span.textContent = text[i];
-      }
-      el.appendChild(span);
-    }
-
-    var chars = el.querySelectorAll('.gap-char');
-
-    gsap.set(chars, {
-      display: 'inline-block',
-      x: isLeft ? -80 : 80,
-      scaleY: 0.95,
-      opacity: 0,
-      force3D: true
-    });
-
-    gsap.to(chars, {
-      keyframes: {
-        '40%': { opacity: 1 },
-        '90%': { x: 0, scaleY: 1 },
-        '100%': {}
-      },
-      duration: 1,
-      ease: 'expo.out',
-      stagger: {
-        each: 0.022,
-        from: isLeft ? 'end' : 'start'
-      },
-      force3D: true,
-      scrollTrigger: {
-        trigger: gapContain,
-        start: 'top 50%',
-        end: 'bottom top',
-        scrub: 0.5,
-        invalidateOnRefresh: true
-      }
-    });
-  });
-})();
-
-// === HOW I FOUND MY WAY IN: 扇形展开/收拢 ===
-// 交互方式：下滑时照片从中心扇形展开到最终位置，上滑时反向收拢回中心
-(function() {
-  var wrap = document.querySelector('.journey-wrap');
-  if (!wrap) return;
-
-  var steps = wrap.querySelectorAll('.journey-step');
-  var groups = wrap.querySelectorAll('.journey-photo-group');
-  if (steps.length === 0 || groups.length === 0) return;
-
-  // ── 每张照片的最终位置（展开状态）和收拢状态 ──
-  var fanOut = [
-    // jp-1: 左上，大左旋
-    { rotation: -8, y: 0, x: 0, scale: 1, opacity: 1 },
-    // jp-2: 右上，微右旋
-    { rotation: 4, y: 0, x: 0, scale: 1, opacity: 1 },
-    // jp-3: 下方偏左，大左旋
-    { rotation: -7, y: 0, x: 0, scale: 1, opacity: 1 }
-  ];
-
-  // 下滑收拢：照片向下方散开消失
-  var fanInDown = [
-    { rotation: -25, y: 200, x: 80, scale: 0.7, opacity: 0 },
-    { rotation: 30, y: 240, x: -60, scale: 0.65, opacity: 0 },
-    { rotation: -18, y: 220, x: 40, scale: 0.68, opacity: 0 }
-  ];
-
-  // 上滑收拢：照片向上方散开消失（与下滑相反方向）
-  var fanInUp = [
-    { rotation: 25, y: -200, x: -80, scale: 0.7, opacity: 0 },
-    { rotation: -30, y: -240, x: 60, scale: 0.65, opacity: 0 },
-    { rotation: 18, y: -220, x: -40, scale: 0.68, opacity: 0 }
-  ];
-
-  // ── 初始化：第一组展开，其余收拢隐藏 ──
-  groups.forEach(function(group, gi) {
-    var photos = group.querySelectorAll('.journey-photo');
-    if (gi === 0) {
-      gsap.set(group, { autoAlpha: 1 });
-      photos.forEach(function(photo, pi) {
-        gsap.set(photo, fanOut[pi]);
-      });
-    } else {
-      gsap.set(group, { autoAlpha: 0 });
-      photos.forEach(function(photo, pi) {
-        gsap.set(photo, fanInDown[pi]);
-      });
-    }
-  });
-
-  // ── 滚动驱动：找到最近的 step，控制扇形展开/收拢 ──
-  var activeIndex = 0;
-  var lastScrollY = window.scrollY;
-  var ticking = false;
-
-  function update() {
-    ticking = false;
-    var currentScrollY = window.scrollY;
-    var scrollDir = currentScrollY > lastScrollY ? 'down' : 'up';
-    lastScrollY = currentScrollY;
-
-    var viewMid = window.innerHeight / 2;
-    var closest = 0;
-    var closestDist = Infinity;
-
-    steps.forEach(function(step, i) {
-      var rect = step.getBoundingClientRect();
-      var stepMid = rect.top + rect.height / 2;
-      var dist = Math.abs(stepMid - viewMid);
-      if (dist < closestDist) {
-        closestDist = dist;
-        closest = i;
-      }
-    });
-
-    if (closest !== activeIndex) {
-      var oldIndex = activeIndex;
-      activeIndex = closest;
-
-      // 更新文案激活状态
-      steps.forEach(function(s, i) {
-        if (i === closest) s.classList.add('is-active');
-        else s.classList.remove('is-active');
-      });
-
-      // 根据滚动方向选择收拢方向
-      // 下滑时：旧组向上方散开，新组从下方飞入
-      // 上滑时：旧组向下方散开，新组从上方飞入
-      var fanIn = scrollDir === 'down' ? fanInUp : fanInDown;
-      var fanInFrom = scrollDir === 'down' ? fanInDown : fanInUp;
-
-      // 旧组：扇形收拢 + 淡出
-      var oldGroup = groups[oldIndex];
-      if (oldGroup) {
-        var oldPhotos = oldGroup.querySelectorAll('.journey-photo');
-        gsap.to(oldGroup, {
-          autoAlpha: 0,
-          duration: 0.5,
-          ease: 'power2.inOut',
-          overwrite: 'auto'
-        });
-        oldPhotos.forEach(function(photo, pi) {
-          gsap.to(photo, {
-            rotation: fanIn[pi].rotation,
-            y: fanIn[pi].y,
-            x: fanIn[pi].x,
-            scale: fanIn[pi].scale,
-            opacity: fanIn[pi].opacity,
-            duration: 0.6,
-            ease: 'power2.in',
-            overwrite: 'auto',
-            delay: pi * 0.06
-          });
-        });
-      }
-
-      // 新组：从反方向扇形展开 + 淡入
-      var newGroup = groups[closest];
-      if (newGroup) {
-        var newPhotos = newGroup.querySelectorAll('.journey-photo');
-        // 先设置到反方向的收拢位置
-        newPhotos.forEach(function(photo, pi) {
-          gsap.set(photo, fanInFrom[pi]);
-        });
-        gsap.to(newGroup, {
-          autoAlpha: 1,
-          duration: 0.5,
-          ease: 'power2.inOut',
-          overwrite: 'auto'
-        });
-        newPhotos.forEach(function(photo, pi) {
-          gsap.to(photo, {
-            rotation: fanOut[pi].rotation,
-            y: fanOut[pi].y,
-            x: fanOut[pi].x,
-            scale: fanOut[pi].scale,
-            opacity: fanOut[pi].opacity,
-            duration: 0.7,
-            ease: 'back.out(1.2)',
-            overwrite: 'auto',
-            delay: pi * 0.08
-          });
-        });
-      }
-    }
-  }
-
-  function onScroll() {
-    if (!ticking) {
-      ticking = true;
-      requestAnimationFrame(update);
-    }
-  }
-
-  window.addEventListener('scroll', onScroll, { passive: true });
-  update();
-})();
 </script>
 <script type="module" src="reactbits-gradual-blur-bundle.js?v=3"></script>
 </body>

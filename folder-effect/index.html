@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Folder Effect</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@500;600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/gsap.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/ScrollTrigger.min.js"></script>
+<style>
+  :root { --bg: #0a0a0a; --text: #f5f5f5; --muted: #888; --accent: #ff8a1f; }
+  * { box-sizing: border-box; }
+  body { margin: 0; background: var(--bg); color: var(--text); font-family: Inter, Arial, sans-serif; }
+  .folder-effect { height: 200vh; position: relative; }
+  .folder-effect-inner { height: 100vh; position: sticky; top: 0; overflow: hidden; display: grid; place-items: center; }
+  .folder-heading { position: absolute; inset: 0; display: grid; align-content: center; pointer-events: none; }
+  .folder-heading p { margin: 0; font-family: Syne, Arial, sans-serif; font-size: clamp(3.5rem, 10vw, 9rem); font-weight: 600; line-height: 0.94; }
+  .folder-heading p:first-child { text-align: left; transform: translateX(-28vw); }
+  .folder-heading p:last-child { text-align: right; color: var(--accent); transform: translateX(28vw); }
+  .folder { width: min(28vw, 22rem); min-width: 14rem; aspect-ratio: 40 / 36; position: relative; perspective: 800px; perspective-origin: 50% 100%; }
+  .folder-back { position: absolute; inset: 0; border-radius: 40px; background: linear-gradient(135deg, #4a4550, #2d2a31); box-shadow: 0 8px 32px rgba(0,0,0,.4), inset 0 1px 0 rgba(255,255,255,.08); }
+  .paper { position: absolute; top: -10%; left: 15%; width: 70%; height: 100%; border-radius: 20px; background: #f0ece4; box-shadow: 0 3px 9px rgba(0,0,0,.1); transform-origin: bottom center; }
+  .paper:nth-of-type(2) { z-index: 2; } .paper:nth-of-type(3) { z-index: 3; } .paper:nth-of-type(4) { z-index: 4; }
+  .paper span { display: block; height: 2px; margin: 1rem .9rem 0; background: #ccc5b9; } .paper span + span { margin-top: .45rem; width: 58%; }
+  .folder-cover { position: absolute; z-index: 5; inset: 17% -1% -2% 0; transform-origin: bottom center; }
+  .folder-cover svg { width: 100%; height: 100%; overflow: visible; }
+  .back { position: fixed; z-index: 10; top: 1.5rem; left: 1.5rem; color: var(--muted); font-size: .75rem; letter-spacing: .12em; text-transform: uppercase; text-decoration: none; }
+  .back:hover { color: var(--accent); }
+  @media (max-width: 768px) { .folder { width: 62vw; min-width: 0; } }
+</style>
+</head>
+<body>
+  <a class="back" href="../index-v2.html">Back</a>
+  <section class="folder-effect">
+    <div class="folder-effect-inner">
+      <div class="folder-heading"><p>We close</p><p>That gap</p></div>
+      <div class="folder" aria-label="Animated folder">
+        <div class="folder-back"></div>
+        <div class="paper"><span></span><span></span></div>
+        <div class="paper"><span></span><span></span></div>
+        <div class="paper"><span></span><span></span></div>
+        <div class="folder-cover">
+          <svg viewBox="0 0 41 29" preserveAspectRatio="none" aria-hidden="true"><defs><linearGradient id="cover" x1="0" y1="0" x2="0" y2="1"><stop stop-color="#9793A7" stop-opacity=".3"/><stop offset="1" stop-color="#9793A7" stop-opacity=".6"/></linearGradient></defs><path d="M0 4C0 1.79 1.79 0 4 0h12c2.3 0 3.7 3 6.6 3h14C38.86 3 40.65 4.79 40.65 7v17.07c0 2.21-1.79 4-4 4H4c-2.21 0-4-1.79-4-4V4Z" fill="url(#cover)"/></svg>
+        </div>
+      </div>
+    </div>
+  </section>
+  <script>
+    gsap.registerPlugin(ScrollTrigger);
+    const effect = document.querySelector('.folder-effect');
+    const cover = document.querySelector('.folder-cover');
+    const papers = document.querySelectorAll('.paper');
+    const lines = document.querySelectorAll('.folder-heading p');
+    const timeline = gsap.timeline({ scrollTrigger: { trigger: effect, start: 'top top', end: 'bottom bottom', scrub: true } });
+    timeline.to(lines, { x: 0, duration: 1, ease: 'none' }, 0).to(cover, { rotationX: -45, duration: 1.2, ease: 'none' }, .15);
+    papers.forEach((paper, index) => timeline.to(paper, { x: (index - 1) * 14, y: -index * 8, rotation: (index - 1) * 7, duration: 1 }, .2 + index * .08));
+  </script>
+</body>
+</html>

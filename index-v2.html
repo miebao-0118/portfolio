@@ -10,7 +10,6 @@
 <script src="https://cdn.jsdelivr.net/npm/three@0.160.1/build/three.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/gsap.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/ScrollTrigger.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/CustomEase.min.js"></script>
 <style>
 /* ===== RESET & BASE ===== */
 *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
@@ -56,6 +55,8 @@ button { border: none; background: none; cursor: pointer; color: inherit; font-f
 /* ===== CUSTOM CURSOR ===== */
 .cursor-dot {
   position: fixed;
+  top: 0;
+  left: 0;
   width: 8px;
   height: 8px;
   background: var(--accent);
@@ -64,10 +65,13 @@ button { border: none; background: none; cursor: pointer; color: inherit; font-f
   z-index: 10000;
   transition: transform 0.1s ease;
   mix-blend-mode: difference;
+  will-change: transform;
 }
 
 .cursor-ring {
   position: fixed;
+  top: 0;
+  left: 0;
   width: 40px;
   height: 40px;
   border: 1.5px solid rgba(255, 138, 31, 0.5);
@@ -76,6 +80,7 @@ button { border: none; background: none; cursor: pointer; color: inherit; font-f
   z-index: 10000;
   transition: transform 0.15s ease, width 0.3s ease, height 0.3s ease;
   mix-blend-mode: difference;
+  will-change: transform;
 }
 
 /* ===== LOADER ===== */
@@ -152,7 +157,12 @@ button { border: none; background: none; cursor: pointer; color: inherit; font-f
   justify-content: space-between;
   align-items: center;
   mix-blend-mode: difference;
-  transition: padding 0.3s ease;
+  transition: transform 0.3s ease;
+  will-change: transform;
+}
+
+.nav.is-compact {
+  transform: translateY(-0.5rem);
 }
 
 .nav-logo {
@@ -289,7 +299,7 @@ button { border: none; background: none; cursor: pointer; color: inherit; font-f
   will-change: transform, filter;
   filter: drop-shadow(var(--hero-shadow-x) var(--hero-shadow-y) 34px rgba(0, 0, 0, 0.45))
     drop-shadow(var(--hero-glow-x) var(--hero-glow-y) 26px rgba(255, 128, 24, var(--hero-glow-alpha)));
-  z-index: 4;
+  z-index: 2;
   pointer-events: none;
   transition: filter 0.2s ease;
 }
@@ -339,18 +349,23 @@ button { border: none; background: none; cursor: pointer; color: inherit; font-f
     radial-gradient(circle at calc(100% - var(--hero-light-x)) calc(100% - var(--hero-light-y)), rgba(255, 198, 116, 0.12), transparent 38%);
   mix-blend-mode: screen;
   transform: translate3d(var(--hero-light-drift-x), var(--hero-light-drift-y), 0);
-  will-change: transform, opacity, background;
+  will-change: transform, opacity;
 }
 
 .global-gradual-blur-mount {
   position: fixed;
-  inset: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 12rem;
   z-index: 900;
   pointer-events: none;
+  isolation: isolate;
 }
 
-/* React Bits Gradual Blur CSS fallback. */
 .gradual-blur {
+  position: absolute;
+  inset: 0;
   isolation: isolate;
   pointer-events: none;
 }
@@ -361,13 +376,18 @@ button { border: none; background: none; cursor: pointer; color: inherit; font-f
   height: 100%;
 }
 
-.gradual-blur-inner > div {
-  -webkit-backdrop-filter: inherit;
-  backdrop-filter: inherit;
+.gradual-blur-inner > span {
+  position: absolute;
+  inset: 0;
+  display: block;
+  -webkit-mask-image: linear-gradient(to bottom, var(--blur-mask));
+  mask-image: linear-gradient(to bottom, var(--blur-mask));
+  -webkit-backdrop-filter: blur(var(--blur-radius));
+  backdrop-filter: blur(var(--blur-radius));
 }
 
 @supports not (backdrop-filter: blur(1px)) {
-  .gradual-blur-inner > div {
+  .gradual-blur-inner > span {
     background: rgba(10, 10, 10, 0.3);
     opacity: 0.5;
   }
@@ -450,10 +470,13 @@ body > section {
   }
 
   .hero-light,
-  .hero::after,
-  .global-gradual-blur-mount {
+  .hero::after {
     display: none;
   }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .global-gradual-blur-mount { display: none; }
 }
 
 /* Layer 6: Canvas animation effect */
@@ -479,7 +502,7 @@ body > section {
 
 /* Layer 4: Scroll overlay — triggered at scroll threshold */
 .hero-overlay {
-  z-index: 2;
+  z-index: 4;
   background-color: var(--bg);
   pointer-events: none;
   opacity: 0;
@@ -745,6 +768,11 @@ body > section {
   overflow: visible;
   transform-style: preserve-3d;
   will-change: transform;
+}
+
+html.performance-lite .about-badge-card {
+  backdrop-filter: blur(20px) saturate(1.22) brightness(1.04);
+  -webkit-backdrop-filter: blur(20px) saturate(1.22) brightness(1.04);
 }
 
 .about-badge-card::before {
@@ -1103,6 +1131,501 @@ body > section {
   color: var(--accent);
 }
 
+/* ===== XIN XIANG PROJECT ===== */
+.xinxiang-project {
+  --xin-red: #e8310e;
+  --xin-orange: #f16128;
+  --xin-yellow: #fa9d2a;
+  --xin-space: clamp(1rem, 1.45vw, 1.4rem);
+  position: relative;
+  z-index: 7;
+  isolation: isolate;
+  overflow: clip;
+  color: #f7f3ed;
+  background: #030303;
+  border-top: 1px solid rgba(255, 255, 255, 0.12);
+}
+
+.xinxiang-glow-field {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  background:
+    radial-gradient(ellipse 68% 30% at 50% 2%, rgba(250, 157, 42, 0.48), transparent 56%),
+    radial-gradient(ellipse 92% 38% at 50% 4%, rgba(241, 97, 40, 0.34), transparent 68%);
+}
+
+.xinxiang-glow-canvas {
+  position: sticky;
+  top: 0;
+  display: block;
+  width: 100%;
+  height: 100svh;
+}
+
+.xinxiang-intro {
+  position: relative;
+  z-index: 2;
+  height: 205svh;
+}
+
+.xinxiang-stage {
+  --xin-arc-yellow: 0.82;
+  --xin-arc-red: 0.48;
+  position: sticky;
+  top: 0;
+  height: 100svh;
+  min-height: 640px;
+  display: grid;
+  place-items: center;
+  overflow: hidden;
+  padding: clamp(4.75rem, 8vh, 7rem) clamp(1.5rem, 4vw, 5rem) clamp(3.5rem, 6vh, 5rem);
+}
+
+.xinxiang-stage::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  background:
+    radial-gradient(ellipse 72% 14% at 50% 104%, rgba(250, 157, 42, var(--xin-arc-yellow)), transparent 54%),
+    radial-gradient(ellipse 90% 19% at 50% 106%, rgba(232, 49, 14, var(--xin-arc-red)), transparent 69%),
+    radial-gradient(circle at 50% 46%, rgba(242, 249, 255, 0.16), rgba(205, 226, 240, 0.065) 24%, transparent 42%),
+    linear-gradient(180deg, rgba(3, 3, 3, 0.96), rgba(3, 3, 3, 0.7) 68%, rgba(3, 3, 3, 0.08));
+}
+
+.xinxiang-stage::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: 5;
+  pointer-events: none;
+  background:
+    linear-gradient(90deg, rgba(255, 255, 255, 0.035) 1px, transparent 1px),
+    linear-gradient(180deg, rgba(255, 255, 255, 0.028) 1px, transparent 1px);
+  background-size: clamp(84px, 9vw, 148px) clamp(84px, 9vw, 148px);
+  mask-image: linear-gradient(180deg, rgba(0, 0, 0, 0.58), transparent 72%);
+  opacity: 0.4;
+}
+
+.xinxiang-title {
+  position: absolute;
+  top: clamp(5.75rem, 13vh, 8.25rem);
+  left: 50%;
+  z-index: 2;
+  width: min(86vw, 1080px);
+  margin: 0;
+  transform: translateX(-50%);
+  line-height: 0;
+  pointer-events: none;
+  user-select: none;
+}
+
+.xinxiang-title-mark {
+  display: block;
+  width: 100%;
+  height: auto;
+  opacity: 0.94;
+  filter: drop-shadow(0 12px 22px rgba(0, 0, 0, 0.38));
+  -webkit-user-drag: none;
+}
+
+.xinxiang-subject {
+  position: relative;
+  top: clamp(-4.75rem, -8vh, -2.75rem);
+  z-index: 3;
+  width: clamp(280px, 36vw, 520px);
+  max-height: 76svh;
+  margin: 0;
+  will-change: transform, opacity;
+}
+
+.xinxiang-subject img {
+  width: 100%;
+  max-height: 76svh;
+  object-fit: contain;
+  filter: drop-shadow(0 34px 46px rgba(0, 0, 0, 0.58));
+  user-select: none;
+  -webkit-user-drag: none;
+}
+
+.xinxiang-project-meta {
+  position: absolute;
+  left: clamp(1.5rem, 4vw, 5rem);
+  right: clamp(1.5rem, 4vw, 5rem);
+  bottom: clamp(14rem, 27vh, 17rem);
+  z-index: 6;
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 2rem;
+  pointer-events: none;
+}
+
+.xinxiang-project-meta p {
+  margin: 0;
+  color: rgba(224, 232, 236, 0.52);
+  font-size: 0.68rem;
+  font-weight: 300;
+  line-height: 1.45;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+
+.xinxiang-project-meta p:last-child {
+  max-width: none;
+  text-align: right;
+}
+
+.xinxiang-panel {
+  position: relative;
+  z-index: 3;
+  min-height: 100svh;
+  padding: clamp(7rem, 12vh, 10rem) clamp(1.5rem, 4vw, 5rem);
+}
+
+.xinxiang-usage {
+  background: linear-gradient(
+    180deg,
+    rgba(18, 8, 4, 0.08) 0,
+    rgba(12, 7, 5, 0.45) 15%,
+    rgba(3, 3, 3, 0.92) 42%,
+    #030303 64%,
+    #030303 100%
+  );
+}
+
+.xinxiang-panel::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  background-image: var(--engineering-grid);
+  background-size: 100% min(82vw, 1180px);
+  background-repeat: no-repeat;
+  background-position: center 20%;
+  opacity: 0.22;
+  mask-image: linear-gradient(180deg, transparent, #000 16%, #000 72%, transparent);
+}
+
+.xinxiang-panel-head {
+  width: min(1440px, 100%);
+  margin: 0 auto clamp(2.2rem, 4vw, 4rem);
+}
+
+.xinxiang-panel-head h3 {
+  margin: 0;
+  font-family: var(--font-display);
+  font-size: clamp(3rem, 6.2vw, 7rem);
+  font-weight: 600;
+  line-height: 0.9;
+  letter-spacing: 0;
+  text-transform: uppercase;
+}
+
+.xinxiang-overview {
+  width: min(1440px, 100%);
+  margin: 0 auto clamp(4.5rem, 7vw, 7rem);
+  display: grid;
+  grid-template-columns: minmax(0, 0.88fr) minmax(0, 1.12fr);
+  gap: clamp(3rem, 8vw, 9rem);
+  align-items: start;
+}
+
+.xinxiang-overview-kicker {
+  margin: 0 0 1.1rem;
+  color: var(--xin-orange);
+  font-size: clamp(0.78rem, 0.9vw, 0.95rem);
+  font-weight: 600;
+  line-height: 1;
+  letter-spacing: 0;
+}
+
+.xinxiang-overview h4 {
+  margin: 0;
+  color: #d8d5d0;
+  font-size: clamp(2rem, 3.1vw, 3.6rem);
+  font-weight: 500;
+  line-height: 1.14;
+  letter-spacing: 0;
+}
+
+.xinxiang-overview-copy {
+  margin: 0;
+  padding-top: 2.35rem;
+  color: rgba(216, 213, 208, 0.6);
+  font-size: clamp(1rem, 1.22vw, 1.24rem);
+  font-weight: 300;
+  line-height: 2;
+}
+
+.xinxiang-usage-grid {
+  width: min(1440px, 100%);
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: minmax(280px, 0.465fr) minmax(0, 0.535fr);
+  gap: var(--xin-space);
+  align-items: start;
+}
+
+.xinxiang-usage-right {
+  display: grid;
+  gap: var(--xin-space);
+}
+
+.xinxiang-effect {
+  background:
+    radial-gradient(circle at 50% 0%, rgba(46, 74, 90, 0.14), transparent 38%),
+    #030303;
+}
+
+.xinxiang-effect-grid {
+  width: min(1440px, 100%);
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: var(--xin-space);
+}
+
+.xinxiang-activity {
+  min-height: 100svh;
+  padding: 0;
+  overflow: hidden;
+  background: linear-gradient(180deg, #030303 0%, #100604 42%, #6f2113 100%);
+}
+
+.xinxiang-activity::before {
+  display: none;
+}
+
+.xinxiang-activity-layout {
+  position: relative;
+  width: 100%;
+  min-height: 100svh;
+  margin: 0;
+  padding: clamp(5.5rem, 7vw, 7rem) clamp(1.5rem, 3vw, 3.5rem) clamp(10rem, 14vw, 15rem);
+  overflow: hidden;
+  isolation: isolate;
+}
+
+.xinxiang-activity-layout::after {
+  content: "";
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  z-index: 12;
+  height: clamp(180px, 22vh, 280px);
+  pointer-events: none;
+  background: linear-gradient(180deg, rgba(111, 33, 19, 0), rgba(111, 33, 19, 0.92));
+  -webkit-backdrop-filter: blur(18px);
+  backdrop-filter: blur(18px);
+  -webkit-mask-image: linear-gradient(180deg, transparent, #000 78%);
+  mask-image: linear-gradient(180deg, transparent, #000 78%);
+}
+
+.xinxiang-activity-head {
+  position: absolute;
+  top: clamp(5.5rem, 7vw, 7rem);
+  left: clamp(2rem, 5vw, 5.5rem);
+  width: min(28vw, 520px);
+  margin: 0;
+  z-index: 20;
+  pointer-events: none;
+}
+
+.xinxiang-activity-head h3 {
+  color: rgba(250, 246, 240, 0.94);
+  font-size: clamp(4rem, 7vw, 8rem);
+  line-height: 0.88;
+  white-space: nowrap;
+}
+
+.xinxiang-activity-head h3 span {
+  display: inline;
+}
+
+.xinxiang-activity-head p {
+  margin: 1.6rem 0 0;
+  color: rgba(255, 196, 164, 0.64);
+  font-size: 0.72rem;
+  font-weight: 400;
+  letter-spacing: 0.16em;
+  line-height: 1.5;
+  text-transform: uppercase;
+}
+
+.xinxiang-activity-board {
+  --activity-columns: 4;
+  position: relative;
+  width: 66.666%;
+  margin-left: auto;
+  display: grid;
+  grid-template-columns: repeat(var(--activity-columns), minmax(0, 1fr));
+  gap: clamp(0.55rem, 0.9vw, 0.9rem);
+  align-items: start;
+  isolation: isolate;
+}
+
+.activity-waterfall-column {
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: clamp(0.55rem, 0.9vw, 0.9rem);
+}
+
+.activity-tile {
+  position: relative;
+  width: 100%;
+  margin: 0;
+  overflow: hidden;
+  border-radius: clamp(0.8rem, 1.2vw, 1.25rem);
+  background: #241710;
+  line-height: 0;
+  opacity: 1;
+  will-change: transform, opacity;
+}
+
+.activity-tile img {
+  display: block;
+  width: 100%;
+  height: auto;
+  object-fit: cover;
+}
+
+.xinxiang-media {
+  position: relative;
+  overflow: hidden;
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  border-radius: 8px;
+  background: rgba(12, 9, 7, 0.72);
+  box-shadow: 0 28px 76px rgba(0, 0, 0, 0.32);
+  will-change: transform, clip-path, opacity;
+}
+
+.xinxiang-media--portrait {
+  aspect-ratio: 3 / 4;
+}
+
+.xinxiang-media--wide {
+  aspect-ratio: 16 / 9;
+}
+
+.xinxiang-media--square {
+  aspect-ratio: 1;
+}
+
+.xinxiang-video-card {
+  aspect-ratio: 1 / 1;
+  cursor: pointer;
+}
+
+.xinxiang-video-play {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  z-index: 4;
+  width: 3.25rem;
+  height: 3.25rem;
+  border: 1px solid rgba(255, 255, 255, 0.62);
+  border-radius: 50%;
+  background: rgba(3, 3, 3, 0.28);
+  transform: translate(-50%, -50%);
+  -webkit-backdrop-filter: blur(8px);
+  backdrop-filter: blur(8px);
+  transition: opacity 240ms ease, transform 350ms cubic-bezier(0.16, 1, 0.3, 1);
+  pointer-events: none;
+}
+
+.xinxiang-video-play::before {
+  content: '';
+  position: absolute;
+  left: 53%;
+  top: 50%;
+  width: 0;
+  height: 0;
+  border-top: 0.38rem solid transparent;
+  border-bottom: 0.38rem solid transparent;
+  border-left: 0.58rem solid rgba(255, 255, 255, 0.92);
+  transform: translate(-50%, -50%);
+}
+
+.xinxiang-video-card.is-playing .xinxiang-video-play {
+  opacity: 0;
+  transform: translate(-50%, -50%) scale(0.82);
+}
+
+.xinxiang-media::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  pointer-events: none;
+  background: linear-gradient(118deg, transparent 24%, rgba(255, 221, 180, 0.13) 46%, transparent 67%);
+  transform: translateX(-125%);
+  transition: transform 800ms cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.xinxiang-media:hover::after {
+  transform: translateX(125%);
+}
+
+.xinxiang-media img,
+.xinxiang-media video {
+  --xin-media-scale: 1.002;
+  width: 100%;
+  height: 100%;
+  display: block;
+  object-fit: cover;
+  transform: scale(var(--xin-media-scale));
+  transition: transform 700ms cubic-bezier(0.16, 1, 0.3, 1), filter 500ms ease;
+  will-change: transform;
+}
+
+.xinxiang-media:hover img,
+.xinxiang-media:hover video {
+  --xin-media-scale: 1.04;
+  filter: saturate(1.06) contrast(1.03);
+}
+
+.xinxiang-media--contain {
+  background: #2e2e2e;
+}
+
+.xinxiang-media--contain img,
+.xinxiang-media.xinxiang-media--contain:hover img {
+  --xin-media-scale: 1;
+  object-fit: contain;
+  filter: none;
+}
+
+.xinxiang-video-card--openbox video {
+  object-position: center 48%;
+}
+
+.xinxiang-video-card--treasure video {
+  object-position: center;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .xinxiang-subject,
+  .xinxiang-media,
+  .xinxiang-panel-head,
+  .activity-tile {
+    will-change: auto;
+  }
+
+  .xinxiang-media img,
+  .xinxiang-media video,
+  .xinxiang-media::after,
+  .activity-tile img {
+    transition: none;
+  }
+}
+
 /* ===== MY WORK ===== */
 .my-work {
   --work-gap: clamp(2rem, 6vw, 6rem);
@@ -1296,19 +1819,6 @@ body > section {
 .my-work-media-group:hover .my-work-media-card img { transform: scale(1.02); }
 .my-work-media-card img { transition: transform 450ms cubic-bezier(0.16, 1, 0.3, 1); }
 
-.work-curl-canvas {
-  position: fixed;
-  inset: 0;
-  z-index: 20;
-  width: 100vw;
-  height: 100svh;
-  display: none;
-  pointer-events: none;
-}
-
-body.work-curl-ready .work-curl-canvas { display: block; }
-body.work-curl-ready .my-work-media-card img { opacity: 0; }
-
 @media (max-width: 768px) {
   .my-work-inner { display: block; padding-bottom: 5rem; }
   .my-work-copy { width: auto; }
@@ -1327,8 +1837,6 @@ body.work-curl-ready .my-work-media-card img { opacity: 0; }
     pointer-events: auto;
   }
   .hero-stat { transform: none; }
-  .work-curl-canvas { display: none !important; }
-  body.work-curl-ready .my-work-media-card img { opacity: 1; }
 }
 
 /* ===== CLIENTS ===== */
@@ -1543,6 +2051,9 @@ body.work-curl-ready .my-work-media-card img { opacity: 0; }
   .client-item:nth-child(2n) { border-right: none; }
   .hero-bottom-grid { grid-template-columns: 1fr 1fr; }
   .hero-logo-svg { grid-column: 1 / -1; }
+  .xinxiang-subject { width: clamp(290px, 43vw, 450px); }
+  .xinxiang-usage-grid { grid-template-columns: minmax(250px, 0.465fr) minmax(0, 0.535fr); }
+  .xinxiang-activity-head h3 { font-size: clamp(3.6rem, 7vw, 5rem); }
 }
 
 @media (max-width: 768px) {
@@ -1581,6 +2092,95 @@ body.work-curl-ready .my-work-media-card img { opacity: 0; }
   .about-strap-cap { width: 72px; }
   .about-badge-hole { width: 96px; height: 34px; }
   .experience-group { grid-template-columns: 1fr; gap: 1rem; }
+  .xinxiang-intro { height: 165svh; }
+  .xinxiang-stage {
+    min-height: 560px;
+    padding: 4.5rem 1.25rem 3rem;
+  }
+  .xinxiang-stage::after { background-size: 84px 84px; }
+  .xinxiang-title {
+    top: clamp(5.25rem, 12vh, 7rem);
+    left: 50%;
+    width: 96vw;
+    transform: translateX(-50%);
+  }
+  .xinxiang-subject {
+    top: -2.25rem;
+    width: min(78vw, 390px);
+    max-height: 67svh;
+    transform: translateY(-6%);
+  }
+  .xinxiang-subject img { max-height: 67svh; }
+  .xinxiang-project-meta {
+    left: 1.25rem;
+    right: 1.25rem;
+    bottom: 1.5rem;
+  }
+  .xinxiang-panel {
+    min-height: auto;
+    padding: 6.5rem 1.25rem 5.5rem;
+  }
+  .xinxiang-panel-head {
+    margin-bottom: 2rem;
+  }
+  .xinxiang-panel-head h3 { font-size: clamp(3.25rem, 15.5vw, 5.4rem); }
+  .xinxiang-overview {
+    grid-template-columns: 1fr;
+    gap: 2rem;
+    margin-bottom: 3.75rem;
+  }
+  .xinxiang-overview h4 { font-size: clamp(2rem, 9vw, 3rem); }
+  .xinxiang-overview-copy {
+    padding-top: 0;
+    font-size: 1rem;
+    line-height: 1.85;
+  }
+  .xinxiang-usage-grid,
+  .xinxiang-effect-grid { grid-template-columns: 1fr; }
+  .xinxiang-usage-right { gap: 0.85rem; }
+  .xinxiang-effect-grid { gap: 0.85rem; }
+  .xinxiang-activity {
+    min-height: auto;
+    padding: 6.5rem 0 0;
+  }
+  .xinxiang-activity-layout {
+    height: auto;
+    min-height: 0;
+    padding: 0 0.8rem 8rem;
+    overflow: hidden;
+  }
+  .xinxiang-activity-layout::after {
+    height: 150px;
+    margin: 0 -0.8rem;
+    -webkit-backdrop-filter: blur(12px);
+    backdrop-filter: blur(12px);
+  }
+  .xinxiang-activity-head {
+    position: relative;
+    top: auto;
+    left: auto;
+    width: 100%;
+    padding: 0 0.45rem;
+  }
+  .xinxiang-activity-head h3 {
+    font-size: clamp(3.25rem, 15vw, 4.25rem);
+    white-space: nowrap;
+  }
+  .xinxiang-activity-board {
+    position: relative;
+    inset: auto;
+    width: 100%;
+    height: auto;
+    margin: 2.25rem 0 0;
+    gap: 0.55rem;
+  }
+  .activity-waterfall-column { gap: 0.55rem; }
+  .activity-tile { border-radius: 0.8rem; }
+  .xinxiang-media { border-radius: 6px; }
+  .xinxiang-video-play {
+    width: 2.75rem;
+    height: 2.75rem;
+  }
   .clients { padding-left: 1.5rem; padding-right: 1.5rem; }
   .clients-grid { grid-template-columns: 1fr; }
   .client-item { border-right: none !important; }
@@ -1595,7 +2195,10 @@ body.work-curl-ready .my-work-media-card img { opacity: 0; }
   height: 2px;
   background: var(--accent);
   z-index: 10001;
-  transition: width 0.1s linear;
+  width: 100%;
+  transform: scaleX(0);
+  transform-origin: left center;
+  will-change: transform;
 }
 </style>
 </head>
@@ -1640,11 +2243,22 @@ body.work-curl-ready .my-work-media-card img { opacity: 0; }
   </ul>
 </nav>
 
-<div id="globalGradualBlur" class="global-gradual-blur-mount" aria-hidden="true"></div>
+<div id="globalGradualBlur" class="global-gradual-blur-mount" aria-hidden="true">
+  <div class="gradual-blur">
+    <div class="gradual-blur-inner">
+      <span style="--blur-radius:0.48rem;--blur-mask:transparent 0%, black 16.7%, black 33.3%, transparent 50%"></span>
+      <span style="--blur-radius:0.95rem;--blur-mask:transparent 16.7%, black 33.3%, black 50%, transparent 66.7%"></span>
+      <span style="--blur-radius:1.63rem;--blur-mask:transparent 33.3%, black 50%, black 66.7%, transparent 83.3%"></span>
+      <span style="--blur-radius:2.39rem;--blur-mask:transparent 50%, black 66.7%, black 83.3%, transparent 100%"></span>
+      <span style="--blur-radius:3.01rem;--blur-mask:transparent 66.7%, black 83.3%, black 100%"></span>
+      <span style="--blur-radius:3.25rem;--blur-mask:transparent 83.3%, black 100%"></span>
+    </div>
+  </div>
+</div>
 
 <div class="site-hero-backdrop" aria-hidden="true">
   <div class="hero-cover">
-    <img src="banner2.jpg" alt="" class="hero-img" data-translate-hero>
+    <img src="banner2.jpg" alt="" class="hero-img" data-translate-hero fetchpriority="high" decoding="async">
     <canvas class="hero-canvas" id="heroCanvas"></canvas>
   </div>
   <div class="hero-fade" id="heroFade"></div>
@@ -1657,8 +2271,8 @@ body.work-curl-ready .my-work-media-card img { opacity: 0; }
   <!-- Layer 1: Bottom gradient -->
   <div class="hero-gradient"></div>
 
-  <img src="assets/hero-portfolio-word.png" alt="" class="hero-portfolio-word">
-  <img src="creative-hero-character-refined.png" alt="" class="hero-character">
+  <img src="assets/hero-portfolio-word.png" alt="" class="hero-portfolio-word" decoding="async">
+  <img src="assets/hero-character-3d-refined-v3-final.png" alt="" class="hero-character" fetchpriority="high" decoding="async">
   <div class="hero-discipline-list" aria-label="Design disciplines">
     <span>APP</span>
     <span>Website</span>
@@ -1764,8 +2378,112 @@ body.work-curl-ready .my-work-media-card img { opacity: 0; }
   </div>
 </section>
 
+<!-- Xin Xiang -->
+<section class="xinxiang-project" id="work" aria-label="新象项目">
+  <div class="xinxiang-glow-field" aria-hidden="true">
+    <canvas class="xinxiang-glow-canvas" id="xinxiangGlowCanvas"></canvas>
+  </div>
+
+  <div class="xinxiang-intro">
+    <div class="xinxiang-stage">
+      <h2 class="xinxiang-title" aria-label="XinXiang Store APP">
+        <img class="xinxiang-title-mark" src="assets/xinxiang-store-lettering.svg" alt="" aria-hidden="true">
+      </h2>
+
+      <figure class="xinxiang-subject">
+        <img src="assets/vip-tag-crystal-metal-cutout-glow.png" alt="XIN XIANG VIP crystal metal tag" loading="lazy" decoding="async">
+      </figure>
+
+      <div class="xinxiang-project-meta">
+        <p>2026 / Project 01</p>
+        <p>UI/UX · 电商</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="xinxiang-panel xinxiang-usage" id="xinxiangUsage" aria-label="XIN XIANG usage">
+    <div class="xinxiang-panel-head">
+      <h3>Pgaes display</h3>
+    </div>
+
+    <div class="xinxiang-overview">
+      <div class="xinxiang-overview-heading">
+        <p class="xinxiang-overview-kicker">Project Overview</p>
+        <h4>心享商城</h4>
+      </div>
+      <p class="xinxiang-overview-copy">以日用品、家用电器、电子产品、潮玩等多元化商品作为奖池奖励诞生的线上盲盒商城。开盒必中，无空包，实物发货，公正概率，是这款 APP 的 slogan，意在用一些有趣的方式充实当代年轻人的碎片时间。</p>
+    </div>
+
+    <div class="xinxiang-usage-grid">
+      <figure class="xinxiang-media xinxiang-media--portrait">
+        <img src="assets/xinxiang1.png" alt="XIN XIANG mobile shopping experience" loading="lazy" decoding="async">
+      </figure>
+
+      <div class="xinxiang-usage-right">
+        <figure class="xinxiang-media xinxiang-media--wide xinxiang-media--contain">
+          <img src="assets/xinxiang2.png" alt="XIN XIANG VIP tag material exploration" loading="lazy" decoding="async">
+        </figure>
+        <figure class="xinxiang-media xinxiang-media--wide">
+          <img src="assets/xinxiang5.png" alt="XIN XIANG color system" loading="lazy" decoding="async">
+        </figure>
+      </div>
+    </div>
+  </div>
+
+  <div class="xinxiang-panel xinxiang-effect" id="xinxiangEffect" aria-label="XIN XIANG effects">
+    <div class="xinxiang-panel-head">
+      <h3>Animation effect</h3>
+    </div>
+
+    <div class="xinxiang-effect-grid">
+      <figure class="xinxiang-media xinxiang-video-card xinxiang-video-card--openbox" tabindex="0">
+        <video muted loop playsinline preload="none" aria-label="XIN XIANG animated open box">
+          <source data-src="assets/openbox.mp4" type="video/mp4">
+        </video>
+        <span class="xinxiang-video-play" aria-hidden="true"></span>
+      </figure>
+      <figure class="xinxiang-media xinxiang-video-card xinxiang-video-card--treasure" tabindex="0">
+        <video muted loop playsinline preload="none" aria-label="XIN XIANG animated treasure">
+          <source data-src="assets/treasure.mp4" type="video/mp4">
+        </video>
+        <span class="xinxiang-video-play" aria-hidden="true"></span>
+      </figure>
+    </div>
+  </div>
+
+  <div class="xinxiang-panel xinxiang-activity" id="xinxiangActivity" aria-label="XIN XIANG activity pages">
+    <div class="xinxiang-activity-layout">
+      <div class="xinxiang-panel-head xinxiang-activity-head">
+        <h3>Activity</h3>
+        <p>Campaign pages / 2022-2026</p>
+      </div>
+
+      <div class="xinxiang-activity-board" aria-label="Activity image waterfall">
+        <figure class="activity-tile" data-ratio="2.148"><img src="assets/activity-waterfall/20260721173337.jpg" width="702" height="1508" alt="每日寻宝活动页面" loading="lazy" decoding="async"></figure>
+        <figure class="activity-tile" data-ratio="1.342"><img src="assets/activity-waterfall/20260721173753.jpg" width="814" height="1092" alt="月中福利活动弹窗" loading="lazy" decoding="async"></figure>
+        <figure class="activity-tile" data-ratio="2.565"><img src="assets/activity-waterfall/20260721173613.jpg" width="814" height="2088" alt="数码好物活动页面" loading="lazy" decoding="async"></figure>
+        <figure class="activity-tile" data-ratio="3.267"><img src="assets/activity-waterfall/20260721174232.jpg" width="810" height="2646" alt="诚意福利活动长页面" loading="lazy" decoding="async"></figure>
+        <figure class="activity-tile" data-ratio="3.525"><img src="assets/activity-waterfall/20260721174630.jpg" width="804" height="2834" alt="月末狂欢活动长页面" loading="lazy" decoding="async"></figure>
+        <figure class="activity-tile" data-ratio="3.277"><img src="assets/activity-waterfall/20260721174406.jpg" width="808" height="2648" alt="月中福利活动长页面" loading="lazy" decoding="async"></figure>
+        <figure class="activity-tile" data-ratio="3.049"><img src="assets/activity-waterfall/20260721174343.jpg" width="814" height="2482" alt="月末福利活动长页面" loading="lazy" decoding="async"></figure>
+        <figure class="activity-tile" data-ratio="2.572"><img src="assets/activity-waterfall/20260721173643.jpg" width="814" height="2094" alt="iPhone 礼盒活动页面" loading="lazy" decoding="async"></figure>
+        <figure class="activity-tile" data-ratio="2.559"><img src="assets/activity-waterfall/20260721173714.jpg" width="816" height="2088" alt="保时捷礼盒活动页面" loading="lazy" decoding="async"></figure>
+        <figure class="activity-tile" data-ratio="2.192"><img src="assets/activity-waterfall/20260721173453.jpg" width="668" height="1464" alt="空间站活动初始页面" loading="lazy" decoding="async"></figure>
+        <figure class="activity-tile" data-ratio="2.190"><img src="assets/activity-waterfall/20260721173523.jpg" width="672" height="1472" alt="空间站活动完成页面" loading="lazy" decoding="async"></figure>
+        <figure class="activity-tile" data-ratio="2.170"><img src="assets/activity-waterfall/20260721174544.jpg" width="814" height="1766" alt="等级月神力值活动页面" loading="lazy" decoding="async"></figure>
+        <figure class="activity-tile" data-ratio="1.347"><img src="assets/activity-waterfall/20260721173827.jpg" width="812" height="1094" alt="月末福利活动弹窗" loading="lazy" decoding="async"></figure>
+        <figure class="activity-tile" data-ratio="1.346"><img src="assets/activity-waterfall/20260721174421.jpg" width="810" height="1090" alt="抓住小美好活动弹窗" loading="lazy" decoding="async"></figure>
+        <figure class="activity-tile" data-ratio="1.340"><img src="assets/activity-waterfall/20260721173858.jpg" width="812" height="1088" alt="诚意福利活动弹窗" loading="lazy" decoding="async"></figure>
+        <figure class="activity-tile" data-ratio="1.340"><img src="assets/activity-waterfall/20260721174558.jpg" width="812" height="1088" alt="诚意福利日活动弹窗" loading="lazy" decoding="async"></figure>
+        <figure class="activity-tile" data-ratio="1.339"><img src="assets/activity-waterfall/20260721174522.jpg" width="814" height="1090" alt="每日寻宝集星活动弹窗" loading="lazy" decoding="async"></figure>
+        <figure class="activity-tile" data-ratio="1.336"><img src="assets/activity-waterfall/20260721174443.jpg" width="816" height="1090" alt="每日寻宝活动弹窗" loading="lazy" decoding="async"></figure>
+      </div>
+    </div>
+  </div>
+</section>
+
 <!-- My Work -->
-<section class="my-work" id="work" aria-label="My work">
+<section class="my-work" id="selected-work" aria-label="My work">
   <div class="my-work-inner">
     <div class="my-work-copy">
       <article class="my-work-step is-active" data-work-step="0">
@@ -1806,37 +2524,37 @@ body.work-curl-ready .my-work-media-card img { opacity: 0; }
       <div class="my-work-media-stage">
         <a class="my-work-media-group is-active" data-work-step="0" href="project.html?work=caimiao&amp;view=brand" aria-label="Open Caimiao project">
           <span class="my-work-media-frame">
-            <span class="my-work-media-card my-work-media-card--wide"><img src="assets/caimiao-work/caimiao-phone.png" alt="Caimiao mobile product visual"></span>
-            <span class="my-work-media-card my-work-media-card--square my-work-media-card--type"><img src="assets/caimiao-work/caimiao-type.png" alt="Caimiao typography system"></span>
-            <span class="my-work-media-card my-work-media-card--square my-work-media-card--palette"><img src="assets/caimiao-work/caimiao-palette.png" alt="Caimiao color system"></span>
+            <span class="my-work-media-card my-work-media-card--wide"><img src="assets/caimiao-work/caimiao-phone.png" alt="Caimiao mobile product visual" loading="lazy" decoding="async"></span>
+            <span class="my-work-media-card my-work-media-card--square my-work-media-card--type"><img src="assets/caimiao-work/caimiao-type.png" alt="Caimiao typography system" loading="lazy" decoding="async"></span>
+            <span class="my-work-media-card my-work-media-card--square my-work-media-card--palette"><img src="assets/caimiao-work/caimiao-palette.png" alt="Caimiao color system" loading="lazy" decoding="async"></span>
           </span>
         </a>
         <a class="my-work-media-group" data-work-step="1" href="project.html?work=caimiao&amp;view=system" aria-label="Open Caimiao visual system">
           <span class="my-work-media-frame">
-            <span class="my-work-media-card my-work-media-card--wide"><img src="project/caimiao/1.jpg" alt="Caimiao visual identity"></span>
-            <span class="my-work-media-card my-work-media-card--square"><img src="project/caimiao/6.jpg" alt="Caimiao visual planning"></span>
-            <span class="my-work-media-card my-work-media-card--square"><img src="project/caimiao/25.jpg" alt="Caimiao growth visual"></span>
+            <span class="my-work-media-card my-work-media-card--wide"><img src="project/caimiao/1.jpg" alt="Caimiao visual identity" loading="lazy" decoding="async"></span>
+            <span class="my-work-media-card my-work-media-card--square"><img src="project/caimiao/6.jpg" alt="Caimiao visual planning" loading="lazy" decoding="async"></span>
+            <span class="my-work-media-card my-work-media-card--square"><img src="project/caimiao/25.jpg" alt="Caimiao growth visual" loading="lazy" decoding="async"></span>
           </span>
         </a>
         <a class="my-work-media-group" data-work-step="2" href="project.html?work=caimiao&amp;view=experience" aria-label="Open Caimiao product experience">
           <span class="my-work-media-frame my-work-media-frame--portrait-split">
-            <span class="my-work-media-card my-work-media-card--wide"><img src="project/caimiao/27.jpg" alt="Caimiao product experience"></span>
-            <span class="my-work-media-card my-work-media-card--square"><img src="project/caimiao/10.jpg" alt="Caimiao interaction detail"></span>
-            <span class="my-work-media-card my-work-media-card--square"><img src="project/caimiao/11.jpg" alt="Caimiao task detail"></span>
+            <span class="my-work-media-card my-work-media-card--wide"><img src="project/caimiao/27.jpg" alt="Caimiao product experience" loading="lazy" decoding="async"></span>
+            <span class="my-work-media-card my-work-media-card--square"><img src="project/caimiao/10.jpg" alt="Caimiao interaction detail" loading="lazy" decoding="async"></span>
+            <span class="my-work-media-card my-work-media-card--square"><img src="project/caimiao/11.jpg" alt="Caimiao task detail" loading="lazy" decoding="async"></span>
           </span>
         </a>
         <a class="my-work-media-group" data-work-step="3" href="project.html?work=caimiao&amp;view=application" aria-label="Open Caimiao brand application">
           <span class="my-work-media-frame">
-            <span class="my-work-media-card my-work-media-card--wide"><img src="project/caimiao/14.jpg" alt="Caimiao brand application"></span>
-            <span class="my-work-media-card my-work-media-card--square"><img src="project/caimiao/4.jpg" alt="Caimiao brand detail"></span>
-            <span class="my-work-media-card my-work-media-card--square"><img src="project/caimiao/12.jpg" alt="Caimiao visual detail"></span>
+            <span class="my-work-media-card my-work-media-card--wide"><img src="project/caimiao/14.jpg" alt="Caimiao brand application" loading="lazy" decoding="async"></span>
+            <span class="my-work-media-card my-work-media-card--square"><img src="project/caimiao/4.jpg" alt="Caimiao brand detail" loading="lazy" decoding="async"></span>
+            <span class="my-work-media-card my-work-media-card--square"><img src="project/caimiao/12.jpg" alt="Caimiao visual detail" loading="lazy" decoding="async"></span>
           </span>
         </a>
         <a class="my-work-media-group" data-work-step="4" href="project.html?work=caimiao&amp;view=application-detail" aria-label="Open Caimiao application detail">
           <span class="my-work-media-frame">
-            <span class="my-work-media-card my-work-media-card--wide"><img src="project/caimiao/5.jpg" alt="Caimiao application overview"></span>
-            <span class="my-work-media-card my-work-media-card--square"><img src="project/caimiao/17.jpg" alt="Caimiao mobile detail"></span>
-            <span class="my-work-media-card my-work-media-card--square"><img src="project/caimiao/18.jpg" alt="Caimiao mobile experience"></span>
+            <span class="my-work-media-card my-work-media-card--wide"><img src="project/caimiao/5.jpg" alt="Caimiao application overview" loading="lazy" decoding="async"></span>
+            <span class="my-work-media-card my-work-media-card--square"><img src="project/caimiao/17.jpg" alt="Caimiao mobile detail" loading="lazy" decoding="async"></span>
+            <span class="my-work-media-card my-work-media-card--square"><img src="project/caimiao/18.jpg" alt="Caimiao mobile experience" loading="lazy" decoding="async"></span>
           </span>
         </a>
       </div>
@@ -1854,9 +2572,138 @@ body.work-curl-ready .my-work-media-card img { opacity: 0; }
   </a>
 </section>
 
-<canvas class="work-curl-canvas" id="workCurlCanvas" aria-hidden="true"></canvas>
-
 <script>
+// ===== RUNTIME PERFORMANCE PROFILE =====
+const RuntimeProfile = (() => {
+  const memory = Number(navigator.deviceMemory || 8);
+  const cores = Number(navigator.hardwareConcurrency || 8);
+  const constrained = memory <= 4 || cores <= 4;
+  document.documentElement.classList.toggle('performance-lite', constrained);
+  return { constrained };
+})();
+
+// ===== SHARED FRAME SCHEDULER =====
+const FrameScheduler = (() => {
+  const frameTasks = new Map();
+  const scrollTasks = new Map();
+  const resizeTasks = new Map();
+  const useGsapTicker = Boolean(window.gsap?.ticker);
+  let attached = false;
+  let nativeFrame = null;
+  let scrollDirty = true;
+  let resizeDirty = true;
+  let lastNow = performance.now();
+  let lastScrollY = window.scrollY;
+
+  const detach = () => {
+    if (!attached) return;
+    if (useGsapTicker) {
+      gsap.ticker.remove(tick);
+    } else if (nativeFrame) {
+      cancelAnimationFrame(nativeFrame);
+      nativeFrame = null;
+    }
+    attached = false;
+  };
+
+  const attach = () => {
+    if (attached || document.hidden) return;
+    attached = true;
+    lastNow = performance.now();
+    if (useGsapTicker) {
+      gsap.ticker.add(tick);
+      gsap.ticker.wake();
+    } else {
+      nativeFrame = requestAnimationFrame(tick);
+    }
+  };
+
+  function tick(time, gsapDelta) {
+    const now = useGsapTicker ? time * 1000 : time;
+    const measuredDelta = useGsapTicker && Number.isFinite(gsapDelta) ? gsapDelta : now - lastNow;
+    const delta = Math.min(Math.max(measuredDelta, 0), 50);
+    const currentScrollY = window.scrollY;
+    const state = {
+      now,
+      delta,
+      scrollY: currentScrollY,
+      scrollDelta: currentScrollY - lastScrollY,
+      width: window.innerWidth,
+      height: window.innerHeight
+    };
+
+    if (resizeDirty) {
+      resizeDirty = false;
+      resizeTasks.forEach(task => task(state));
+    }
+
+    if (scrollDirty) {
+      scrollDirty = false;
+      scrollTasks.forEach(task => task(state));
+      lastScrollY = currentScrollY;
+    }
+
+    frameTasks.forEach((task, key) => {
+      if (task(state) === false) frameTasks.delete(key);
+    });
+
+    lastNow = now;
+    if (!frameTasks.size && !scrollDirty && !resizeDirty) {
+      detach();
+    } else if (!useGsapTicker && attached) {
+      nativeFrame = requestAnimationFrame(tick);
+    }
+  }
+
+  window.addEventListener('scroll', () => {
+    scrollDirty = true;
+    attach();
+  }, { passive: true });
+
+  window.addEventListener('resize', () => {
+    resizeDirty = true;
+    scrollDirty = true;
+    attach();
+  }, { passive: true });
+
+  document.addEventListener('visibilitychange', () => {
+    if (document.hidden) {
+      detach();
+    } else {
+      resizeDirty = true;
+      scrollDirty = true;
+      attach();
+    }
+  });
+
+  return {
+    add(key, task) {
+      frameTasks.set(key, task);
+      attach();
+    },
+    remove(key) {
+      frameTasks.delete(key);
+    },
+    request(key, task) {
+      frameTasks.set(key, state => {
+        task(state);
+        return false;
+      });
+      attach();
+    },
+    onScroll(key, task) {
+      scrollTasks.set(key, task);
+      scrollDirty = true;
+      attach();
+    },
+    onResize(key, task) {
+      resizeTasks.set(key, task);
+      resizeDirty = true;
+      attach();
+    }
+  };
+})();
+
 // ===== LOADER =====
 window.addEventListener('load', () => {
   setTimeout(() => {
@@ -1869,22 +2716,34 @@ const cursorDot = document.getElementById('cursorDot');
 const cursorRing = document.getElementById('cursorRing');
 let mouseX = 0, mouseY = 0;
 let ringX = 0, ringY = 0;
+let cursorActive = false;
+let ringRadius = 20;
 
 document.addEventListener('mousemove', (e) => {
   mouseX = e.clientX;
   mouseY = e.clientY;
-  cursorDot.style.left = mouseX - 4 + 'px';
-  cursorDot.style.top = mouseY - 4 + 'px';
+  if (!cursorActive) {
+    ringX = mouseX;
+    ringY = mouseY;
+    cursorActive = true;
+  }
+  FrameScheduler.add('cursor-ring', animateRing);
 });
 
 function animateRing() {
   ringX += (mouseX - ringX) * 0.15;
   ringY += (mouseY - ringY) * 0.15;
-  cursorRing.style.left = ringX - 20 + 'px';
-  cursorRing.style.top = ringY - 20 + 'px';
-  requestAnimationFrame(animateRing);
+  cursorDot.style.transform = `translate3d(${mouseX - 4}px, ${mouseY - 4}px, 0)`;
+  cursorRing.style.transform = `translate3d(${ringX - ringRadius}px, ${ringY - ringRadius}px, 0)`;
+
+  if (Math.abs(mouseX - ringX) < 0.08 && Math.abs(mouseY - ringY) < 0.08) {
+    ringX = mouseX;
+    ringY = mouseY;
+    return false;
+  }
+
+  return true;
 }
-animateRing();
 
 // Hover effects for cursor
 const hoverElements = document.querySelectorAll('a, button, .client-item');
@@ -1892,12 +2751,14 @@ hoverElements.forEach(el => {
   el.addEventListener('mouseenter', () => {
     cursorRing.style.width = '60px';
     cursorRing.style.height = '60px';
-    cursorRing.style.left = ringX - 30 + 'px';
-    cursorRing.style.top = ringY - 30 + 'px';
+    ringRadius = 30;
+    FrameScheduler.add('cursor-ring', animateRing);
   });
   el.addEventListener('mouseleave', () => {
     cursorRing.style.width = '40px';
     cursorRing.style.height = '40px';
+    ringRadius = 20;
+    FrameScheduler.add('cursor-ring', animateRing);
   });
 });
 
@@ -1909,11 +2770,10 @@ if ('ontouchstart' in window) {
 
 // ===== SCROLL PROGRESS =====
 const scrollProgress = document.getElementById('scrollProgress');
-window.addEventListener('scroll', () => {
-  const scrollTop = window.scrollY;
+FrameScheduler.onScroll('scroll-progress', ({ scrollY }) => {
   const docHeight = document.documentElement.scrollHeight - window.innerHeight;
-  const scrollPercent = (scrollTop / docHeight) * 100;
-  scrollProgress.style.width = scrollPercent + '%';
+  const progress = docHeight > 0 ? Math.min(Math.max(scrollY / docHeight, 0), 1) : 0;
+  scrollProgress.style.transform = `scaleX(${progress.toFixed(5)})`;
 });
 
 // ===== SCROLL REVEAL =====
@@ -1977,7 +2837,7 @@ revealElements.forEach(el => revealObserver.observe(el));
     }
   }
 
-  if (!reduceMotion && hasFinePointer) {
+  if (!reduceMotion && hasFinePointer && !RuntimeProfile.constrained) {
     gsap.set(card, { transformPerspective: 1200, transformOrigin: '50% 50%' });
 
     const rotateXTo = gsap.quickTo(card, 'rotationX', { duration: 0.55, ease: 'power3.out' });
@@ -2004,6 +2864,471 @@ revealElements.forEach(el => revealObserver.observe(el));
   }
 })();
 
+// ===== XIN XIANG: RESPONSIVE ACTIVITY WATERFALL =====
+(function() {
+  const board = document.querySelector('.xinxiang-activity-board');
+  const tiles = board ? [...board.querySelectorAll('.activity-tile')] : [];
+  if (!board || !tiles.length) return;
+
+  let activeColumnCount = 0;
+  let resizeFrame = 0;
+
+  const getColumnCount = () => {
+    if (window.matchMedia('(max-width: 768px)').matches) return 2;
+    if (window.matchMedia('(max-width: 1100px)').matches) return 3;
+    return 4;
+  };
+
+  const layoutWaterfall = () => {
+    const columnCount = getColumnCount();
+    if (columnCount === activeColumnCount) return;
+
+    activeColumnCount = columnCount;
+    board.style.setProperty('--activity-columns', columnCount);
+
+    const columns = Array.from({ length: columnCount }, () => {
+      const column = document.createElement('div');
+      column.className = 'activity-waterfall-column';
+      return column;
+    });
+    const columnHeights = Array(columnCount).fill(0);
+
+    tiles.forEach((tile, index) => {
+      const targetColumn = index < columnCount
+        ? index
+        : columnHeights.indexOf(Math.min(...columnHeights));
+      columns[targetColumn].appendChild(tile);
+      columnHeights[targetColumn] += Number(tile.dataset.ratio) || 1;
+    });
+
+    board.replaceChildren(...columns);
+    requestAnimationFrame(() => {
+      if (typeof ScrollTrigger !== 'undefined') ScrollTrigger.refresh();
+    });
+  };
+
+  layoutWaterfall();
+  window.addEventListener('resize', () => {
+    cancelAnimationFrame(resizeFrame);
+    resizeFrame = requestAnimationFrame(layoutWaterfall);
+  }, { passive: true });
+})();
+
+// ===== XIN XIANG: THREE.JS GLOW + SCROLL STORY =====
+(function() {
+  const project = document.querySelector('.xinxiang-project');
+  const intro = project?.querySelector('.xinxiang-intro');
+  const stage = project?.querySelector('.xinxiang-stage');
+  const canvas = document.getElementById('xinxiangGlowCanvas');
+  const subject = project?.querySelector('.xinxiang-subject');
+  const title = project?.querySelector('.xinxiang-title');
+  const titleLines = title ? [...title.querySelectorAll('.xinxiang-title-mark')] : [];
+  const meta = project?.querySelector('.xinxiang-project-meta');
+  const panelHeads = project ? [...project.querySelectorAll('.xinxiang-panel-head')] : [];
+  const overviewItems = project ? [...project.querySelectorAll('.xinxiang-overview > *')] : [];
+  const media = project ? [...project.querySelectorAll('.xinxiang-media')] : [];
+  const activityTiles = project ? [...project.querySelectorAll('.activity-tile')] : [];
+  const videos = project ? [...project.querySelectorAll('video')] : [];
+
+  if (!project || !intro || !stage || !canvas || !subject || !panelHeads.length) return;
+
+  const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const isMobile = window.matchMedia('(max-width: 768px)').matches;
+  const hasFinePointer = window.matchMedia('(pointer: fine)').matches;
+  const glowState = { progress: reduceMotion ? 0.18 : 0 };
+  let glowMaterial = null;
+  let renderer = null;
+  let scene = null;
+  let camera = null;
+  let projectVisible = false;
+  let lastGlowFrame = 0;
+  const startTime = performance.now();
+  const glowTaskKey = 'xinxiang-glow';
+
+  if (typeof THREE !== 'undefined') {
+    const vertexShader = `
+      varying vec2 vUv;
+
+      void main() {
+        vUv = uv;
+        gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
+      }
+    `;
+
+    const fragmentShader = `
+      precision mediump float;
+
+      uniform float uTime;
+      uniform float uProgress;
+      uniform vec2 uResolution;
+      varying vec2 vUv;
+
+      float hash21(vec2 value) {
+        value = fract(value * vec2(123.34, 456.21));
+        value += dot(value, value + 45.32);
+        return fract(value.x * value.y);
+      }
+
+      void main() {
+        float progress = smoothstep(0.0, 1.0, uProgress);
+        float aspect = uResolution.x / max(uResolution.y, 1.0);
+        vec2 center = vec2(0.5, mix(-0.52, 0.34, progress));
+        vec2 point = vUv - center;
+        point.x *= aspect;
+
+        float radius = mix(0.60, 1.08, progress);
+        float distanceToCenter = length(vec2(point.x * 0.78, point.y * 1.34));
+        float softness = mix(0.10, 0.34, progress);
+        float ring = exp(-pow((distanceToCenter - radius) / softness, 2.0));
+        float body = smoothstep(radius + 0.16, radius - 0.44, distanceToCenter);
+        float horizontalPosition = abs(vUv.x * 2.0 - 1.0);
+        float arcY = mix(0.012, 0.62, progress)
+          + (1.0 - pow(horizontalPosition, 1.7)) * mix(0.045, 0.22, progress);
+        float horizon = exp(-pow((vUv.y - arcY) / mix(0.058, 0.25, progress), 2.0));
+        horizon *= smoothstep(1.08, 0.16, horizontalPosition);
+
+        float angleFlow = 0.5 + 0.5 * sin(atan(point.y, point.x) * 1.65 - uTime * 0.16);
+        float horizontalFlow = smoothstep(-0.75, 0.8, point.x + sin(point.y * 4.0 + uTime * 0.12) * 0.12);
+        vec3 red = vec3(0.91, 0.10, 0.025);
+        vec3 orange = vec3(1.0, 0.31, 0.055);
+        vec3 yellow = vec3(1.0, 0.69, 0.12);
+        vec3 color = mix(red, orange, horizontalFlow);
+        color = mix(color, yellow, ring * (0.42 + angleFlow * 0.34));
+        color = mix(color, yellow, horizon * mix(0.72, 0.42, progress));
+
+        float pulse = 0.96 + sin(uTime * 0.72 + point.x * 3.0) * 0.04;
+        float alpha = clamp(
+          (ring * 0.92 + body * mix(0.08, 0.66, progress) + horizon * mix(0.76, 0.48, progress)) * pulse,
+          0.0,
+          0.96
+        );
+        float grain = (hash21(vUv * uResolution + floor(uTime * 10.0)) - 0.5) * 0.018;
+        color += grain;
+
+        gl_FragColor = vec4(color, alpha);
+      }
+    `;
+
+    renderer = new THREE.WebGLRenderer({
+      canvas,
+      alpha: true,
+      antialias: false,
+      powerPreference: 'high-performance'
+    });
+    renderer.setClearColor(0x000000, 0);
+
+    scene = new THREE.Scene();
+    camera = new THREE.OrthographicCamera(-1, 1, 1, -1, 0, 1);
+    glowMaterial = new THREE.ShaderMaterial({
+      transparent: true,
+      depthWrite: false,
+      vertexShader,
+      fragmentShader,
+      uniforms: {
+        uTime: { value: 0 },
+        uProgress: { value: glowState.progress },
+        uResolution: { value: new THREE.Vector2(window.innerWidth, window.innerHeight) }
+      }
+    });
+    scene.add(new THREE.Mesh(new THREE.PlaneGeometry(2, 2), glowMaterial));
+
+    const resizeGlow = () => {
+      const width = window.innerWidth;
+      const height = window.innerHeight;
+      const maxDpr = window.matchMedia('(max-width: 768px)').matches ? 1 : 1.5;
+      renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, maxDpr));
+      renderer.setSize(width, height, false);
+      glowMaterial.uniforms.uResolution.value.set(width, height);
+    };
+
+    const renderGlow = ({ now }) => {
+      if (!projectVisible || document.hidden) return false;
+      if (isMobile && now - lastGlowFrame < 1000 / 30) return true;
+      lastGlowFrame = now;
+      glowMaterial.uniforms.uTime.value = reduceMotion ? 0 : (now - startTime) * 0.001;
+      glowMaterial.uniforms.uProgress.value = glowState.progress;
+      renderer.render(scene, camera);
+      return !reduceMotion;
+    };
+
+    const startGlow = () => {
+      if (projectVisible && !document.hidden && !reduceMotion) {
+        lastGlowFrame = 0;
+        FrameScheduler.add(glowTaskKey, renderGlow);
+      } else if (projectVisible) {
+        renderer.render(scene, camera);
+      }
+    };
+
+    const stopGlow = () => {
+      FrameScheduler.remove(glowTaskKey);
+    };
+
+    const visibilityObserver = new IntersectionObserver(([entry]) => {
+      projectVisible = entry.isIntersecting;
+      if (projectVisible) startGlow(); else stopGlow();
+    }, { rootMargin: '20% 0px' });
+
+    visibilityObserver.observe(intro);
+    FrameScheduler.onResize('xinxiang-glow-resize', () => {
+      resizeGlow();
+      if (projectVisible) renderer.render(scene, camera);
+    });
+    resizeGlow();
+    renderer.render(scene, camera);
+  }
+
+  const hydrateVideo = video => {
+    const source = video.querySelector('source[data-src]');
+    if (!source) return;
+    source.src = source.dataset.src;
+    source.removeAttribute('data-src');
+    video.preload = 'metadata';
+    video.load();
+  };
+
+  const videoHydrationObserver = new IntersectionObserver(entries => {
+    entries.forEach(entry => {
+      if (!entry.isIntersecting) return;
+      const video = entry.target.querySelector('video');
+      if (video) hydrateVideo(video);
+      videoHydrationObserver.unobserve(entry.target);
+    });
+  }, { rootMargin: '75% 0px' });
+
+  const videoVisibilityObserver = new IntersectionObserver(entries => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) return;
+      const card = entry.target;
+      const video = card.querySelector('video');
+      video?.pause();
+      card.classList.remove('is-playing');
+    });
+  }, { threshold: 0.08 });
+
+  videos.forEach(video => {
+    video.muted = true;
+    video.defaultMuted = true;
+    const card = video.closest('.xinxiang-video-card');
+    if (!card) return;
+
+    const play = () => {
+      hydrateVideo(video);
+      const playAttempt = video.play();
+      if (playAttempt) {
+        playAttempt.then(() => card.classList.add('is-playing')).catch(() => {});
+      }
+    };
+
+    const pause = () => {
+      video.pause();
+      card.classList.remove('is-playing');
+    };
+
+    if (hasFinePointer) {
+      card.addEventListener('pointerenter', play, { passive: true });
+      card.addEventListener('pointerleave', pause, { passive: true });
+    } else {
+      card.addEventListener('click', () => {
+        if (video.paused) play(); else pause();
+      });
+    }
+
+    card.addEventListener('keydown', event => {
+      if (event.key !== 'Enter' && event.key !== ' ') return;
+      event.preventDefault();
+      if (video.paused) play(); else pause();
+    });
+
+    videoHydrationObserver.observe(card);
+    videoVisibilityObserver.observe(card);
+  });
+
+  if (window.gsap && window.ScrollTrigger) {
+    gsap.registerPlugin(ScrollTrigger);
+
+    if (!reduceMotion) {
+      const introEntrance = gsap.timeline({
+        defaults: { duration: 1, ease: 'power3.out' },
+        scrollTrigger: {
+          trigger: project,
+          start: 'top 78%',
+          toggleActions: 'play none none reverse'
+        }
+      });
+
+      introEntrance
+        .fromTo(titleLines,
+          { autoAlpha: 0, y: 42 },
+          { autoAlpha: 1, y: 0, stagger: 0.07, duration: 0.9 },
+          0
+        )
+        .fromTo(subject,
+          { autoAlpha: 0, y: 56, scale: 0.86, rotationX: -4 },
+          { autoAlpha: 1, y: 0, scale: 1, rotationX: 0, duration: 1.15 },
+          0.08
+        )
+        .fromTo(meta,
+          { autoAlpha: 0, y: 18 },
+          { autoAlpha: 1, y: 0, duration: 0.7 },
+          0.42
+        );
+
+      const scrollStory = gsap.timeline({
+        defaults: { ease: 'none' },
+        scrollTrigger: {
+          trigger: intro,
+          start: 'top top',
+          end: 'bottom bottom',
+          scrub: 0.8,
+          invalidateOnRefresh: true
+        }
+      });
+
+      scrollStory
+        .addLabel('ignite', 0)
+        .to(glowState, {
+          progress: 1,
+          duration: 1,
+          onUpdate: () => {
+            if (glowMaterial) glowMaterial.uniforms.uProgress.value = glowState.progress;
+          }
+        }, 'ignite')
+        .to(stage, {
+          '--xin-arc-yellow': 0,
+          '--xin-arc-red': 0,
+          duration: 0.38
+        }, 0.16)
+        .to(subject, {
+          yPercent: isMobile ? -16 : -24,
+          scale: 1.1,
+          rotationZ: -1.5,
+          autoAlpha: 0,
+          duration: 0.62
+        }, 0.38)
+        .to(title, {
+          yPercent: isMobile ? -8 : -12,
+          autoAlpha: 0,
+          duration: 0.44
+        }, 0.42)
+        .to(meta, {
+          y: -28,
+          autoAlpha: 0,
+          duration: 0.34
+        }, 0.5);
+
+      panelHeads.forEach(head => {
+        gsap.fromTo(head,
+          { autoAlpha: 0, y: 44 },
+          {
+            autoAlpha: 1,
+            y: 0,
+            duration: 0.85,
+            ease: 'power3.out',
+            scrollTrigger: {
+              trigger: head,
+              start: 'top 84%',
+              toggleActions: 'play none none reverse'
+            }
+          }
+        );
+      });
+
+      if (overviewItems.length) {
+        gsap.fromTo(overviewItems,
+          { autoAlpha: 0, y: 34 },
+          {
+            autoAlpha: 1,
+            y: 0,
+            duration: 0.85,
+            ease: 'power3.out',
+            stagger: 0.1,
+            scrollTrigger: {
+              trigger: overviewItems[0].parentElement,
+              start: 'top 84%',
+              toggleActions: 'play none none reverse'
+            }
+          }
+        );
+      }
+
+      ScrollTrigger.batch(media, {
+        interval: 0.1,
+        batchMax: isMobile ? 2 : 3,
+        start: 'top 88%',
+        onEnter: batch => {
+          gsap.fromTo(batch,
+            {
+              autoAlpha: 0,
+              y: index => 54 + (index % 2) * 28,
+              rotation: index => index % 2 ? 0.8 : -0.65,
+              clipPath: 'inset(10% 0 10% 0 round 8px)'
+            },
+            {
+              autoAlpha: 1,
+              y: 0,
+              rotation: 0,
+              clipPath: 'inset(0% 0 0% 0 round 8px)',
+              duration: 1,
+              ease: 'power3.out',
+              stagger: 0.12,
+              overwrite: 'auto'
+            }
+          );
+        },
+        onLeaveBack: batch => {
+          gsap.to(batch, {
+            autoAlpha: 0,
+            y: 42,
+            duration: 0.45,
+            ease: 'power2.in',
+            overwrite: 'auto'
+          });
+        }
+      });
+
+      if (activityTiles.length) {
+        ScrollTrigger.batch(activityTiles, {
+          interval: 0.08,
+          batchMax: isMobile ? 2 : 4,
+          start: 'top 92%',
+          onEnter: batch => {
+            gsap.fromTo(batch,
+              { autoAlpha: 0, y: 24 },
+              {
+                autoAlpha: 1,
+                y: 0,
+                duration: 0.55,
+                ease: 'power3.out',
+                stagger: 0.06,
+                overwrite: 'auto'
+              }
+            );
+          },
+          onLeaveBack: batch => {
+            gsap.to(batch, {
+              autoAlpha: 0,
+              y: 16,
+              duration: 0.3,
+              ease: 'power2.in',
+              overwrite: 'auto'
+            });
+          }
+        });
+      }
+    } else {
+      gsap.set([subject, title, meta, ...panelHeads, ...overviewItems, ...media, ...activityTiles], {
+        autoAlpha: 1,
+        clearProps: 'transform,filter,clipPath'
+      });
+    }
+
+    const refreshAfterMedia = () => ScrollTrigger.refresh();
+    window.addEventListener('load', refreshAfterMedia, { once: true });
+    videos.forEach(video => video.addEventListener('loadedmetadata', refreshAfterMedia, { once: true }));
+  }
+})();
+
 // ===== MY WORK: COPY-LED MEDIA SWITCHING =====
 (function() {
   const wrap = document.querySelector('.my-work');
@@ -2022,7 +3347,7 @@ revealElements.forEach(el => revealObserver.observe(el));
 
   let activeIndex = 0;
   let lastScrollY = window.scrollY;
-  let frame = null;
+  let workVisible = false;
 
   const syncFeatureFrameHeight = () => {
     if (!featureFrame) return;
@@ -2034,7 +3359,7 @@ revealElements.forEach(el => revealObserver.observe(el));
     caseCopies.forEach(copy => copy.style.removeProperty('--case-copy-shift'));
     workTitle?.style.removeProperty('--work-title-shift');
 
-    requestAnimationFrame(() => {
+    FrameScheduler.request('my-work-copy-layout', () => {
       const frameBottom = mediaFrame.getBoundingClientRect().bottom - mediaStage.getBoundingClientRect().top;
       if (!Number.isFinite(frameBottom)) return;
 
@@ -2064,7 +3389,7 @@ revealElements.forEach(el => revealObserver.observe(el));
   });
 
   window.addEventListener('load', syncCaseCopyPositions, { once: true });
-  window.addEventListener('resize', syncCaseCopyPositions, { passive: true });
+  FrameScheduler.onResize('my-work-copy-resize', syncCaseCopyPositions);
   syncCaseCopyPositions();
 
   const activate = (nextIndex, direction) => {
@@ -2090,10 +3415,10 @@ revealElements.forEach(el => revealObserver.observe(el));
     activeIndex = nextIndex;
   };
 
-  const update = () => {
-    frame = null;
-    const direction = window.scrollY >= lastScrollY ? 'down' : 'up';
-    lastScrollY = window.scrollY;
+  const update = ({ scrollY = window.scrollY } = {}) => {
+    if (!workVisible) return;
+    const direction = scrollY >= lastScrollY ? 'down' : 'up';
+    lastScrollY = scrollY;
     const mediaTop = mediaFrame.getBoundingClientRect().top;
     let nextIndex = 0;
 
@@ -2107,213 +3432,14 @@ revealElements.forEach(el => revealObserver.observe(el));
     activate(nextIndex, direction);
   };
 
-  window.addEventListener('scroll', () => {
-    if (!frame) frame = requestAnimationFrame(update);
-  }, { passive: true });
-  update();
+  const workObserver = new IntersectionObserver(([entry]) => {
+    workVisible = entry.isIntersecting;
+    if (workVisible) FrameScheduler.request('my-work-switch-enter', update);
+  }, { rootMargin: '35% 0px' });
+  workObserver.observe(wrap);
+
+  FrameScheduler.onScroll('my-work-switch', update);
 })();
-
-// ===== MY WORK: SCROLL-VELOCITY WEBGL CURL =====
-(function() {
-  const canvas = document.getElementById('workCurlCanvas');
-  const work = document.querySelector('.my-work');
-  const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-  if (!canvas || !work || reduceMotion || window.matchMedia('(max-width: 768px)').matches) return;
-
-  const images = [...work.querySelectorAll('.my-work-media-card img')];
-  if (!images.length) return;
-
-  const gl = canvas.getContext('webgl', { alpha: true, premultipliedAlpha: false });
-  if (!gl) return;
-
-  const vertexSource = `
-    attribute vec2 aPosition;
-    uniform vec4 uRect;
-    uniform float uCurl;
-    varying vec2 vUv;
-
-    void main() {
-      float screenY = clamp(uRect.y + aPosition.y * uRect.w, 0.0, 1.0);
-      float profile = 1.0 - sqrt(max(0.0, 1.0 - pow(screenY * 2.0 - 1.0, 2.0)));
-      float scaleX = 1.0 - profile * uCurl;
-      float curvedX = 0.5 + (aPosition.x - 0.5) * scaleX;
-      vec2 screen = vec2(uRect.x + curvedX * uRect.z, uRect.y + aPosition.y * uRect.w);
-      vUv = aPosition;
-      gl_Position = vec4(screen * 2.0 - 1.0, 0.0, 1.0);
-    }
-  `;
-
-  const fragmentSource = `
-    precision mediump float;
-    uniform sampler2D uTexture;
-    uniform vec4 uRect;
-    uniform float uCurl;
-    uniform float uOpacity;
-    varying vec2 vUv;
-
-    void main() {
-      float screenY = clamp(uRect.y + vUv.y * uRect.w, 0.0, 1.0);
-      float profile = 1.0 - sqrt(max(0.0, 1.0 - pow(screenY * 2.0 - 1.0, 2.0)));
-      float sampleScale = max(0.72, 1.0 - profile * uCurl * 1.7);
-      float sampleX = 0.5 + (vUv.x - 0.5) / sampleScale;
-      if (sampleX < 0.0 || sampleX > 1.0) discard;
-      vec4 color = texture2D(uTexture, vec2(sampleX, vUv.y));
-      gl_FragColor = vec4(color.rgb, color.a * uOpacity);
-    }
-  `;
-
-  function compile(type, source) {
-    const shader = gl.createShader(type);
-    gl.shaderSource(shader, source);
-    gl.compileShader(shader);
-    if (!gl.getShaderParameter(shader, gl.COMPILE_STATUS)) {
-      gl.deleteShader(shader);
-      return null;
-    }
-    return shader;
-  }
-
-  const vertex = compile(gl.VERTEX_SHADER, vertexSource);
-  const fragment = compile(gl.FRAGMENT_SHADER, fragmentSource);
-  if (!vertex || !fragment) return;
-
-  const program = gl.createProgram();
-  gl.attachShader(program, vertex);
-  gl.attachShader(program, fragment);
-  gl.linkProgram(program);
-  if (!gl.getProgramParameter(program, gl.LINK_STATUS)) return;
-
-  const positionLocation = gl.getAttribLocation(program, 'aPosition');
-  const rectLocation = gl.getUniformLocation(program, 'uRect');
-  const curlLocation = gl.getUniformLocation(program, 'uCurl');
-  const opacityLocation = gl.getUniformLocation(program, 'uOpacity');
-  const textureLocation = gl.getUniformLocation(program, 'uTexture');
-  const quad = gl.createBuffer();
-  gl.bindBuffer(gl.ARRAY_BUFFER, quad);
-  gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([
-    0, 0, 1, 0,
-    0, 1, 1, 1
-  ]), gl.STATIC_DRAW);
-
-  const textures = new Map();
-  function uploadTexture(image) {
-    if (!image.complete || !image.naturalWidth) return false;
-    const texture = gl.createTexture();
-    gl.bindTexture(gl.TEXTURE_2D, texture);
-    gl.pixelStorei(gl.UNPACK_FLIP_Y_WEBGL, true);
-    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE);
-    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
-    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR);
-    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.LINEAR);
-    gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, image);
-    textures.set(image, texture);
-    return true;
-  }
-
-  function waitForImage(image) {
-    if (image.complete) return Promise.resolve();
-    return new Promise(resolve => {
-      image.addEventListener('load', resolve, { once: true });
-      image.addEventListener('error', resolve, { once: true });
-    });
-  }
-
-  Promise.all(images.map(waitForImage)).then(() => {
-    const hasTexture = images.some(uploadTexture);
-    if (!hasTexture) return;
-
-    document.body.classList.add('work-curl-ready');
-    gl.useProgram(program);
-    gl.enable(gl.BLEND);
-    gl.blendFunc(gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA);
-    gl.uniform1i(textureLocation, 0);
-    gl.bindBuffer(gl.ARRAY_BUFFER, quad);
-    gl.enableVertexAttribArray(positionLocation);
-    gl.vertexAttribPointer(positionLocation, 2, gl.FLOAT, false, 0, 0);
-
-    let width = 0;
-    let height = 0;
-    let lastScrollY = window.scrollY;
-    let lastTime = performance.now();
-    let curl = 0;
-
-    function resize() {
-      const dpr = Math.min(window.devicePixelRatio || 1, 1.5);
-      width = window.innerWidth;
-      height = window.innerHeight;
-      canvas.width = Math.round(width * dpr);
-      canvas.height = Math.round(height * dpr);
-      gl.viewport(0, 0, canvas.width, canvas.height);
-    }
-
-    function drawImage(image) {
-      const group = image.closest('.my-work-media-group');
-      if (!group || getComputedStyle(group).visibility === 'hidden') return;
-
-      const rect = image.getBoundingClientRect();
-      if (rect.bottom <= 0 || rect.top >= height || rect.right <= 0 || rect.left >= width) return;
-
-      const opacity = Number.parseFloat(getComputedStyle(group).opacity);
-      if (!Number.isFinite(opacity) || opacity <= 0.002) return;
-
-      const texture = textures.get(image);
-      if (!texture) return;
-      gl.activeTexture(gl.TEXTURE0);
-      gl.bindTexture(gl.TEXTURE_2D, texture);
-      gl.uniform4f(rectLocation,
-        rect.left / width,
-        1 - rect.bottom / height,
-        rect.width / width,
-        rect.height / height
-      );
-      gl.uniform1f(opacityLocation, opacity);
-      gl.drawArrays(gl.TRIANGLE_STRIP, 0, 4);
-    }
-
-    function render(now) {
-      const delta = Math.max((now - lastTime) / 1000, 1 / 120);
-      const speed = Math.abs(window.scrollY - lastScrollY) / delta;
-      const targetCurl = Math.min(speed / 1800, 1) * 0.065;
-      curl += (targetCurl - curl) * 0.14;
-      lastScrollY = window.scrollY;
-      lastTime = now;
-
-      gl.clearColor(0, 0, 0, 0);
-      gl.clear(gl.COLOR_BUFFER_BIT);
-      gl.uniform1f(curlLocation, curl);
-      if (!document.hidden && width && height) images.forEach(drawImage);
-      requestAnimationFrame(render);
-    }
-
-    window.addEventListener('resize', resize, { passive: true });
-    resize();
-    requestAnimationFrame(render);
-  });
-})();
-
-// ===== COUNTER ANIMATION =====
-const statNumbers = document.querySelectorAll('.stat-number[data-count]');
-const counterObserver = new IntersectionObserver((entries) => {
-  entries.forEach(entry => {
-    if (entry.isIntersecting) {
-      const el = entry.target;
-      const target = parseInt(el.dataset.count);
-      let current = 0;
-      const increment = target / 40;
-      const timer = setInterval(() => {
-        current += increment;
-        if (current >= target) {
-          current = target;
-          clearInterval(timer);
-        }
-        el.textContent = Math.floor(current) + '+';
-      }, 40);
-      counterObserver.unobserve(el);
-    }
-  });
-}, { threshold: 0.5 });
-
-statNumbers.forEach(el => counterObserver.observe(el));
 
 // ===== SMOOTH NAV SCROLL =====
 document.querySelectorAll('.nav-links a').forEach(link => {
@@ -2330,16 +3456,9 @@ document.querySelectorAll('.nav-links a').forEach(link => {
 });
 
 // ===== NAV SCROLL EFFECT =====
-let lastScroll = 0;
 const nav = document.querySelector('.nav');
-window.addEventListener('scroll', () => {
-  const currentScroll = window.scrollY;
-  if (currentScroll > 100) {
-    nav.style.padding = '1rem 3rem';
-  } else {
-    nav.style.padding = '1.5rem 3rem';
-  }
-  lastScroll = currentScroll;
+FrameScheduler.onScroll('nav-state', ({ scrollY }) => {
+  nav?.classList.toggle('is-compact', scrollY > 100);
 });
 
 // ===== HERO THREE.JS SHADER ANIMATION =====
@@ -2591,22 +3710,22 @@ window.addEventListener('scroll', () => {
     const start = performance.now();
     const duration = params.revealDuration * 1000;
     const delay = params.revealDelay * 1000;
-    function step(now) {
+    FrameScheduler.add('hero-reveal', ({ now }) => {
       const elapsed = now - start - delay;
-      if (elapsed < 0) { requestAnimationFrame(step); return; }
+      if (elapsed < 0) return true;
       const t = Math.min(elapsed / duration, 1);
-      // ease-out cubic
       state.reveal = 1 - Math.pow(1 - t, 3);
       syncReveal();
-      if (t < 1) requestAnimationFrame(step);
-    }
-    requestAnimationFrame(step);
+      return t < 1;
+    });
   }
 
   // --- Render loop ---
   let isVisible = true;
   let isRunning = false;
   const targetFrameMs = 1000 / 60;
+  const renderIntervalMs = 1000 / (RuntimeProfile.constrained ? 30 : 60);
+  let lastRenderTime = 0;
 
   function render(delta, frameTime) {
     const x = Math.min(frameTime / targetFrameMs, 3);
@@ -2634,21 +3753,20 @@ window.addEventListener('scroll', () => {
   function startLoop() {
     if (isRunning) return;
     isRunning = true;
-    let lastTime = performance.now();
-    function tick(now) {
-      if (!isRunning) return;
-      const frameTime = now - lastTime;
-      lastTime = now;
-      if (isVisible) {
-        render(0, frameTime);
-      }
-      requestAnimationFrame(tick);
-    }
-    requestAnimationFrame(tick);
+    lastRenderTime = 0;
+    FrameScheduler.add('hero-shader', ({ now, delta }) => {
+      if (!isRunning || !isVisible || document.hidden) return false;
+      if (lastRenderTime && now - lastRenderTime < renderIntervalMs) return true;
+      const frameDelta = lastRenderTime ? now - lastRenderTime : delta;
+      lastRenderTime = now;
+      render(0, frameDelta);
+      return true;
+    });
   }
 
   function stopLoop() {
     isRunning = false;
+    FrameScheduler.remove('hero-shader');
   }
 
   // Visibility observer
@@ -2656,12 +3774,7 @@ window.addEventListener('scroll', () => {
     isVisible = entry.isIntersecting;
     if (isVisible) startLoop(); else stopLoop();
   }, { threshold: 0 });
-  visObserver.observe(canvas);
-
-  // Tab visibility
-  document.addEventListener('visibilitychange', () => {
-    if (document.hidden) stopLoop(); else if (isVisible) startLoop();
-  });
+  visObserver.observe(document.querySelector('.hero') || container);
 
   // Initialize
   resize();
@@ -2688,11 +3801,10 @@ window.addEventListener('scroll', () => {
 
   const canHover = window.matchMedia('(pointer: fine)').matches;
   const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-  if (!canHover || reduceMotion) return;
+  if (!canHover || reduceMotion || RuntimeProfile.constrained) return;
 
   const state = { x: 0, y: 0, intensity: 0 };
   const target = { x: 0, y: 0, intensity: 0, lightX: 50, lightY: 42 };
-  let frame = null;
 
   function updateFromPointer(event) {
     const rect = heroSection.getBoundingClientRect();
@@ -2710,8 +3822,7 @@ window.addEventListener('scroll', () => {
   }
 
   function startHeroPointerLoop() {
-    if (frame) return;
-    frame = requestAnimationFrame(tickHeroPointer);
+    FrameScheduler.add('hero-pointer', tickHeroPointer);
   }
 
   function tickHeroPointer() {
@@ -2762,11 +3873,10 @@ window.addEventListener('scroll', () => {
       Math.abs(target.intensity - state.intensity) < 0.002;
 
     if (settled && target.intensity === 0) {
-      frame = null;
-      return;
+      return false;
     }
 
-    frame = requestAnimationFrame(tickHeroPointer);
+    return true;
   }
 
   heroSection.addEventListener('pointermove', updateFromPointer, { passive: true });
@@ -2789,10 +3899,10 @@ window.addEventListener('scroll', () => {
   const workSection = document.querySelector('.my-work');
   if (!heroSection || !workSection) return;
 
-  const updateHeroFade = () => {
-    const scrollY = window.scrollY;
-    const heroH = heroSection.offsetHeight;
-    const workTop = workSection.offsetTop;
+  let heroH = heroSection.offsetHeight;
+  let workTop = workSection.offsetTop;
+
+  const updateHeroFade = ({ scrollY = window.scrollY } = {}) => {
     const releaseStart = Math.max(heroH * 0.8, workTop - window.innerHeight * 0.9);
     const fadeIn = Math.min(scrollY / (heroH * 0.72), 1) * 0.62;
     const release = Math.min(Math.max((scrollY - releaseStart) / Math.max(workTop - releaseStart, 1), 0), 1);
@@ -2805,9 +3915,13 @@ window.addEventListener('scroll', () => {
     }
   };
 
-  window.addEventListener('scroll', updateHeroFade, { passive: true });
-  window.addEventListener('resize', updateHeroFade, { passive: true });
-  updateHeroFade();
+  FrameScheduler.onScroll('hero-fade', updateHeroFade);
+  FrameScheduler.onResize('hero-fade-resize', state => {
+    heroH = heroSection.offsetHeight;
+    workTop = workSection.offsetTop;
+    updateHeroFade(state);
+  });
+  FrameScheduler.request('hero-fade-initial', updateHeroFade);
 })();
 
 // === SCROLL SYNC (no Lenis) ===
@@ -2815,6 +3929,5 @@ window.addEventListener('scroll', () => {
 gsap.ticker.lagSmoothing(0);
 
 </script>
-<script type="module" src="reactbits-gradual-blur-bundle.js?v=3"></script>
 </body>
 </html>

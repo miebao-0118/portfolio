@@ -2481,6 +2481,8 @@ html.performance-lite .about-badge-card {
 /* ===== CAIMIAO SHARED THREE.JS WATER / CASE GALLERY ===== */
 .caimiao-river-world {
   overflow: hidden;
+  opacity: 0;
+  visibility: hidden;
   transform-origin: 50% 50%;
 }
 
@@ -2536,7 +2538,7 @@ html.performance-lite .about-badge-card {
   position: absolute;
   top: 0;
   bottom: 0;
-  width: 42%;
+  width: 50%;
   background: var(--caimiao-yellow);
   will-change: transform, opacity;
 }
@@ -2564,33 +2566,6 @@ html.performance-lite .about-badge-card {
   width: 100%;
   height: 100%;
   object-fit: contain;
-}
-
-.caimiao-boat-wake {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  z-index: 1;
-  width: 118%;
-  height: 36%;
-  border: 2px solid rgba(225, 249, 255, 0.7);
-  border-radius: 50%;
-  opacity: 0;
-  transform: translate(-50%, -50%) scale(0.62);
-  animation: caimiaoBoatWake 3.2s ease-out infinite;
-  pointer-events: none;
-}
-
-.caimiao-boat-wake--inner {
-  width: 88%;
-  height: 27%;
-  animation-delay: 1.55s;
-}
-
-@keyframes caimiaoBoatWake {
-  0% { opacity: 0; transform: translate(-50%, -50%) scale(0.58); }
-  18% { opacity: 0.5; }
-  72%, 100% { opacity: 0; transform: translate(-50%, -50%) scale(1.35); }
 }
 
 .caimiao-case-layer {
@@ -2740,8 +2715,36 @@ html.performance-lite .about-badge-card {
   opacity: 0;
   filter: blur(0.25px) drop-shadow(0 18px 36px rgba(226, 246, 255, 0.14));
   mix-blend-mode: screen;
+  -webkit-mask-image: linear-gradient(
+    180deg,
+    transparent 0%,
+    rgba(0, 0, 0, 0.78) 8%,
+    #000 18%,
+    #000 82%,
+    rgba(0, 0, 0, 0.72) 92%,
+    transparent 100%
+  );
+  mask-image: linear-gradient(
+    180deg,
+    transparent 0%,
+    rgba(0, 0, 0, 0.78) 8%,
+    #000 18%,
+    #000 82%,
+    rgba(0, 0, 0, 0.72) 92%,
+    transparent 100%
+  );
   pointer-events: none;
   will-change: transform, opacity;
+}
+
+.caimiao-exit-cloud--wisps {
+  -webkit-mask-image: linear-gradient(90deg, transparent 0%, #000 12%, #000 84%, transparent 100%);
+  mask-image: linear-gradient(90deg, transparent 0%, #000 12%, #000 84%, transparent 100%);
+}
+
+.caimiao-exit-cloud--bank {
+  -webkit-mask-image: linear-gradient(180deg, transparent 0%, rgba(0, 0, 0, 0.82) 10%, #000 24%, #000 88%, transparent 100%);
+  mask-image: linear-gradient(180deg, transparent 0%, rgba(0, 0, 0, 0.82) 10%, #000 24%, #000 88%, transparent 100%);
 }
 
 @media (max-width: 1024px) {
@@ -2754,7 +2757,6 @@ html.performance-lite .about-badge-card {
 
 @media (max-width: 768px) {
   .caimiao-water-portal { clip-path: inset(100% 40% 0 40%); }
-  .caimiao-river-shutter { width: 40%; }
   .caimiao-boat { width: clamp(68px, 18vw, 96px); }
   .caimiao-case-layer {
     grid-template-columns: minmax(0, 1fr) minmax(74px, 20vw) minmax(0, 1fr);
@@ -2778,13 +2780,34 @@ html.performance-lite .about-badge-card {
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .caimiao-boat-wake { animation: none; }
+  .caimiao-journey.is-static .caimiao-river-world {
+    opacity: 1;
+    visibility: visible;
+  }
   .caimiao-journey.is-static .caimiao-water-portal {
-    clip-path: inset(0 40% 0 40%);
+    clip-path: inset(0 42% 0 42%);
+  }
+  .caimiao-journey.is-static .caimiao-river-shutter--left {
+    transform: translateX(-16%);
+  }
+  .caimiao-journey.is-static .caimiao-river-shutter--right {
+    transform: translateX(16%);
   }
   .caimiao-journey.is-static .caimiao-media-set:first-child {
     opacity: 1;
     visibility: visible;
+  }
+}
+
+@media (max-width: 768px) and (prefers-reduced-motion: reduce) {
+  .caimiao-journey.is-static .caimiao-water-portal {
+    clip-path: inset(0 40% 0 40%);
+  }
+  .caimiao-journey.is-static .caimiao-river-shutter--left {
+    transform: translateX(-20%);
+  }
+  .caimiao-journey.is-static .caimiao-river-shutter--right {
+    transform: translateX(20%);
   }
 }
 
@@ -3460,8 +3483,6 @@ html.performance-lite .about-badge-card {
         <span class="caimiao-river-shutter caimiao-river-shutter--right"></span>
       </div>
       <div class="caimiao-boat" aria-hidden="true">
-        <span class="caimiao-boat-wake caimiao-boat-wake--outer"></span>
-        <span class="caimiao-boat-wake caimiao-boat-wake--inner"></span>
         <img src="assets/caimiao-journey/boat.png" alt="">
       </div>
 
@@ -4482,6 +4503,15 @@ revealElements.forEach(el => revealObserver.observe(el));
 
   if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
 
+  const settings = {
+    segments: RuntimeProfile.constrained ? 96 : 150,
+    normalSize: RuntimeProfile.constrained ? 128 : 256,
+    wakeSize: RuntimeProfile.constrained ? 128 : 256,
+    renderInterval: 1000 / (RuntimeProfile.constrained ? 30 : 60),
+    fixedStep: 1 / 60,
+    maxWakeSteps: 3
+  };
+
   let renderer;
   try {
     renderer = new THREE.WebGLRenderer({
@@ -4497,24 +4527,213 @@ revealElements.forEach(el => revealObserver.observe(el));
 
   renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 1));
   renderer.outputColorSpace = THREE.SRGBColorSpace;
-  renderer.setClearColor(0x147eb8, 1);
+  renderer.toneMapping = THREE.ACESFilmicToneMapping;
+  renderer.toneMappingExposure = 1.08;
+  renderer.setClearColor(0x0b78ad, 1);
 
   const scene = new THREE.Scene();
-  scene.background = new THREE.Color(0x147eb8);
-  const camera = new THREE.PerspectiveCamera(46, 1, 0.1, 220);
+  scene.background = new THREE.Color(0x0b78ad);
+  const camera = new THREE.PerspectiveCamera(43, 1, 0.1, 260);
   const geometry = new THREE.PlaneGeometry(
-    92,
     150,
-    RuntimeProfile.constrained ? 42 : 78,
-    RuntimeProfile.constrained ? 58 : 104
+    150,
+    settings.segments,
+    settings.segments
   );
   geometry.rotateX(-Math.PI / 2);
 
+  const simulationCamera = new THREE.OrthographicCamera(-1, 1, 1, -1, 0, 1);
+  const simulationGeometry = new THREE.PlaneGeometry(2, 2);
+
+  const createRenderTarget = size => new THREE.WebGLRenderTarget(size, size, {
+    minFilter: THREE.LinearFilter,
+    magFilter: THREE.LinearFilter,
+    format: THREE.RGBAFormat,
+    type: THREE.UnsignedByteType,
+    depthBuffer: false,
+    stencilBuffer: false
+  });
+
+  let wakeRead = createRenderTarget(settings.wakeSize);
+  let wakeWrite = createRenderTarget(settings.wakeSize);
+  const normalTarget = createRenderTarget(settings.normalSize);
+
+  const clearWakeTarget = target => {
+    const previousColor = renderer.getClearColor(new THREE.Color());
+    const previousAlpha = renderer.getClearAlpha();
+    renderer.setRenderTarget(target);
+    renderer.setClearColor(new THREE.Color(0.5, 0.5, 0), 1);
+    renderer.clear(true, false, false);
+    renderer.setRenderTarget(null);
+    renderer.setClearColor(previousColor, previousAlpha);
+  };
+  clearWakeTarget(wakeRead);
+  clearWakeTarget(wakeWrite);
+
+  const simulationVertexShader = `
+    varying vec2 vUv;
+    void main() {
+      vUv = uv;
+      gl_Position = vec4(position, 1.0);
+    }
+  `;
+
+  const wakeMaterial = new THREE.ShaderMaterial({
+    uniforms: {
+      uState: { value: wakeRead.texture },
+      uTexel: { value: new THREE.Vector2(1 / settings.wakeSize, 1 / settings.wakeSize) },
+      uSource: { value: 0 },
+      uBoatUv: { value: new THREE.Vector2(0.5, 0.475) },
+      uTime: { value: 0 }
+    },
+    vertexShader: simulationVertexShader,
+    fragmentShader: `
+      precision highp float;
+      uniform sampler2D uState;
+      uniform vec2 uTexel;
+      uniform float uSource;
+      uniform vec2 uBoatUv;
+      uniform float uTime;
+      varying vec2 vUv;
+
+      vec2 decodeState(vec4 state) {
+        return state.rg * 2.0 - 1.0;
+      }
+
+      void main() {
+        vec2 state = decodeState(texture2D(uState, vUv));
+        float height = state.x;
+        float velocity = state.y;
+        float left = decodeState(texture2D(uState, vUv - vec2(uTexel.x, 0.0))).x;
+        float right = decodeState(texture2D(uState, vUv + vec2(uTexel.x, 0.0))).x;
+        float down = decodeState(texture2D(uState, vUv - vec2(0.0, uTexel.y))).x;
+        float up = decodeState(texture2D(uState, vUv + vec2(0.0, uTexel.y))).x;
+        float average = (left + right + down + up) * 0.25;
+
+        velocity += (average - height) * 0.34;
+        velocity *= 0.975;
+        height = (height + velocity) * 0.992;
+
+        vec2 boatSpace = vUv - uBoatUv;
+        boatSpace.x *= 1.38;
+        float radius = length(boatSpace);
+        float ring = exp(-pow((radius - 0.028) * 92.0, 2.0));
+        float stern = exp(-dot(
+          vec2(boatSpace.x * 46.0, (boatSpace.y + 0.034) * 72.0),
+          vec2(boatSpace.x * 46.0, (boatSpace.y + 0.034) * 72.0)
+        ));
+        float pulse = 0.78 + 0.22 * sin(uTime * 5.4);
+        height += (ring * 0.015 + stern * 0.012) * uSource * pulse;
+
+        gl_FragColor = vec4(
+          clamp(height * 0.5 + 0.5, 0.0, 1.0),
+          clamp(velocity * 0.5 + 0.5, 0.0, 1.0),
+          0.0,
+          1.0
+        );
+      }
+    `
+  });
+  const wakeScene = new THREE.Scene();
+  wakeScene.add(new THREE.Mesh(simulationGeometry, wakeMaterial));
+
+  const normalMaterial = new THREE.ShaderMaterial({
+    uniforms: {
+      uTime: { value: 0 },
+      uWakeMap: { value: wakeRead.texture },
+      uTexel: { value: new THREE.Vector2(1 / settings.normalSize, 1 / settings.normalSize) }
+    },
+    vertexShader: simulationVertexShader,
+    fragmentShader: `
+      precision highp float;
+      uniform float uTime;
+      uniform sampler2D uWakeMap;
+      uniform vec2 uTexel;
+      varying vec2 vUv;
+
+      float hash21(vec2 p) {
+        p = fract(p * vec2(123.34, 456.21));
+        p += dot(p, p + 45.32);
+        return fract(p.x * p.y);
+      }
+
+      float valueNoise(vec2 p) {
+        vec2 i = floor(p);
+        vec2 f = fract(p);
+        f = f * f * (3.0 - 2.0 * f);
+        float a = hash21(i);
+        float b = hash21(i + vec2(1.0, 0.0));
+        float c = hash21(i + vec2(0.0, 1.0));
+        float d = hash21(i + vec2(1.0, 1.0));
+        return mix(mix(a, b, f.x), mix(c, d, f.x), f.y);
+      }
+
+      float surfaceHeight(vec2 uv) {
+        vec2 slowUv = uv * 6.5 + vec2(uTime * 0.022, -uTime * 0.018);
+        vec2 detailUv = uv * 24.0 + vec2(-uTime * 0.045, uTime * 0.036);
+        float broad = valueNoise(slowUv) * 0.72;
+        float detail = valueNoise(detailUv) * 0.28;
+        float wake = texture2D(uWakeMap, uv).r * 2.0 - 1.0;
+        return broad + detail + wake * 1.18;
+      }
+
+      void main() {
+        float hL = surfaceHeight(vUv - vec2(uTexel.x, 0.0));
+        float hR = surfaceHeight(vUv + vec2(uTexel.x, 0.0));
+        float hD = surfaceHeight(vUv - vec2(0.0, uTexel.y));
+        float hU = surfaceHeight(vUv + vec2(0.0, uTexel.y));
+        vec3 normal = normalize(vec3((hL - hR) * 1.25, 0.42, (hD - hU) * 1.25));
+        gl_FragColor = vec4(normal * 0.5 + 0.5, 1.0);
+      }
+    `
+  });
+  const normalScene = new THREE.Scene();
+  normalScene.add(new THREE.Mesh(simulationGeometry, normalMaterial));
+
+  const createEnvironmentMap = () => {
+    const faces = Array.from({ length: 6 }, (_, index) => {
+      const face = document.createElement('canvas');
+      face.width = 96;
+      face.height = 96;
+      const context = face.getContext('2d');
+      const gradient = context.createLinearGradient(0, 0, 0, 96);
+      if (index === 2) {
+        gradient.addColorStop(0, '#f8fdff');
+        gradient.addColorStop(0.42, '#bfeeff');
+        gradient.addColorStop(1, '#62aeda');
+      } else if (index === 3) {
+        gradient.addColorStop(0, '#317dab');
+        gradient.addColorStop(1, '#075b8e');
+      } else {
+        gradient.addColorStop(0, '#dff7ff');
+        gradient.addColorStop(0.38, '#8fd4ed');
+        gradient.addColorStop(1, '#126d9f');
+      }
+      context.fillStyle = gradient;
+      context.fillRect(0, 0, 96, 96);
+      const glow = context.createRadialGradient(22, 18, 2, 22, 18, 34);
+      glow.addColorStop(0, 'rgba(255,255,255,0.9)');
+      glow.addColorStop(1, 'rgba(255,255,255,0)');
+      context.fillStyle = glow;
+      context.fillRect(0, 0, 96, 96);
+      return face;
+    });
+    const texture = new THREE.CubeTexture(faces);
+    texture.colorSpace = THREE.SRGBColorSpace;
+    texture.needsUpdate = true;
+    return texture;
+  };
+  const environmentMap = createEnvironmentMap();
+
   const uniforms = {
     uTime: { value: 0 },
-    uDeep: { value: new THREE.Color(0x0870aa) },
-    uShallow: { value: new THREE.Color(0x61c8e9) },
-    uFoam: { value: new THREE.Color(0xd9f8ff) }
+    uWakeMap: { value: wakeRead.texture },
+    uNormalMap: { value: normalTarget.texture },
+    uEnvironmentMap: { value: environmentMap },
+    uDeep: { value: new THREE.Color(0x035d91) },
+    uMid: { value: new THREE.Color(0x118fc4) },
+    uShallow: { value: new THREE.Color(0x73d4ec) },
+    uFoam: { value: new THREE.Color(0xe9fbff) }
   };
 
   const material = new THREE.ShaderMaterial({
@@ -4522,47 +4741,88 @@ revealElements.forEach(el => revealObserver.observe(el));
     vertexShader: `
       precision highp float;
       uniform float uTime;
+      uniform sampler2D uWakeMap;
       varying vec3 vWorld;
-      varying float vWave;
       varying vec2 vUvWater;
+      varying float vElevation;
+
+      float hash21(vec2 p) {
+        p = fract(p * vec2(123.34, 456.21));
+        p += dot(p, p + 45.32);
+        return fract(p.x * p.y);
+      }
+
+      float valueNoise(vec2 p) {
+        vec2 i = floor(p);
+        vec2 f = fract(p);
+        f = f * f * (3.0 - 2.0 * f);
+        float a = hash21(i);
+        float b = hash21(i + vec2(1.0, 0.0));
+        float c = hash21(i + vec2(0.0, 1.0));
+        float d = hash21(i + vec2(1.0, 1.0));
+        return mix(mix(a, b, f.x), mix(c, d, f.x), f.y);
+      }
 
       void main() {
         vec3 transformed = position;
-        float broad = sin(transformed.x * 0.24 + transformed.z * 0.15 + uTime * 0.34);
-        float crossWave = sin(transformed.x * -0.31 + transformed.z * 0.22 + uTime * 0.27);
-        float detail = sin(transformed.x * 0.78 + transformed.z * -0.58 + uTime * 0.52);
-        float ripple = broad * 0.28 + crossWave * 0.18 + detail * 0.055;
-        transformed.y += ripple;
+        vec2 worldUv = transformed.xz / 150.0 + 0.5;
+        float broad = valueNoise(
+          transformed.xz * 0.052 + vec2(uTime * 0.055, -uTime * 0.041)
+        );
+        float detail = valueNoise(
+          transformed.xz * 0.19 + vec2(-uTime * 0.11, uTime * 0.085)
+        );
+        float wake = texture2D(uWakeMap, worldUv).r * 2.0 - 1.0;
+        float elevation = (broad - 0.5) * 1.18 + (detail - 0.5) * 0.28 + wake * 0.72;
+        transformed.y += elevation;
         vec4 world = modelMatrix * vec4(transformed, 1.0);
         vWorld = world.xyz;
-        vWave = ripple;
-        vUvWater = uv;
+        vElevation = elevation;
+        vUvWater = worldUv;
         gl_Position = projectionMatrix * viewMatrix * world;
       }
     `,
     fragmentShader: `
       precision highp float;
       uniform float uTime;
+      uniform sampler2D uWakeMap;
+      uniform sampler2D uNormalMap;
+      uniform samplerCube uEnvironmentMap;
       uniform vec3 uDeep;
+      uniform vec3 uMid;
       uniform vec3 uShallow;
       uniform vec3 uFoam;
       varying vec3 vWorld;
-      varying float vWave;
       varying vec2 vUvWater;
+      varying float vElevation;
 
       void main() {
-        vec3 normal = normalize(cross(dFdx(vWorld), dFdy(vWorld)));
-        if (normal.y < 0.0) normal *= -1.0;
-        vec3 lightDir = normalize(vec3(-0.45, 0.9, 0.25));
-        float light = clamp(dot(normal, lightDir), 0.0, 1.0);
-        float crest = smoothstep(0.17, 0.47, vWave);
-        float fine = sin((vUvWater.x * 54.0) + (vUvWater.y * 41.0) - uTime * 0.38) * 0.5 + 0.5;
-        float shimmer = pow(light, 6.0) * (0.35 + fine * 0.32);
-        float depthMix = clamp(0.42 + vWave * 0.55 + light * 0.24, 0.0, 1.0);
-        vec3 color = mix(uDeep, uShallow, depthMix);
-        color = mix(color, uFoam, crest * 0.2 + shimmer * 0.34);
-        float vignette = smoothstep(0.9, 0.22, distance(vUvWater, vec2(0.5)));
-        color *= mix(0.86, 1.04, vignette);
+        vec3 mapNormal = texture2D(uNormalMap, vUvWater).rgb * 2.0 - 1.0;
+        vec3 geometricNormal = normalize(cross(dFdx(vWorld), dFdy(vWorld)));
+        if (geometricNormal.y < 0.0) geometricNormal *= -1.0;
+        vec3 normal = normalize(mix(geometricNormal, mapNormal, 0.72));
+        vec3 viewDirection = normalize(cameraPosition - vWorld);
+
+        vec3 keyLight = normalize(vec3(-0.42, 0.86, 0.28));
+        vec3 fillLight = normalize(vec3(0.58, 0.54, -0.36));
+        float key = max(dot(normal, keyLight), 0.0);
+        float fill = max(dot(normal, fillLight), 0.0) * 0.34;
+        float fresnel = pow(1.0 - max(dot(normal, viewDirection), 0.0), 3.2);
+        float specular = pow(max(dot(reflect(-keyLight, normal), viewDirection), 0.0), 58.0);
+
+        vec3 reflected = reflect(-viewDirection, normal);
+        vec3 environment = textureCube(uEnvironmentMap, reflected).rgb;
+        float elevationMix = clamp(0.46 + vElevation * 0.38 + key * 0.2, 0.0, 1.0);
+        vec3 color = mix(uDeep, uMid, elevationMix);
+        color = mix(color, uShallow, clamp(fresnel * 0.58 + fill, 0.0, 0.62));
+        color = mix(color, environment, 0.16 + fresnel * 0.34);
+
+        float wakeHeight = abs(texture2D(uWakeMap, vUvWater).r * 2.0 - 1.0);
+        float wakeFoam = smoothstep(0.035, 0.13, wakeHeight);
+        color = mix(color, uFoam, wakeFoam * 0.46 + specular * 0.38);
+        color += uFoam * specular * 0.16;
+        float vignette = smoothstep(0.88, 0.16, distance(vUvWater, vec2(0.5)));
+        color *= mix(0.91, 1.035, vignette);
         gl_FragColor = vec4(color, 1.0);
       }
     `,
@@ -4573,17 +4833,61 @@ revealElements.forEach(el => revealObserver.observe(el));
   scene.add(water);
 
   let viewProgress = 0;
+  let boatStrength = 0;
   let visible = true;
   let running = false;
+  let lastFrameTime = 0;
+  let accumulatedWakeTime = 0;
+  let lastPresentedTime = 0;
 
   const applyView = () => {
     const eased = viewProgress * viewProgress * (3 - 2 * viewProgress);
-    camera.position.set(0, 16 + eased * 42, 20 + eased * 18);
-    camera.lookAt(0, 0, -13 + eased * 5);
+    camera.position.set(0, 36 + eased * 52, 13 + eased * 3);
+    camera.lookAt(0, -0.5, -4 + eased * 2);
+  };
+
+  const stepWake = timeSeconds => {
+    wakeMaterial.uniforms.uState.value = wakeRead.texture;
+    wakeMaterial.uniforms.uSource.value = boatStrength;
+    wakeMaterial.uniforms.uTime.value = timeSeconds;
+    renderer.setRenderTarget(wakeWrite);
+    renderer.render(wakeScene, simulationCamera);
+    renderer.setRenderTarget(null);
+    const previousRead = wakeRead;
+    wakeRead = wakeWrite;
+    wakeWrite = previousRead;
+  };
+
+  const renderNormalMap = timeSeconds => {
+    normalMaterial.uniforms.uTime.value = timeSeconds;
+    normalMaterial.uniforms.uWakeMap.value = wakeRead.texture;
+    renderer.setRenderTarget(normalTarget);
+    renderer.render(normalScene, simulationCamera);
+    renderer.setRenderTarget(null);
+    uniforms.uWakeMap.value = wakeRead.texture;
+    uniforms.uNormalMap.value = normalTarget.texture;
   };
 
   const render = now => {
-    uniforms.uTime.value = now * 0.001;
+    const timeSeconds = now * 0.001;
+    const frameDelta = lastFrameTime
+      ? Math.min((now - lastFrameTime) * 0.001, 0.05)
+      : settings.fixedStep;
+    lastFrameTime = now;
+    accumulatedWakeTime += frameDelta;
+    const requestedSteps = Math.floor(accumulatedWakeTime / settings.fixedStep);
+    const wakeSteps = Math.min(settings.maxWakeSteps, requestedSteps);
+    for (let step = 0; step < wakeSteps; step += 1) {
+      stepWake(timeSeconds);
+    }
+    if (wakeSteps === settings.maxWakeSteps && requestedSteps > settings.maxWakeSteps) {
+      accumulatedWakeTime = 0;
+    } else {
+      accumulatedWakeTime -= wakeSteps * settings.fixedStep;
+    }
+
+    renderNormalMap(timeSeconds);
+    uniforms.uTime.value = timeSeconds;
     renderer.render(scene, camera);
   };
 
@@ -4595,14 +4899,15 @@ revealElements.forEach(el => revealObserver.observe(el));
     camera.updateProjectionMatrix();
     applyView();
     render(performance.now());
-    portal.classList.add('has-webgl-water');
   };
 
   const start = () => {
     if (running) return;
     running = true;
     FrameScheduler.add('caimiao-water', ({ now }) => {
-      if (!visible || document.hidden) return false;
+      if (!visible || document.hidden) return true;
+      if (lastPresentedTime && now - lastPresentedTime < settings.renderInterval) return true;
+      lastPresentedTime = now;
       render(now);
       return true;
     });
@@ -4628,16 +4933,37 @@ revealElements.forEach(el => revealObserver.observe(el));
     portal.classList.remove('has-webgl-water');
   });
 
+  renderer.compile(wakeScene, simulationCamera);
+  renderer.compile(normalScene, simulationCamera);
+  renderer.compile(scene, camera);
+  resize();
+  stepWake(performance.now() * 0.001);
+  renderNormalMap(performance.now() * 0.001);
+  renderer.render(scene, camera);
+  portal.classList.add('has-webgl-water');
+
   window.caimiaoWaterSurface = {
     setView(progress) {
       viewProgress = Math.max(0, Math.min(1, Number(progress) || 0));
       applyView();
-      render(performance.now());
+    },
+    setBoatStrength(strength) {
+      boatStrength = Math.max(0, Math.min(1, Number(strength) || 0));
+    },
+    getMetrics() {
+      return {
+        segments: settings.segments,
+        vertices: (settings.segments + 1) * (settings.segments + 1),
+        normalSize: settings.normalSize,
+        wakeSize: settings.wakeSize,
+        maxWakeSteps: settings.maxWakeSteps,
+        visible,
+        running
+      };
     },
     isReady: true
   };
 
-  resize();
   start();
 })();
 
@@ -4723,6 +5049,7 @@ revealElements.forEach(el => revealObserver.observe(el));
 
   const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
   const isMobile = window.matchMedia('(max-width: 768px)').matches;
+  const shutterOpenPercent = isMobile ? 20 : 16;
   const q = selector => journey.querySelector(selector);
   const qa = selector => [...journey.querySelectorAll(selector)];
 
@@ -4765,7 +5092,7 @@ revealElements.forEach(el => revealObserver.observe(el));
   gsap.set(brandMark, { xPercent: -50, yPercent: 0 });
   gsap.set(paleGround, { autoAlpha: 0 });
   gsap.set(cloudTransition, { yPercent: 38, scale: 1.05 });
-  gsap.set(riverWorld, { autoAlpha: 1, scale: 1, yPercent: 0 });
+  gsap.set(riverWorld, { autoAlpha: 0, scale: 1, yPercent: 0 });
   gsap.set(waterPortal, {
     autoAlpha: 1,
     clipPath: isMobile ? 'inset(100% 40% 0% 40%)' : 'inset(100% 42% 0% 42%)'
@@ -4839,10 +5166,25 @@ revealElements.forEach(el => revealObserver.observe(el));
     .to(cloudTransition, { autoAlpha: 0, duration: 5, ease: 'power1.inOut' }, 'sky+=18.5')
 
     .addLabel('river', 20.8)
+    .to(riverWorld, {
+      autoAlpha: 1,
+      duration: 1.2,
+      ease: 'power1.out'
+    }, 'river-=0.6')
     .to(waterPortal, {
       clipPath: isMobile ? 'inset(0% 40% 0% 40%)' : 'inset(0% 42% 0% 42%)',
       duration: 8,
       ease: 'power2.out'
+    }, 'river')
+    .to(leftShutter, {
+      xPercent: -shutterOpenPercent,
+      duration: 8,
+      ease: 'power2.inOut'
+    }, 'river')
+    .to(rightShutter, {
+      xPercent: shutterOpenPercent,
+      duration: 8,
+      ease: 'power2.inOut'
     }, 'river')
     .to(boat, {
       autoAlpha: 1,
@@ -4857,7 +5199,7 @@ revealElements.forEach(el => revealObserver.observe(el));
     .to(boat, { x: -3, y: 0, rotation: 90, duration: 12 }, 'river+=51');
 
   const primaryCase = steps[0];
-  const waterView = { progress: 0 };
+  const waterInteraction = { view: 0, boat: 0 };
 
   story
     .addLabel('caseStart', 38)
@@ -4909,7 +5251,13 @@ revealElements.forEach(el => revealObserver.observe(el));
       y: -12,
       duration: 1.8,
       ease: 'power2.inOut'
-    }, 91);
+    }, 91)
+    .to(waterInteraction, {
+      boat: 1,
+      duration: 8,
+      ease: 'power2.out',
+      onUpdate: () => window.caimiaoWaterSurface?.setBoatStrength(waterInteraction.boat)
+    }, 'river+=2');
 
   story
     .addLabel('droneOut', 94)
@@ -4921,34 +5269,40 @@ revealElements.forEach(el => revealObserver.observe(el));
       duration: 8,
       ease: 'power3.in'
     }, 'droneOut')
-    .to(waterPortal, {
-      clipPath: 'inset(0% 0% 0% 0%)',
-      duration: 12,
-      ease: 'power2.inOut'
-    }, 'droneOut')
     .to(leftShutter, {
-      xPercent: 78,
-      scaleX: 0.25,
-      duration: 9,
+      xPercent: 0,
+      scaleX: 1,
+      duration: 6,
       ease: 'power2.inOut'
     }, 'droneOut')
     .to(rightShutter, {
-      xPercent: -78,
-      scaleX: 0.25,
-      duration: 9,
+      xPercent: 0,
+      scaleX: 1,
+      duration: 6,
       ease: 'power2.inOut'
     }, 'droneOut')
+    .to(waterInteraction, {
+      boat: 0,
+      duration: 6,
+      ease: 'power2.in',
+      onUpdate: () => window.caimiaoWaterSurface?.setBoatStrength(waterInteraction.boat)
+    }, 'droneOut')
+    .to(waterPortal, {
+      clipPath: 'inset(0% 0% 0% 0%)',
+      duration: 1,
+      ease: 'none'
+    }, 'droneOut+=5')
     .to([leftShutter, rightShutter], {
       yPercent: -112,
       autoAlpha: 0,
-      duration: 7,
+      duration: 9,
       ease: 'power3.inOut'
-    }, 'droneOut+=7')
-    .to(waterView, {
-      progress: 0.62,
+    }, 'droneOut+=6')
+    .to(waterInteraction, {
+      view: 0.62,
       duration: 14,
       ease: 'power2.inOut',
-      onUpdate: () => window.caimiaoWaterSurface?.setView(waterView.progress)
+      onUpdate: () => window.caimiaoWaterSurface?.setView(waterInteraction.view)
     }, 'droneOut')
     .to(flyer, {
       autoAlpha: 1,
@@ -4973,11 +5327,11 @@ revealElements.forEach(el => revealObserver.observe(el));
     .to(flightCopy, { autoAlpha: 0, y: -22, duration: 4 }, 'oceanFlight+=20')
 
     .addLabel('highAltitude', 141)
-    .to(waterView, {
-      progress: 1,
+    .to(waterInteraction, {
+      view: 1,
       duration: 13,
       ease: 'power2.inOut',
-      onUpdate: () => window.caimiaoWaterSurface?.setView(waterView.progress)
+      onUpdate: () => window.caimiaoWaterSurface?.setView(waterInteraction.view)
     }, 'highAltitude')
     .to(flyer, { scaleX: -0.76, scaleY: 0.76, y: -6, duration: 13, ease: 'power2.inOut' }, 'highAltitude')
     .to(flightClouds, { scale: 1.16, yPercent: -42, duration: 13, ease: 'power1.inOut' }, 'highAltitude')

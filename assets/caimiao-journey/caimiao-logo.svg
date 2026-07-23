@@ -1,5 +1,21 @@
-<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 468 336" role="img" aria-labelledby="title desc">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 306 193" preserveAspectRatio="xMidYMid meet" role="img" aria-labelledby="title desc">
   <title id="title">财苗</title>
-  <desc id="desc">Extracted 财苗 brand mark</desc>
-  <image width="468" height="336" href="caimiao-logo-transparent.png" xlink:href="caimiao-logo-transparent.png"/>
+  <desc id="desc">财苗品牌标志</desc>
+  <g fill="#11a79b">
+    <text x="77" y="52" font-family="Segoe UI, Arial, sans-serif" font-size="25" font-weight="400" letter-spacing=".2">cái</text>
+    <text x="168" y="52" font-family="Segoe UI, Arial, sans-serif" font-size="25" font-weight="400" letter-spacing=".2">miáo</text>
+  </g>
+  <g fill="none" stroke="#11a79b" stroke-width="10" stroke-linecap="square" stroke-linejoin="round">
+    <path d="M59 157V85c0-10 7-17 17-17h8c10 0 17 7 17 17v52c0 13-7 20-20 20H59"/>
+    <path d="M77 145V83"/>
+    <path d="M107 96h35"/>
+    <path d="M129 67v69c0 14-8 21-23 21h-6"/>
+    <path d="M106 139l23-25"/>
+    <path d="M163 85h85"/>
+    <path d="M181 64v31"/>
+    <path d="M229 64v31"/>
+    <rect x="165" y="104" width="82" height="56" rx="8"/>
+    <path d="M206 111v42"/>
+    <path d="M184 132h44"/>
+  </g>
 </svg>

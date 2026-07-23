@@ -361,6 +361,15 @@ button { border: none; background: none; cursor: pointer; color: inherit; font-f
   z-index: 900;
   pointer-events: none;
   isolation: isolate;
+  transition: opacity 420ms ease;
+}
+
+body.caimiao-story-active .global-gradual-blur-mount {
+  opacity: 0;
+}
+
+body.xinxiang-activity-active .global-gradual-blur-mount {
+  opacity: 0;
 }
 
 .gradual-blur {
@@ -1391,6 +1400,7 @@ html.performance-lite .about-badge-card {
 }
 
 .xinxiang-activity {
+  position: relative;
   min-height: 100svh;
   padding: 0;
   overflow: hidden;
@@ -1406,33 +1416,21 @@ html.performance-lite .about-badge-card {
   width: 100%;
   min-height: 100svh;
   margin: 0;
-  padding: clamp(5.5rem, 7vw, 7rem) clamp(1.5rem, 3vw, 3.5rem) clamp(10rem, 14vw, 15rem);
+  padding: clamp(5.5rem, 7vw, 7rem) clamp(2rem, 7vw, 8.5rem) clamp(1.5rem, 3vh, 2.75rem);
   overflow: hidden;
   isolation: isolate;
 }
 
 .xinxiang-activity-layout::after {
-  content: "";
-  position: absolute;
-  right: 0;
-  bottom: 0;
-  left: 0;
-  z-index: 12;
-  height: clamp(180px, 22vh, 280px);
-  pointer-events: none;
-  background: linear-gradient(180deg, rgba(111, 33, 19, 0), rgba(111, 33, 19, 0.92));
-  -webkit-backdrop-filter: blur(18px);
-  backdrop-filter: blur(18px);
-  -webkit-mask-image: linear-gradient(180deg, transparent, #000 78%);
-  mask-image: linear-gradient(180deg, transparent, #000 78%);
+  display: none;
 }
 
 .xinxiang-activity-head {
-  position: absolute;
-  top: clamp(5.5rem, 7vw, 7rem);
-  left: clamp(2rem, 5vw, 5.5rem);
-  width: min(28vw, 520px);
-  margin: 0;
+  position: relative;
+  top: auto;
+  left: auto;
+  width: min(100%, 1680px);
+  margin: 0 auto clamp(2.75rem, 4.5vw, 5rem);
   z-index: 20;
   pointer-events: none;
 }
@@ -1459,15 +1457,33 @@ html.performance-lite .about-badge-card {
 }
 
 .xinxiang-activity-board {
-  --activity-columns: 4;
+  --activity-columns: 5;
   position: relative;
-  width: 66.666%;
-  margin-left: auto;
+  width: min(100%, 1680px);
+  height: 100svh;
+  margin: 0 auto;
+  overflow: hidden;
   display: grid;
   grid-template-columns: repeat(var(--activity-columns), minmax(0, 1fr));
   gap: clamp(0.55rem, 0.9vw, 0.9rem);
   align-items: start;
   isolation: isolate;
+  -webkit-mask-image: linear-gradient(
+    180deg,
+    #000 0%,
+    #000 78%,
+    rgba(0, 0, 0, 0.9) 88%,
+    rgba(0, 0, 0, 0.32) 96%,
+    transparent 100%
+  );
+  mask-image: linear-gradient(
+    180deg,
+    #000 0%,
+    #000 78%,
+    rgba(0, 0, 0, 0.9) 88%,
+    rgba(0, 0, 0, 0.32) 96%,
+    transparent 100%
+  );
 }
 
 .activity-waterfall-column {
@@ -1494,6 +1510,8 @@ html.performance-lite .about-badge-card {
   width: 100%;
   height: auto;
   object-fit: cover;
+  transform: scale(1.05, 1.025);
+  transform-origin: center;
 }
 
 .xinxiang-media {
@@ -1626,217 +1644,710 @@ html.performance-lite .about-badge-card {
   }
 }
 
-/* ===== MY WORK ===== */
-.my-work {
-  --work-gap: clamp(2rem, 6vw, 6rem);
-  border-top: 1px solid rgba(255, 255, 255, 0.16);
-  background: transparent;
-  overflow: clip;
+/* ===== CAIMIAO SCROLL JOURNEY ===== */
+.caimiao-journey {
+  --caimiao-yellow: #fff8cf;
+  --caimiao-ink: #17384a;
   position: relative;
+  height: 900svh;
+  overflow: clip;
+  background: var(--caimiao-yellow);
   isolation: isolate;
 }
 
-.my-work::before {
-  content: '';
-  position: absolute;
-  inset: 0;
-  z-index: 0;
-  pointer-events: none;
-  background-image: var(--engineering-grid);
-  background-position: center;
-  background-size: 100% 100%;
-  opacity: 0.82;
-}
-
-.my-work-inner {
-  display: flex;
-  gap: var(--work-gap);
-  max-width: 1440px;
-  margin: 0 auto;
-  padding: 0 clamp(1.5rem, 5vw, 5rem) 12vh;
-  align-items: flex-start;
-  position: relative;
-  z-index: 1;
-}
-
-.my-work-copy {
-  width: min(42%, 32rem);
-  flex: 0 0 auto;
-}
-
-.my-work-step {
-  min-height: 100svh;
-  display: flex;
-  flex-direction: column;
-  justify-content: flex-start;
-  gap: 0.9rem;
-  padding: 0;
-  opacity: 1;
-}
-
-.my-work-step.is-active { opacity: 1; }
-
-.my-work-case-copy {
-  display: flex;
-  flex-direction: column;
-  gap: 0.9rem;
-  margin-top: auto;
-  opacity: 1;
-  transform: translateY(var(--case-copy-shift, 0px));
-  transition: opacity 220ms linear;
-}
-
-.my-work-title {
-  margin: 0 0 clamp(3.5rem, 7vw, 6rem);
-  font-family: var(--font-display);
-  font-size: clamp(3.75rem, 6.2vw, 7.25rem);
-  font-weight: 800;
-  line-height: 0.92;
-  letter-spacing: 0;
-  text-transform: uppercase;
-  transform: translateY(var(--work-title-shift, 0px));
-}
-
-.my-work-date {
-  font-size: clamp(1.1rem, 1.6vw, 1.45rem);
-  font-weight: 700;
-  color: var(--text);
-  line-height: 1.25;
-}
-
-.my-work-date span {
-  display: block;
-  margin-top: 0.3rem;
-  font-size: 0.9rem;
-  font-weight: 400;
-  color: var(--text-muted);
-}
-
-.my-work-label {
-  color: var(--accent);
-  font-size: 0.72rem;
-  letter-spacing: 0.14em;
-  line-height: 1;
-  text-transform: uppercase;
-}
-
-.my-work-project-title {
-  margin: 0;
-  font-family: var(--font-display);
-  font-size: clamp(1.85rem, 3vw, 3.15rem);
-  font-weight: 700;
-  line-height: 1.08;
-  letter-spacing: 0;
-}
-
-.my-work-description {
-  max-width: 33ch;
-  margin: 0;
-  color: rgba(245, 245, 245, 0.72);
-  font-size: 1rem;
-  line-height: 1.8;
-}
-
-.my-work-media {
+.caimiao-journey-stage {
   position: sticky;
   top: 0;
-  width: 1px;
-  flex: 1 1 auto;
+  width: 100%;
   height: 100svh;
-  align-self: flex-start;
+  min-height: 620px;
+  overflow: hidden;
+  background: var(--caimiao-yellow);
+  isolation: isolate;
 }
 
-.my-work-media-stage {
-  position: relative;
-  height: 100%;
-}
-
-.my-work-media-group {
+.caimiao-layer,
+.caimiao-layer img,
+.caimiao-sky,
+.caimiao-pale-ground,
+.caimiao-white-veil {
   position: absolute;
   inset: 0;
-  display: flex;
-  align-items: center;
-  visibility: hidden;
-  pointer-events: none;
 }
 
-.my-work-media-frame {
-  --work-media-frame-gap: clamp(0.75rem, 1.5vw, 1.35rem);
-  position: relative;
-  width: 100%;
-  height: auto;
-  display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: var(--work-media-frame-gap);
-  overflow: visible;
-}
-
-.my-work-media-frame--portrait-split {
-  height: var(--feature-frame-height, auto);
-  grid-template-rows: repeat(2, minmax(0, 1fr));
-}
-
-.my-work-media-frame--portrait-split .my-work-media-card--wide {
-  grid-column: 1;
-  grid-row: 1 / -1;
-  aspect-ratio: auto;
-}
-
-.my-work-media-frame--portrait-split .my-work-media-card--square {
-  grid-column: 2;
-  aspect-ratio: auto;
-}
-
-.my-work-media-frame--portrait-split .my-work-media-card--square:nth-child(2) { grid-row: 1; }
-.my-work-media-frame--portrait-split .my-work-media-card--square:nth-child(3) { grid-row: 2; }
-
-.my-work-media-group:first-child { visibility: visible; }
-.my-work-media-group.is-active { pointer-events: auto; }
-
-.my-work-media-card {
-  overflow: hidden;
-  border: 1px solid rgba(255, 255, 255, 0.18);
-  background: rgba(10, 10, 10, 0.22);
-  box-shadow: 0 20px 52px rgba(0, 0, 0, 0.3);
-}
-
-.my-work-media-card--wide {
-  grid-column: 1 / -1;
-  aspect-ratio: 16 / 9;
-}
-
-.my-work-media-card--square { aspect-ratio: 1; }
-
-.my-work-media-card img {
+.caimiao-sky {
+  z-index: 1;
   width: 100%;
   height: 100%;
   object-fit: cover;
+  object-position: center;
 }
 
-.my-work-media-card--type img,
-.my-work-media-card--palette img { object-position: center; }
+.caimiao-pale-ground {
+  z-index: 2;
+  background: var(--caimiao-yellow);
+  opacity: 0;
+}
 
-.my-work-media-group:hover .my-work-media-card img { transform: scale(1.02); }
-.my-work-media-card img { transition: transform 450ms cubic-bezier(0.16, 1, 0.3, 1); }
+.caimiao-sky-veil {
+  position: absolute;
+  inset: 0 0 auto;
+  z-index: 8;
+  height: clamp(12rem, 28vh, 22rem);
+  pointer-events: none;
+  background: linear-gradient(180deg, #6f2113 0%, rgba(111, 33, 19, 0.7) 22%, rgba(111, 33, 19, 0) 100%);
+}
+
+.caimiao-hero {
+  position: absolute;
+  top: 49%;
+  left: 50%;
+  z-index: 5;
+  width: min(72vw, 1040px);
+  aspect-ratio: 4 / 3;
+  transform: none;
+  will-change: transform, opacity;
+}
+
+.caimiao-hero img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
+.caimiao-hero-airflow {
+  z-index: 2;
+  opacity: 0.88;
+  filter: grayscale(1) brightness(2.35) contrast(0.88);
+  mix-blend-mode: screen;
+}
+
+.caimiao-cloud-bank {
+  position: absolute;
+  right: -5vw;
+  bottom: -30vh;
+  left: -5vw;
+  z-index: 4;
+  width: 110vw;
+  max-width: none;
+  height: auto;
+  pointer-events: none;
+  will-change: transform, opacity;
+}
+
+.caimiao-river-reveal {
+  position: absolute;
+  top: -14vh;
+  bottom: -14vh;
+  left: 50%;
+  z-index: 4;
+  width: clamp(150px, 17vw, 280px);
+  transform: translateX(-50%) scaleY(0);
+  transform-origin: 50% 0;
+  overflow: hidden;
+  will-change: transform, opacity;
+}
+
+.caimiao-river {
+  width: 100%;
+  height: 130%;
+  object-fit: cover;
+  object-position: center top;
+  will-change: transform;
+}
+
+.caimiao-boat {
+  position: absolute;
+  top: 51%;
+  left: 50%;
+  z-index: 9;
+  width: clamp(96px, 10vw, 158px);
+  height: auto;
+  opacity: 0;
+  transform: none;
+  filter: drop-shadow(0 14px 18px rgba(77, 111, 90, 0.16));
+  will-change: transform, opacity;
+}
+
+.caimiao-case-layer {
+  position: absolute;
+  inset: 0;
+  z-index: 7;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  gap: clamp(13rem, 20vw, 23rem);
+  align-items: center;
+  padding: clamp(4rem, 7vw, 7rem) clamp(2rem, 6vw, 7rem);
+  pointer-events: none;
+}
+
+.caimiao-case-copy,
+.caimiao-case-media {
+  position: relative;
+  min-width: 0;
+  height: min(68vh, 660px);
+}
+
+.caimiao-case-step,
+.caimiao-media-group {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  opacity: 0;
+  visibility: hidden;
+  will-change: transform, opacity;
+}
+
+.caimiao-case-step {
+  align-items: flex-start;
+  color: var(--caimiao-ink);
+}
+
+.caimiao-case-kicker {
+  margin: 0 0 1.15rem;
+  color: #3e8a89;
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.caimiao-case-title {
+  max-width: 10ch;
+  margin: 0;
+  color: var(--caimiao-ink);
+  font-family: var(--font-display);
+  font-size: clamp(2.35rem, 4.6vw, 5rem);
+  font-weight: 780;
+  line-height: 0.98;
+  letter-spacing: -0.035em;
+}
+
+.caimiao-case-description {
+  max-width: 34ch;
+  margin: 1.5rem 0 0;
+  color: rgba(23, 56, 74, 0.68);
+  font-size: clamp(0.95rem, 1.2vw, 1.08rem);
+  line-height: 1.8;
+}
+
+.caimiao-media-group {
+  align-items: center;
+}
+
+.caimiao-media-frame {
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  border-radius: 24px;
+  background: #eaf0e5;
+  box-shadow: 0 28px 72px rgba(83, 124, 133, 0.18);
+}
+
+.caimiao-media-frame img {
+  width: 100%;
+  height: 100%;
+  display: block;
+  object-fit: cover;
+  transition: transform 500ms cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.caimiao-media-frame:hover img {
+  transform: scale(1.025);
+}
+
+.caimiao-ocean {
+  position: absolute;
+  inset: -6vh 0 0;
+  z-index: 3;
+  width: 100%;
+  height: 112vh;
+  object-fit: cover;
+  object-position: center 20%;
+  opacity: 0;
+  transform: none;
+  will-change: transform, opacity;
+}
+
+.caimiao-flyer {
+  position: absolute;
+  top: 53%;
+  left: 50%;
+  z-index: 10;
+  width: clamp(190px, 27vw, 410px);
+  height: auto;
+  opacity: 0;
+  transform: none;
+  filter: drop-shadow(0 20px 26px rgba(12, 74, 115, 0.18));
+  will-change: transform, opacity;
+}
+
+.caimiao-flight-clouds {
+  position: absolute;
+  top: -24vh;
+  left: 50%;
+  z-index: 8;
+  width: 128vw;
+  max-width: none;
+  height: 150vh;
+  object-fit: fill;
+  opacity: 0;
+  transform: translateX(-50%);
+  filter: grayscale(1) brightness(2.15) contrast(0.82);
+  mix-blend-mode: screen;
+  pointer-events: none;
+  will-change: transform, opacity;
+}
+
+.caimiao-flight-copy {
+  position: absolute;
+  top: 50%;
+  z-index: 9;
+  width: min(28vw, 360px);
+  color: #f5fbff;
+  text-shadow: 0 2px 18px rgba(2, 28, 50, 0.78), 0 1px 3px rgba(2, 28, 50, 0.7);
+  opacity: 0;
+  will-change: transform, opacity;
+}
+
+.caimiao-flight-copy--left { left: clamp(2rem, 7vw, 8rem); transform: translateY(-50%); }
+.caimiao-flight-copy--right { right: clamp(2rem, 7vw, 8rem); transform: translateY(-50%); }
+
+.caimiao-flight-copy h3 {
+  margin: 0;
+  font-family: var(--font-display);
+  font-size: clamp(2rem, 3.5vw, 4rem);
+  line-height: 1;
+}
+
+.caimiao-flight-copy p {
+  margin: 1rem 0 0;
+  color: rgba(245, 251, 255, 0.76);
+  line-height: 1.75;
+}
+
+.caimiao-cloud-curtain {
+  position: absolute;
+  inset: -12vh auto -12vh -118vw;
+  z-index: 14;
+  width: 122vw;
+  overflow: visible;
+  background: #fff;
+  opacity: 0;
+  will-change: transform, opacity;
+}
+
+.caimiao-cloud-curtain img {
+  position: absolute;
+  top: 50%;
+  left: 100%;
+  width: 280vh;
+  height: auto;
+  max-width: none;
+  transform: translate(-50%, -50%) rotate(90deg);
+}
+
+.caimiao-white-veil {
+  z-index: 13;
+  background: #fff;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.caimiao-next-placeholder {
+  min-height: 100svh;
+  display: grid;
+  place-items: center;
+  background: #fff;
+  color: #111;
+}
+
+.caimiao-next-logo {
+  margin: 0;
+  font-family: var(--font-display);
+  font-size: clamp(4rem, 12vw, 11rem);
+  font-weight: 800;
+  letter-spacing: -0.06em;
+  line-height: 0.8;
+}
 
 @media (max-width: 768px) {
-  .my-work-inner { display: block; padding-bottom: 5rem; }
-  .my-work-copy { width: auto; }
-  .my-work-step { min-height: auto; padding: 5rem 0 2rem; opacity: 1; }
-  .my-work-title { margin-bottom: 3rem; }
-  .my-work-step:first-child { padding-top: 5rem; }
-  .my-work-case-copy { margin-top: 0; }
-  .my-work-media { position: static; width: auto; height: auto; }
-  .my-work-media-stage { height: auto; padding: 0; display: grid; gap: 2rem; }
-  .my-work-media-frame--portrait-split { height: auto !important; }
-  .my-work-media-group {
-    position: relative;
-    inset: auto;
-    visibility: visible !important;
-    padding: 0;
-    pointer-events: auto;
+  .caimiao-journey { height: 780svh; }
+  .caimiao-journey-stage { min-height: 540px; }
+  .caimiao-hero { top: 45%; width: 108vw; }
+  .caimiao-cloud-bank { right: -22vw; bottom: -12vh; left: -22vw; width: 144vw; }
+  .caimiao-river-reveal { width: 20vw; min-width: 76px; }
+  .caimiao-boat { width: clamp(76px, 24vw, 112px); }
+  .caimiao-case-layer {
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    gap: 24vw;
+    padding: 5.5rem 1rem 2rem;
   }
+  .caimiao-case-copy,
+  .caimiao-case-media { height: min(60vh, 520px); }
+  .caimiao-case-title { font-size: clamp(1.45rem, 7vw, 2.15rem); }
+  .caimiao-case-description { font-size: 0.78rem; line-height: 1.58; }
+  .caimiao-case-kicker { margin-bottom: 0.7rem; font-size: 0.58rem; }
+  .caimiao-media-frame { border-radius: 14px; }
+  .caimiao-flyer { width: min(58vw, 280px); }
+  .caimiao-flight-clouds { width: 174vw; height: 150vh; }
+  .caimiao-flight-copy { top: auto; bottom: 8vh; width: 36vw; }
+  .caimiao-flight-copy--left { left: 1rem; transform: none; }
+  .caimiao-flight-copy--right { right: 1rem; transform: none; }
+  .caimiao-flight-copy h3 { font-size: clamp(1.05rem, 5.4vw, 1.55rem); line-height: 1.08; }
+  .caimiao-flight-copy p { margin-top: 0.65rem; font-size: 0.76rem; line-height: 1.55; }
+  .caimiao-cloud-curtain { width: 160vw; left: -158vw; }
+  .caimiao-cloud-curtain img { width: 300vh; }
   .hero-stat { transform: none; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .caimiao-journey.is-static { height: 100svh; }
+  .caimiao-journey.is-static .caimiao-journey-stage { position: relative; }
+  .caimiao-journey.is-static .caimiao-sky-veil,
+  .caimiao-journey.is-static .caimiao-hero,
+  .caimiao-journey.is-static .caimiao-cloud-bank { display: none; }
+  .caimiao-journey.is-static .caimiao-pale-ground { opacity: 1; }
+  .caimiao-journey.is-static .caimiao-river-reveal { transform: translateX(-50%) scaleY(1); }
+  .caimiao-journey.is-static .caimiao-boat,
+  .caimiao-journey.is-static .caimiao-case-step:first-child,
+  .caimiao-journey.is-static .caimiao-media-group:first-child { opacity: 1; visibility: visible; }
+  .caimiao-journey.is-static .caimiao-boat { transform: translate(-50%, -50%) rotate(90deg); }
+}
+
+/* ===== CAIMIAO REFINED PARALLAX JOURNEY ===== */
+.caimiao-journey {
+  --caimiao-yellow: #fff9d9;
+  --caimiao-ink: #17384a;
+  height: 1120svh;
+  margin-top: -1px;
+  background: var(--caimiao-yellow);
+}
+
+.caimiao-journey-stage {
+  background: var(--caimiao-yellow);
+}
+
+.caimiao-entry-orange,
+.caimiao-entry-white,
+.caimiao-sky-scene,
+.caimiao-river-world,
+.caimiao-ocean-world,
+.caimiao-exit-clouds {
+  position: absolute;
+  inset: 0;
+}
+
+.caimiao-entry-orange {
+  z-index: 30;
+  right: 0;
+  bottom: auto;
+  left: 0;
+  height: clamp(170px, 28vh, 310px);
+  background: linear-gradient(
+    180deg,
+    #6f2113 0%,
+    rgba(111, 33, 19, 0.96) 20%,
+    rgba(111, 33, 19, 0.7) 52%,
+    rgba(111, 33, 19, 0.18) 84%,
+    transparent 100%
+  );
+  pointer-events: none;
+  will-change: transform, opacity;
+}
+
+.caimiao-entry-white {
+  display: none;
+}
+
+.caimiao-sky-scene {
+  z-index: 1;
+  overflow: hidden;
+  background: #77cef5;
+  will-change: transform, opacity;
+}
+
+.caimiao-sky {
+  z-index: 1;
+  top: -6vh;
+  right: auto;
+  bottom: auto;
+  left: -8vw;
+  width: 116vw;
+  max-width: none;
+  height: 112vh;
+  object-position: center 46%;
+  will-change: transform, opacity;
+}
+
+.caimiao-sky-smoke {
+  display: none;
+}
+
+.caimiao-fluid-canvas {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  width: 100%;
+  height: 100%;
+  opacity: 0;
+  pointer-events: none;
+  mix-blend-mode: screen;
+  filter: blur(0.45px);
+  will-change: opacity;
+}
+
+.caimiao-brand-mark {
+  position: absolute;
+  top: 17vh;
+  left: 22%;
+  z-index: 4;
+  width: min(29vw, 420px);
+  height: auto;
+  opacity: 0.92;
+  filter: brightness(0.66) saturate(1.3) drop-shadow(0 10px 30px rgba(255, 255, 255, 0.32));
+  pointer-events: none;
+  will-change: transform, opacity;
+}
+
+.caimiao-hero {
+  top: 54%;
+  z-index: 6;
+  width: min(70vw, 980px);
+}
+
+.caimiao-hero-airflow {
+  opacity: 0.94;
+  filter: grayscale(1) brightness(1.55) contrast(0.96);
+  mix-blend-mode: screen;
+}
+
+.caimiao-pale-ground {
+  z-index: 2;
+  background: var(--caimiao-yellow);
+}
+
+.caimiao-cloud-transition {
+  position: absolute;
+  right: -7.75vw;
+  bottom: -22vh;
+  left: -7.75vw;
+  z-index: 8;
+  width: 115.5vw;
+  aspect-ratio: 1672 / 941;
+  max-width: none;
+  pointer-events: none;
+  will-change: transform, opacity;
+}
+
+.caimiao-cloud-bank,
+.caimiao-cloud-bank-blur {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  pointer-events: none;
+}
+
+.caimiao-cloud-bank {
+  z-index: 2;
+}
+
+.caimiao-cloud-bank-blur {
+  z-index: 1;
+  opacity: 0.42;
+  filter: blur(26px) brightness(1.06);
+  transform: translateY(6vh) scale(1.01);
+}
+
+.caimiao-cloud-tail {
+  position: absolute;
+  top: calc(100% - 3px);
+  right: 0;
+  left: 0;
+  z-index: 3;
+  height: 82vh;
+  background: linear-gradient(180deg, #c7d0d5 0%, #ced7d9 28%, #e4e7d9 65%, var(--caimiao-yellow) 100%);
+}
+
+.caimiao-cloud-tail::before {
+  content: "";
+  position: absolute;
+  right: 0;
+  bottom: calc(100% - 2px);
+  left: 0;
+  height: 16vh;
+  background: linear-gradient(180deg, rgba(199, 208, 213, 0) 0%, rgba(199, 208, 213, 0.84) 70%, #c7d0d5 100%);
+  -webkit-backdrop-filter: blur(12px);
+  backdrop-filter: blur(12px);
+  -webkit-mask-image: linear-gradient(180deg, transparent 0%, #000 48%);
+  mask-image: linear-gradient(180deg, transparent 0%, #000 48%);
+}
+
+.caimiao-river-world {
+  z-index: 5;
+  transform-origin: 50% 56%;
+  will-change: transform, opacity;
+}
+
+.caimiao-river-reveal {
+  top: -18vh;
+  bottom: -28vh;
+  width: clamp(142px, 16vw, 264px);
+  transform: translateX(-50%);
+  transform-origin: 50% 0;
+  overflow: hidden;
+  -webkit-mask-image: linear-gradient(
+    180deg,
+    transparent 0%,
+    rgba(0, 0, 0, 0.38) 5%,
+    #000 11%,
+    #000 89%,
+    rgba(0, 0, 0, 0.4) 96%,
+    transparent 100%
+  );
+  mask-image: linear-gradient(
+    180deg,
+    transparent 0%,
+    rgba(0, 0, 0, 0.38) 5%,
+    #000 11%,
+    #000 89%,
+    rgba(0, 0, 0, 0.4) 96%,
+    transparent 100%
+  );
+  will-change: opacity, transform;
+}
+
+.caimiao-river {
+  height: 170%;
+  object-position: center top;
+}
+
+.caimiao-boat {
+  top: 50%;
+  z-index: 10;
+  opacity: 0;
+}
+
+.caimiao-case-layer {
+  z-index: 8;
+}
+
+.caimiao-ocean-world {
+  z-index: 7;
+  overflow: hidden;
+  opacity: 0;
+  border-radius: 50% 50% 0 0 / 13% 13% 0 0;
+  background: #167bb6;
+  transform-origin: 50% 50%;
+  will-change: transform, opacity, border-radius;
+}
+
+.caimiao-ocean {
+  position: absolute;
+  top: -4vh;
+  right: 0;
+  bottom: auto;
+  left: 0;
+  z-index: 1;
+  width: 100vw;
+  min-width: 100%;
+  height: auto;
+  min-height: 520vh;
+  max-width: none;
+  object-fit: cover;
+  object-position: center top;
+  opacity: 1;
+  will-change: transform;
+}
+
+.caimiao-flyer {
+  top: 52%;
+  z-index: 11;
+  width: clamp(180px, 25vw, 390px);
+}
+
+.caimiao-flight-clouds {
+  top: -18vh;
+  z-index: 9;
+  left: 50%;
+  width: max(138vw, 1280px);
+  height: auto;
+  object-fit: contain;
+  opacity: 0;
+  filter: brightness(1.14) contrast(0.92);
+  mix-blend-mode: screen;
+  pointer-events: none;
+  will-change: transform, opacity;
+}
+
+.caimiao-flight-copy {
+  z-index: 10;
+}
+
+.caimiao-exit-clouds {
+  z-index: 18;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+.caimiao-exit-cloud {
+  position: absolute;
+  max-width: none;
+  height: auto;
+  opacity: 0;
+  filter: grayscale(1) brightness(1.08) contrast(0.94);
+  will-change: transform, opacity;
+}
+
+.caimiao-exit-cloud--wisps {
+  top: -16vh;
+  left: -18vw;
+  width: 136vw;
+}
+
+.caimiao-exit-cloud--bank {
+  right: -10vw;
+  bottom: -54vh;
+  width: 120vw;
+}
+
+.caimiao-white-veil {
+  z-index: 19;
+}
+
+@media (max-width: 768px) {
+  .caimiao-journey { height: 980svh; }
+  .caimiao-sky { top: -3vh; left: -20vw; width: 140vw; height: 106vh; }
+  .caimiao-brand-mark { top: 13vh; left: 26%; width: min(45vw, 240px); }
+  .caimiao-hero { top: 52%; width: 106vw; }
+  .caimiao-cloud-transition { right: -28vw; bottom: -18vh; left: -28vw; width: 156vw; }
+  .caimiao-cloud-bank-blur { transform: translateY(6vh) scale(1.01); }
+  .caimiao-cloud-tail { height: 88vh; }
+  .caimiao-river-reveal { width: clamp(74px, 20vw, 108px); }
+  .caimiao-ocean { width: 165vw; left: 50%; transform: translateX(-50%); min-height: 540vh; }
+  .caimiao-flight-clouds { top: -5vh; width: 245vw; height: auto; }
+  .caimiao-exit-cloud--wisps { left: -42vw; width: 190vw; }
+  .caimiao-exit-cloud--bank { right: -38vw; width: 178vw; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .caimiao-fluid-canvas { display: none; }
+  .caimiao-journey.is-static .caimiao-entry-orange,
+  .caimiao-journey.is-static .caimiao-entry-white,
+  .caimiao-journey.is-static .caimiao-sky-scene,
+  .caimiao-journey.is-static .caimiao-cloud-transition,
+  .caimiao-journey.is-static .caimiao-ocean-world,
+  .caimiao-journey.is-static .caimiao-exit-clouds { display: none; }
+  .caimiao-journey.is-static .caimiao-river-reveal {
+    clip-path: inset(0);
+    transform: translateX(-50%);
+  }
 }
 
 /* ===== CLIENTS ===== */
@@ -2146,20 +2657,18 @@ html.performance-lite .about-badge-card {
   .xinxiang-activity-layout {
     height: auto;
     min-height: 0;
-    padding: 0 0.8rem 8rem;
+    padding: 0 0.8rem;
     overflow: hidden;
   }
   .xinxiang-activity-layout::after {
-    height: 150px;
-    margin: 0 -0.8rem;
-    -webkit-backdrop-filter: blur(12px);
-    backdrop-filter: blur(12px);
+    display: none;
   }
   .xinxiang-activity-head {
     position: relative;
     top: auto;
     left: auto;
     width: 100%;
+    margin: 0;
     padding: 0 0.45rem;
   }
   .xinxiang-activity-head h3 {
@@ -2170,7 +2679,7 @@ html.performance-lite .about-badge-card {
     position: relative;
     inset: auto;
     width: 100%;
-    height: auto;
+    height: 100svh;
     margin: 2.25rem 0 0;
     gap: 0.55rem;
   }
@@ -2482,84 +2991,93 @@ html.performance-lite .about-badge-card {
   </div>
 </section>
 
-<!-- My Work -->
-<section class="my-work" id="selected-work" aria-label="My work">
-  <div class="my-work-inner">
-    <div class="my-work-copy">
-      <article class="my-work-step is-active" data-work-step="0">
-        <h2 class="my-work-title">My<br>Work</h2>
-        <div class="my-work-case-copy">
-          <p class="my-work-date">2026.8<span>至今</span></p>
-          <p class="my-work-label">Brand identity / App design</p>
-          <h3 class="my-work-project-title">财苗 - 专注于孩童财商</h3>
-          <p class="my-work-description">围绕儿童财商启蒙打造的产品体验，通过任务、成长记录与亲子协作，让抽象的金钱认知转化为孩子能够理解、参与和持续积累的日常行动。</p>
-        </div>
-      </article>
-      <article class="my-work-step" data-work-step="1">
-        <div class="my-work-case-copy">
-          <p class="my-work-date">2026.8<span>至今</span></p>
-          <p class="my-work-label">Visual system</p>
-          <h3 class="my-work-project-title">财苗 - 轻盈而可信赖的视觉语言</h3>
-          <p class="my-work-description">以橙色、青绿色和留白建立明快的品牌识别；将字体、插画与界面组件统一为适合儿童与家长共同使用的视觉系统。</p>
-        </div>
-      </article>
-      <article class="my-work-step" data-work-step="2">
-        <div class="my-work-case-copy">
-          <p class="my-work-date">2026.8<span>至今</span></p>
-          <p class="my-work-label">Product experience</p>
-          <h3 class="my-work-project-title">财苗 - 成长任务与亲子协作</h3>
-          <p class="my-work-description">以可完成的日常任务、成长记录和亲子共创机制，将抽象的财商教育转化为孩子能够参与、理解并持续积累的体验。</p>
-        </div>
-      </article>
-      <article class="my-work-step" data-work-step="3">
-        <div class="my-work-case-copy">
-          <p class="my-work-date">2026.8<span>至今</span></p>
-          <p class="my-work-label">Brand application</p>
-          <h3 class="my-work-project-title">财苗 - 面向孩子的品牌应用系统</h3>
-          <p class="my-work-description">将品牌色彩、字体、图形和内容节奏延展到不同产品场景，建立兼顾趣味、可信度与成长感的完整应用体系。</p>
-        </div>
-      </article>
-    </div>
-    <div class="my-work-media" aria-label="Caimiao project previews">
-      <div class="my-work-media-stage">
-        <a class="my-work-media-group is-active" data-work-step="0" href="project.html?work=caimiao&amp;view=brand" aria-label="Open Caimiao project">
-          <span class="my-work-media-frame">
-            <span class="my-work-media-card my-work-media-card--wide"><img src="assets/caimiao-work/caimiao-phone.png" alt="Caimiao mobile product visual" loading="lazy" decoding="async"></span>
-            <span class="my-work-media-card my-work-media-card--square my-work-media-card--type"><img src="assets/caimiao-work/caimiao-type.png" alt="Caimiao typography system" loading="lazy" decoding="async"></span>
-            <span class="my-work-media-card my-work-media-card--square my-work-media-card--palette"><img src="assets/caimiao-work/caimiao-palette.png" alt="Caimiao color system" loading="lazy" decoding="async"></span>
-          </span>
-        </a>
-        <a class="my-work-media-group" data-work-step="1" href="project.html?work=caimiao&amp;view=system" aria-label="Open Caimiao visual system">
-          <span class="my-work-media-frame">
-            <span class="my-work-media-card my-work-media-card--wide"><img src="project/caimiao/1.jpg" alt="Caimiao visual identity" loading="lazy" decoding="async"></span>
-            <span class="my-work-media-card my-work-media-card--square"><img src="project/caimiao/6.jpg" alt="Caimiao visual planning" loading="lazy" decoding="async"></span>
-            <span class="my-work-media-card my-work-media-card--square"><img src="project/caimiao/25.jpg" alt="Caimiao growth visual" loading="lazy" decoding="async"></span>
-          </span>
-        </a>
-        <a class="my-work-media-group" data-work-step="2" href="project.html?work=caimiao&amp;view=experience" aria-label="Open Caimiao product experience">
-          <span class="my-work-media-frame my-work-media-frame--portrait-split">
-            <span class="my-work-media-card my-work-media-card--wide"><img src="project/caimiao/27.jpg" alt="Caimiao product experience" loading="lazy" decoding="async"></span>
-            <span class="my-work-media-card my-work-media-card--square"><img src="project/caimiao/10.jpg" alt="Caimiao interaction detail" loading="lazy" decoding="async"></span>
-            <span class="my-work-media-card my-work-media-card--square"><img src="project/caimiao/11.jpg" alt="Caimiao task detail" loading="lazy" decoding="async"></span>
-          </span>
-        </a>
-        <a class="my-work-media-group" data-work-step="3" href="project.html?work=caimiao&amp;view=application" aria-label="Open Caimiao brand application">
-          <span class="my-work-media-frame">
-            <span class="my-work-media-card my-work-media-card--wide"><img src="project/caimiao/14.jpg" alt="Caimiao brand application" loading="lazy" decoding="async"></span>
-            <span class="my-work-media-card my-work-media-card--square"><img src="project/caimiao/4.jpg" alt="Caimiao brand detail" loading="lazy" decoding="async"></span>
-            <span class="my-work-media-card my-work-media-card--square"><img src="project/caimiao/12.jpg" alt="Caimiao visual detail" loading="lazy" decoding="async"></span>
-          </span>
-        </a>
-        <a class="my-work-media-group" data-work-step="4" href="project.html?work=caimiao&amp;view=application-detail" aria-label="Open Caimiao application detail">
-          <span class="my-work-media-frame">
-            <span class="my-work-media-card my-work-media-card--wide"><img src="project/caimiao/5.jpg" alt="Caimiao application overview" loading="lazy" decoding="async"></span>
-            <span class="my-work-media-card my-work-media-card--square"><img src="project/caimiao/17.jpg" alt="Caimiao mobile detail" loading="lazy" decoding="async"></span>
-            <span class="my-work-media-card my-work-media-card--square"><img src="project/caimiao/18.jpg" alt="Caimiao mobile experience" loading="lazy" decoding="async"></span>
-          </span>
-        </a>
+<!-- Caimiao Journey -->
+<section class="caimiao-journey" id="selected-work" aria-label="财苗项目滚动案例">
+  <div class="caimiao-journey-stage">
+    <div class="caimiao-sky-scene">
+      <img class="caimiao-sky" src="assets/caimiao-journey/sky.png" alt="蓝天与云层背景" loading="lazy" decoding="async">
+      <canvas class="caimiao-fluid-canvas" id="caimiaoFluidCanvas" aria-hidden="true"></canvas>
+      <object class="caimiao-brand-mark" data="assets/caimiao-journey/caimiao-logo.svg" type="image/svg+xml" aria-label="财苗"></object>
+
+      <div class="caimiao-hero" aria-hidden="true">
+        <img class="caimiao-hero-character" src="assets/caimiao-journey/hero-v2.png" alt="">
+        <img class="caimiao-hero-airflow" src="assets/caimiao-journey/airflow-v2.png" alt="">
       </div>
     </div>
+
+    <div class="caimiao-pale-ground" aria-hidden="true"></div>
+    <div class="caimiao-cloud-transition" aria-hidden="true">
+      <img class="caimiao-cloud-bank-blur" src="assets/caimiao-journey/cloud-bank.png" alt="">
+      <img class="caimiao-cloud-bank" src="assets/caimiao-journey/cloud-bank.png" alt="">
+      <div class="caimiao-cloud-tail"></div>
+    </div>
+
+    <div class="caimiao-river-world">
+      <div class="caimiao-river-reveal" aria-hidden="true">
+        <img class="caimiao-river" src="assets/caimiao-journey/river.png" alt="">
+      </div>
+      <img class="caimiao-boat" src="assets/caimiao-journey/boat.png" alt="" aria-hidden="true">
+
+      <div class="caimiao-case-layer">
+        <div class="caimiao-case-copy">
+          <article class="caimiao-case-step" data-caimiao-step="0">
+            <p class="caimiao-case-kicker">Project overview</p>
+            <h2 class="caimiao-case-title">项目名称占位</h2>
+            <p class="caimiao-case-description">项目介绍文案待补充。这里暂时用于确认标题、正文与河流中线之间的版式关系。</p>
+          </article>
+          <article class="caimiao-case-step" data-caimiao-step="1">
+            <p class="caimiao-case-kicker">Product experience</p>
+            <h2 class="caimiao-case-title">内容模块占位</h2>
+            <p class="caimiao-case-description">图片介绍文案待补充。页面滚动时，小船保持在视觉中段，左右内容随旅程自然切换。</p>
+          </article>
+          <article class="caimiao-case-step" data-caimiao-step="2">
+            <p class="caimiao-case-kicker">Visual system</p>
+            <h2 class="caimiao-case-title">展示说明占位</h2>
+            <p class="caimiao-case-description">项目说明待补充。第三组内容结束后，浅蓝河流会逐步延展并连接到大海。</p>
+          </article>
+        </div>
+
+        <div class="caimiao-case-media" aria-label="财苗项目图片展示">
+          <a class="caimiao-media-group" data-caimiao-step="0" href="project.html?work=caimiao&amp;view=brand" aria-label="打开财苗品牌项目">
+            <span class="caimiao-media-frame"><img src="project/caimiao/1.jpg" alt="财苗品牌视觉展示" loading="lazy" decoding="async"></span>
+          </a>
+          <a class="caimiao-media-group" data-caimiao-step="1" href="project.html?work=caimiao&amp;view=experience" aria-label="打开财苗产品体验">
+            <span class="caimiao-media-frame"><img src="project/caimiao/25.jpg" alt="财苗成长页面展示" loading="lazy" decoding="async"></span>
+          </a>
+          <a class="caimiao-media-group" data-caimiao-step="2" href="project.html?work=caimiao&amp;view=application" aria-label="打开财苗品牌应用">
+            <span class="caimiao-media-frame"><img src="project/caimiao/26.jpg" alt="财苗个人页面展示" loading="lazy" decoding="async"></span>
+          </a>
+        </div>
+      </div>
+    </div>
+
+    <div class="caimiao-ocean-world" aria-hidden="true">
+      <img class="caimiao-ocean" src="assets/caimiao-journey/ocean-v2.png" alt="">
+    </div>
+    <img class="caimiao-flight-clouds" src="assets/caimiao-journey/flight-clouds-v5.png" alt="" aria-hidden="true">
+    <img class="caimiao-flyer" src="assets/caimiao-journey/flyer.png" alt="" aria-hidden="true">
+
+    <div class="caimiao-flight-copy caimiao-flight-copy--left">
+      <h3>飞行文案占位</h3>
+      <p>左侧文字内容待补充，用于描述项目推进过程或视觉概念。</p>
+    </div>
+    <div class="caimiao-flight-copy caimiao-flight-copy--right">
+      <h3>说明文案占位</h3>
+      <p>右侧文字内容待补充，用于补充图片信息或阶段成果。</p>
+    </div>
+
+    <div class="caimiao-exit-clouds" aria-hidden="true">
+      <img class="caimiao-exit-cloud caimiao-exit-cloud--wisps" src="assets/caimiao-journey/exit-cloud-wisps.png" alt="">
+      <img class="caimiao-exit-cloud caimiao-exit-cloud--bank" src="assets/caimiao-journey/exit-cloud-bank.png" alt="">
+    </div>
+    <div class="caimiao-white-veil" aria-hidden="true"></div>
+    <div class="caimiao-entry-orange" aria-hidden="true"></div>
+    <div class="caimiao-entry-white" aria-hidden="true"></div>
   </div>
+</section>
+
+<section class="caimiao-next-placeholder" aria-label="下一个项目占位">
+  <p class="caimiao-next-logo">LOGO</p>
 </section>
 
 <!-- CTA -->
@@ -2876,7 +3394,8 @@ revealElements.forEach(el => revealObserver.observe(el));
   const getColumnCount = () => {
     if (window.matchMedia('(max-width: 768px)').matches) return 2;
     if (window.matchMedia('(max-width: 1100px)').matches) return 3;
-    return 4;
+    if (window.matchMedia('(max-width: 1360px)').matches) return 4;
+    return 5;
   };
 
   const layoutWaterfall = () => {
@@ -2928,6 +3447,7 @@ revealElements.forEach(el => revealObserver.observe(el));
   const overviewItems = project ? [...project.querySelectorAll('.xinxiang-overview > *')] : [];
   const media = project ? [...project.querySelectorAll('.xinxiang-media')] : [];
   const activityTiles = project ? [...project.querySelectorAll('.activity-tile')] : [];
+  const activity = project?.querySelector('.xinxiang-activity');
   const videos = project ? [...project.querySelectorAll('video')] : [];
 
   if (!project || !intro || !stage || !canvas || !subject || !panelHeads.length) return;
@@ -3147,6 +3667,15 @@ revealElements.forEach(el => revealObserver.observe(el));
   if (window.gsap && window.ScrollTrigger) {
     gsap.registerPlugin(ScrollTrigger);
 
+    if (activity) {
+      ScrollTrigger.create({
+        trigger: activity,
+        start: 'top bottom',
+        end: 'bottom top',
+        onToggle: self => document.body.classList.toggle('xinxiang-activity-active', self.isActive)
+      });
+    }
+
     if (!reduceMotion) {
       const introEntrance = gsap.timeline({
         defaults: { duration: 1, ease: 'power3.out' },
@@ -3329,116 +3858,388 @@ revealElements.forEach(el => revealObserver.observe(el));
   }
 })();
 
-// ===== MY WORK: COPY-LED MEDIA SWITCHING =====
+// ===== CAIMIAO JOURNEY: SKY / RIVER / OCEAN STORY =====
 (function() {
-  const wrap = document.querySelector('.my-work');
-  if (!wrap || !window.gsap) return;
+  const journey = document.querySelector('.caimiao-journey--legacy');
+  const stage = journey?.querySelector('.caimiao-journey-stage');
+  if (!journey || !stage) return;
 
-  const steps = wrap.querySelectorAll('.my-work-step');
-  const groups = wrap.querySelectorAll('.my-work-media-group');
-  const caseCopies = [...wrap.querySelectorAll('.my-work-case-copy')];
-  const workTitle = wrap.querySelector('.my-work-title');
-  const mediaFrame = wrap.querySelector('.my-work-media-frame');
-  const mediaStage = wrap.querySelector('.my-work-media-stage');
-  const featureFrame = wrap.querySelector('.my-work-media-frame--portrait-split');
   const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-  const isMobile = window.matchMedia('(max-width: 768px)').matches;
-  if (!steps.length || !groups.length || !mediaFrame || !mediaStage || isMobile) return;
+  const steps = [...journey.querySelectorAll('.caimiao-case-step')];
+  const mediaGroups = [...journey.querySelectorAll('.caimiao-media-group')];
+  const sky = journey.querySelector('.caimiao-sky');
+  const skyVeil = journey.querySelector('.caimiao-sky-veil');
+  const paleGround = journey.querySelector('.caimiao-pale-ground');
+  const hero = journey.querySelector('.caimiao-hero');
+  const airflow = journey.querySelector('.caimiao-hero-airflow');
+  const cloudBank = journey.querySelector('.caimiao-cloud-bank');
+  const riverReveal = journey.querySelector('.caimiao-river-reveal');
+  const river = journey.querySelector('.caimiao-river');
+  const boat = journey.querySelector('.caimiao-boat');
+  const caseLayer = journey.querySelector('.caimiao-case-layer');
+  const ocean = journey.querySelector('.caimiao-ocean');
+  const flyer = journey.querySelector('.caimiao-flyer');
+  const flightClouds = journey.querySelector('.caimiao-flight-clouds');
+  const flightCopy = [...journey.querySelectorAll('.caimiao-flight-copy')];
+  const curtain = journey.querySelector('.caimiao-cloud-curtain');
+  const whiteVeil = journey.querySelector('.caimiao-white-veil');
 
-  let activeIndex = 0;
-  let lastScrollY = window.scrollY;
-  let workVisible = false;
-
-  const syncFeatureFrameHeight = () => {
-    if (!featureFrame) return;
-    featureFrame.style.setProperty('--feature-frame-height', `${mediaFrame.getBoundingClientRect().height}px`);
-  };
-
-  const syncCaseCopyPositions = () => {
-    syncFeatureFrameHeight();
-    caseCopies.forEach(copy => copy.style.removeProperty('--case-copy-shift'));
-    workTitle?.style.removeProperty('--work-title-shift');
-
-    FrameScheduler.request('my-work-copy-layout', () => {
-      const frameBottom = mediaFrame.getBoundingClientRect().bottom - mediaStage.getBoundingClientRect().top;
-      if (!Number.isFinite(frameBottom)) return;
-
-      if (workTitle) {
-        const titleShift = mediaFrame.getBoundingClientRect().top - steps[0].getBoundingClientRect().top;
-        workTitle.style.setProperty('--work-title-shift', `${titleShift}px`);
-      }
-
-      caseCopies.forEach((copy, index) => {
-        const targetBottom = steps[index].getBoundingClientRect().top + frameBottom;
-        const shift = targetBottom - copy.getBoundingClientRect().bottom;
-        copy.style.setProperty('--case-copy-shift', `${shift}px`);
-      });
-    });
-  };
-
-  if (reduceMotion) {
-    steps[0].classList.add('is-active');
-    groups[0].classList.add('is-active');
-    caseCopies.forEach(copy => { copy.style.opacity = '1'; });
-    syncCaseCopyPositions();
+  if (reduceMotion || !window.gsap || !window.ScrollTrigger) {
+    journey.classList.add('is-static');
     return;
   }
 
-  groups.forEach((group, index) => {
-    gsap.set(group, { autoAlpha: index === 0 ? 1 : 0, x: 0, y: 0 });
+  gsap.registerPlugin(ScrollTrigger);
+
+  gsap.set(hero, { xPercent: -50, yPercent: -50 });
+  gsap.set(steps, { autoAlpha: 0, x: -32 });
+  gsap.set(mediaGroups, { autoAlpha: 0, x: 38 });
+  gsap.set(boat, { autoAlpha: 0, xPercent: -50, yPercent: -50, rotation: 90, scale: 0.72 });
+  gsap.set(ocean, { autoAlpha: 0, yPercent: 100 });
+  gsap.set(flyer, {
+    autoAlpha: 0,
+    xPercent: -50,
+    yPercent: -50,
+    y: () => window.innerHeight * 0.72,
+    rotation: 180,
+    scaleX: -0.78,
+    scaleY: 0.78
+  });
+  gsap.set(flightCopy, { autoAlpha: 0, y: 28 });
+  gsap.set(curtain, { autoAlpha: 0, xPercent: 0 });
+
+  const story = gsap.timeline({
+    defaults: { ease: 'none' },
+    scrollTrigger: {
+      trigger: journey,
+      start: 'top top',
+      end: 'bottom bottom',
+      scrub: 1.05,
+      invalidateOnRefresh: true,
+      onEnter: () => document.body.classList.add('caimiao-story-active'),
+      onEnterBack: () => document.body.classList.add('caimiao-story-active'),
+      onLeaveBack: () => document.body.classList.remove('caimiao-story-active')
+    }
   });
 
-  window.addEventListener('load', syncCaseCopyPositions, { once: true });
-  FrameScheduler.onResize('my-work-copy-resize', syncCaseCopyPositions);
-  syncCaseCopyPositions();
+  story
+    .addLabel('sky', 0)
+    .to(skyVeil, { autoAlpha: 0, duration: 4 }, 'sky')
+    .to(hero, { yPercent: -3, scale: 1.035, duration: 9 }, 'sky')
+    .to(airflow, { rotation: 2.5, scale: 1.035, duration: 9 }, 'sky')
+    .addLabel('leaveSky', 9)
+    .to(cloudBank, {
+      yPercent: () => window.innerWidth <= 768 ? -320 : -125,
+      scale: 1.07,
+      duration: 10
+    }, 'leaveSky')
+    .to(hero, { yPercent: -24, scale: 0.82, autoAlpha: 0, duration: 9 }, 'leaveSky+=2')
+    .to(sky, { autoAlpha: 0, scale: 1.06, duration: 10 }, 'leaveSky+=3')
+    .to(paleGround, { autoAlpha: 1, duration: 8 }, 'leaveSky+=3')
+    .to(riverReveal, { scaleY: 1, duration: 10 }, 'leaveSky+=5')
+    .to(river, { yPercent: -10, duration: 44 }, 'leaveSky+=5')
+    .to(boat, { autoAlpha: 1, scale: 1, duration: 4 }, 'leaveSky+=9')
+    .to(boat, { x: 9, y: 8, rotation: 93, duration: 10 }, 'leaveSky+=13')
+    .to(boat, { x: -7, y: -5, rotation: 88, duration: 10 }, 'leaveSky+=23')
+    .to(boat, { x: 5, y: 7, rotation: 92, duration: 10 }, 'leaveSky+=33');
 
-  const activate = (nextIndex, direction) => {
-    if (nextIndex === activeIndex || !groups[nextIndex]) return;
-    const previous = groups[activeIndex];
-    const next = groups[nextIndex];
+  const addCasePair = (index, enterAt, leaveAt) => {
+    const step = steps[index];
+    const media = mediaGroups[index];
+    if (!step || !media) return;
 
-    const activeStepIndex = Math.max(0, nextIndex - 1);
-    steps.forEach((step, index) => step.classList.toggle('is-active', index === activeStepIndex));
-    groups.forEach((group, index) => group.classList.toggle('is-active', index === nextIndex));
-    gsap.to(previous, {
+    story
+      .fromTo(step,
+        { autoAlpha: 0, x: -32, y: 12 },
+        { autoAlpha: 1, x: 0, y: 0, duration: 2.2, ease: 'power3.out' },
+        enterAt
+      )
+      .fromTo(media,
+        { autoAlpha: 0, x: 38, y: 14 },
+        { autoAlpha: 1, x: 0, y: 0, duration: 2.5, ease: 'power3.out' },
+        enterAt + 0.35
+      )
+      .to(step, { autoAlpha: 0, x: -24, y: -8, duration: 1.6, ease: 'power2.inOut' }, leaveAt)
+      .to(media, { autoAlpha: 0, x: 26, y: -10, duration: 1.6, ease: 'power2.inOut' }, leaveAt + 0.15);
+  };
+
+  addCasePair(0, 23, 35);
+  addCasePair(1, 36, 48);
+  addCasePair(2, 49, 62);
+
+  story
+    .addLabel('ocean', 62)
+    .to(caseLayer, { autoAlpha: 0, duration: 3 }, 'ocean')
+    .to(ocean, { autoAlpha: 1, yPercent: 0, duration: 11 }, 'ocean')
+    .to(riverReveal, { scaleX: 4.2, autoAlpha: 0, duration: 8 }, 'ocean+=1')
+    .to(boat, { autoAlpha: 0, scale: 0.08, y: 70, rotation: 98, duration: 7 }, 'ocean+=2')
+    .to(flyer, {
+      autoAlpha: 1,
+      y: 0,
+      scaleX: -1,
+      scaleY: 1,
+      duration: 9,
+      ease: 'power2.out'
+    }, 'ocean+=4')
+    .to(flightClouds, { autoAlpha: 0.9, yPercent: -8, duration: 6 }, 'ocean+=7')
+    .to(flightCopy, { autoAlpha: 1, y: 0, duration: 4, stagger: 0.6, ease: 'power3.out' }, 'ocean+=10')
+    .to(flyer, { x: 10, y: 14, rotation: 176, duration: 8 }, 'ocean+=12')
+    .to(flightClouds, { yPercent: -27, duration: 16 }, 'ocean+=11')
+    .to(flyer, { x: -8, y: -10, rotation: 183, duration: 8 }, 'ocean+=20')
+    .to(flightCopy, { autoAlpha: 0, y: -24, duration: 3 }, 'ocean+=24')
+    .addLabel('cloudWipe', 88)
+    .to(curtain, { autoAlpha: 1, xPercent: 100, duration: 9, ease: 'power2.inOut' }, 'cloudWipe')
+    .to(whiteVeil, { autoAlpha: 1, duration: 3, ease: 'power2.inOut' }, 'cloudWipe+=8')
+    .to(curtain, { xPercent: 120, duration: 4 }, 'cloudWipe+=9');
+
+  const refresh = () => ScrollTrigger.refresh();
+  window.addEventListener('load', refresh, { once: true });
+  journey.querySelectorAll('img').forEach(image => {
+    if (!image.complete) image.addEventListener('load', refresh, { once: true });
+  });
+})();
+
+// ===== CAIMIAO REFINED JOURNEY: CENTERED SUBJECT / MOVING WORLD =====
+(function initCaimiaoRefinedJourney() {
+  const journey = document.querySelector('.caimiao-journey');
+  const stage = journey?.querySelector('.caimiao-journey-stage');
+  if (!journey || !stage) return;
+
+  const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const isMobile = window.matchMedia('(max-width: 768px)').matches;
+  const q = selector => journey.querySelector(selector);
+  const qa = selector => [...journey.querySelectorAll(selector)];
+
+  const entryOrange = q('.caimiao-entry-orange');
+  const entryWhite = q('.caimiao-entry-white');
+  const skyScene = q('.caimiao-sky-scene');
+  const sky = q('.caimiao-sky');
+  const fluidCanvas = q('.caimiao-fluid-canvas');
+  const brandMark = q('.caimiao-brand-mark');
+  const paleGround = q('.caimiao-pale-ground');
+  const hero = q('.caimiao-hero');
+  const airflow = q('.caimiao-hero-airflow');
+  const cloudTransition = q('.caimiao-cloud-transition');
+  const riverWorld = q('.caimiao-river-world');
+  const riverReveal = q('.caimiao-river-reveal');
+  const river = q('.caimiao-river');
+  const boat = q('.caimiao-boat');
+  const caseLayer = q('.caimiao-case-layer');
+  const steps = qa('.caimiao-case-step');
+  const mediaGroups = qa('.caimiao-media-group');
+  const oceanWorld = q('.caimiao-ocean-world');
+  const ocean = q('.caimiao-ocean');
+  const flyer = q('.caimiao-flyer');
+  const flightClouds = q('.caimiao-flight-clouds');
+  const flightCopy = qa('.caimiao-flight-copy');
+  const exitWisps = q('.caimiao-exit-cloud--wisps');
+  const exitBank = q('.caimiao-exit-cloud--bank');
+  const whiteVeil = q('.caimiao-white-veil');
+
+  if (reduceMotion || !window.gsap || !window.ScrollTrigger) {
+    journey.classList.add('is-static');
+    return;
+  }
+
+  gsap.registerPlugin(ScrollTrigger);
+
+  gsap.set(entryOrange, { autoAlpha: 1, yPercent: 0 });
+  gsap.set(skyScene, { autoAlpha: 1, scale: 1.025 });
+  gsap.set(fluidCanvas, { autoAlpha: 0 });
+  gsap.set(hero, { xPercent: -50, yPercent: -50 });
+  gsap.set(brandMark, { xPercent: -50, yPercent: 0 });
+  gsap.set(paleGround, { autoAlpha: 0 });
+  gsap.set(cloudTransition, { yPercent: 38, scale: 1.05 });
+  gsap.set(riverWorld, { autoAlpha: 1, scale: 1, yPercent: 0 });
+  gsap.set(riverReveal, { autoAlpha: 0, yPercent: -7 });
+  gsap.set(steps, { autoAlpha: 0, x: -32, y: 12 });
+  gsap.set(mediaGroups, { autoAlpha: 0, x: 38, y: 14 });
+  gsap.set(boat, {
+    autoAlpha: 0,
+    xPercent: -50,
+    yPercent: -50,
+    y: () => -window.innerHeight * 0.82,
+    rotation: 90,
+    scale: 0.82
+  });
+  gsap.set(oceanWorld, { autoAlpha: 0, yPercent: 106, scale: 1 });
+  gsap.set(ocean, { xPercent: isMobile ? -50 : 0, yPercent: 0, scale: 1.18 });
+  gsap.set(flyer, {
+    autoAlpha: 0,
+    xPercent: -50,
+    yPercent: -50,
+    y: () => window.innerHeight * 0.82,
+    rotation: 180,
+    scaleX: -0.76,
+    scaleY: 0.76
+  });
+  gsap.set(flightClouds, { autoAlpha: 0, xPercent: -50, yPercent: 24, scale: 1.02 });
+  gsap.set(flightCopy, { autoAlpha: 0, y: 28 });
+  gsap.set(exitWisps, { autoAlpha: 0, xPercent: -18, yPercent: 24, scale: 1.08 });
+  gsap.set(exitBank, { autoAlpha: 0, yPercent: 48, scale: 1.06 });
+  gsap.set(whiteVeil, { autoAlpha: 0 });
+
+  const story = gsap.timeline({
+    defaults: { ease: 'none' },
+    scrollTrigger: {
+      trigger: journey,
+      start: 'top top',
+      end: 'bottom bottom',
+      scrub: 1.08,
+      invalidateOnRefresh: true,
+      onEnter: () => document.body.classList.add('caimiao-story-active'),
+      onEnterBack: () => document.body.classList.add('caimiao-story-active'),
+      onLeave: () => document.body.classList.remove('caimiao-story-active'),
+      onLeaveBack: () => document.body.classList.remove('caimiao-story-active')
+    }
+  });
+
+  story
+    .addLabel('entry', 0)
+    .to(entryOrange, {
+      yPercent: -105,
       autoAlpha: 0,
-      x: direction === 'down' ? -24 : 24,
-      y: direction === 'down' ? -12 : 12,
-      duration: 0.42,
-      ease: 'power2.inOut',
-      overwrite: 'auto'
-    });
-    gsap.fromTo(next,
-      { autoAlpha: 0, x: direction === 'down' ? 34 : -34, y: direction === 'down' ? 14 : -14 },
-      { autoAlpha: 1, x: 0, y: 0, duration: 0.56, ease: 'power3.out', overwrite: 'auto' }
-    );
-    activeIndex = nextIndex;
+      duration: 3.4,
+      ease: 'power2.inOut'
+    }, 'entry')
+    .to(skyScene, { scale: 1, duration: 4.4, ease: 'power2.out' }, 'entry')
+    .to(fluidCanvas, { autoAlpha: 0.46, duration: 3.8, ease: 'power2.out' }, 'entry+=0.35')
+
+    .addLabel('sky', 3.8)
+    .to(sky, { yPercent: -6, scale: 1.04, duration: 24 }, 'sky')
+    .to(fluidCanvas, { autoAlpha: 0.28, duration: 24 }, 'sky')
+    .to(brandMark, { yPercent: -15, scale: 0.96, duration: 24 }, 'sky')
+    .to(hero, { yPercent: -59, scale: 1.025, duration: 24 }, 'sky')
+    .to(airflow, { rotation: 2.2, scale: 1.035, opacity: 0.82, duration: 20 }, 'sky+=1')
+    .to(cloudTransition, {
+      yPercent: isMobile ? -164 : -142,
+      scale: 1.05,
+      duration: 18,
+      ease: 'none'
+    }, 'sky+=5.5')
+    .to(paleGround, { autoAlpha: 1, duration: 9, ease: 'power1.inOut' }, 'sky+=11.5')
+    .to(skyScene, { autoAlpha: 0, yPercent: -8, duration: 9, ease: 'power1.inOut' }, 'sky+=15')
+    .to(cloudTransition, { autoAlpha: 0, duration: 5, ease: 'power1.inOut' }, 'sky+=18.5')
+
+    .addLabel('river', 20.8)
+    .to(riverReveal, {
+      autoAlpha: 1,
+      yPercent: 0,
+      duration: 8,
+      ease: 'power2.out'
+    }, 'river')
+    .to(river, { yPercent: -24, duration: 70 }, 'river')
+    .to(boat, {
+      autoAlpha: 1,
+      y: 0,
+      scale: 1,
+      duration: 13,
+      ease: 'power2.out'
+    }, 'river+=2')
+    .to(boat, { x: 8, y: 6, rotation: 93, duration: 12 }, 'river+=15')
+    .to(boat, { x: -6, y: -4, rotation: 88, duration: 12 }, 'river+=27')
+    .to(boat, { x: 4, y: 5, rotation: 92, duration: 12 }, 'river+=39')
+    .to(boat, { x: -3, y: 0, rotation: 90, duration: 12 }, 'river+=51');
+
+  const addCasePair = (index, enterAt, leaveAt) => {
+    const step = steps[index];
+    const media = mediaGroups[index];
+    if (!step || !media) return;
+
+    story
+      .to(step, {
+        autoAlpha: 1,
+        x: 0,
+        y: 0,
+        duration: 2.6,
+        ease: 'power3.out'
+      }, enterAt)
+      .to(media, {
+        autoAlpha: 1,
+        x: 0,
+        y: 0,
+        duration: 2.8,
+        ease: 'power3.out'
+      }, enterAt + 0.35)
+      .to(step, { autoAlpha: 0, x: -24, y: -8, duration: 1.8, ease: 'power2.inOut' }, leaveAt)
+      .to(media, { autoAlpha: 0, x: 26, y: -10, duration: 1.8, ease: 'power2.inOut' }, leaveAt + 0.15);
   };
 
-  const update = ({ scrollY = window.scrollY } = {}) => {
-    if (!workVisible) return;
-    const direction = scrollY >= lastScrollY ? 'down' : 'up';
-    lastScrollY = scrollY;
-    const mediaTop = mediaFrame.getBoundingClientRect().top;
-    let nextIndex = 0;
+  addCasePair(0, 43, 58);
+  addCasePair(1, 61, 76);
+  addCasePair(2, 79, 94);
 
-    caseCopies.forEach((copy, index) => {
-      const copyTop = copy.getBoundingClientRect().top;
-      const passedDistance = Math.max(0, mediaTop - copyTop);
-      const fadeProgress = Math.min(passedDistance / (window.innerHeight * 0.35), 1);
-      copy.style.opacity = (1 - fadeProgress * 0.68).toFixed(3);
-      if (copyTop <= mediaTop) nextIndex = Math.min(index + 1, groups.length - 1);
-    });
-    activate(nextIndex, direction);
-  };
+  story
+    .addLabel('droneOut', 95)
+    .to(caseLayer, { autoAlpha: 0, duration: 3 }, 'droneOut')
+    .to(boat, {
+      autoAlpha: 0,
+      y: -72,
+      scale: 0.34,
+      duration: 4.2,
+      ease: 'power2.in'
+    }, 'droneOut')
+    .to(riverWorld, {
+      scale: 0.48,
+      yPercent: -16,
+      autoAlpha: 0,
+      duration: 7,
+      ease: 'power2.inOut'
+    }, 'droneOut+=1')
+    .to(oceanWorld, {
+      autoAlpha: 1,
+      yPercent: 0,
+      duration: 11,
+      ease: 'power2.out'
+    }, 'droneOut+=8')
+    .to(oceanWorld, { borderRadius: '0%', duration: 7, ease: 'power2.inOut' }, 'droneOut+=15')
+    .to(flyer, {
+      autoAlpha: 1,
+      y: 0,
+      scaleX: -1,
+      scaleY: 1,
+      duration: 10,
+      ease: 'power2.out'
+    }, 'droneOut+=13')
 
-  const workObserver = new IntersectionObserver(([entry]) => {
-    workVisible = entry.isIntersecting;
-    if (workVisible) FrameScheduler.request('my-work-switch-enter', update);
-  }, { rootMargin: '35% 0px' });
-  workObserver.observe(wrap);
+    .addLabel('oceanFlight', 116)
+    .to(ocean, { yPercent: -58, duration: 35 }, 'droneOut+=10')
+    .to(flightClouds, { autoAlpha: 0.52, yPercent: -32, duration: 29 }, 'oceanFlight')
+    .to(flightCopy, {
+      autoAlpha: 1,
+      y: 0,
+      duration: 4,
+      stagger: 0.6,
+      ease: 'power3.out'
+    }, 'oceanFlight+=3')
+    .to(flyer, { x: 8, y: 10, rotation: 177, duration: 10 }, 'oceanFlight+=5')
+    .to(flyer, { x: -6, y: -8, rotation: 183, duration: 10 }, 'oceanFlight+=15')
+    .to(flightCopy, { autoAlpha: 0, y: -22, duration: 4 }, 'oceanFlight+=20')
 
-  FrameScheduler.onScroll('my-work-switch', update);
+    .addLabel('highAltitude', 141)
+    .to(ocean, { scale: 1, duration: 13, ease: 'power2.inOut' }, 'highAltitude')
+    .to(flyer, { scaleX: -0.76, scaleY: 0.76, y: -6, duration: 13, ease: 'power2.inOut' }, 'highAltitude')
+    .to(flightClouds, { scale: 1.16, yPercent: -42, duration: 13, ease: 'power1.inOut' }, 'highAltitude')
+    .to(exitWisps, {
+      autoAlpha: 0.94,
+      xPercent: 0,
+      yPercent: 0,
+      duration: 9,
+      ease: 'power2.inOut'
+    }, 'highAltitude+=3')
+    .to(exitBank, {
+      autoAlpha: 1,
+      yPercent: 0,
+      duration: 10,
+      ease: 'power2.inOut'
+    }, 'highAltitude+=5')
+    .to(whiteVeil, { autoAlpha: 1, duration: 4, ease: 'power2.inOut' }, 'highAltitude+=12');
+
+  const refresh = () => ScrollTrigger.refresh();
+  window.addEventListener('load', refresh, { once: true });
+  journey.querySelectorAll('img').forEach(image => {
+    if (!image.complete) image.addEventListener('load', refresh, { once: true });
+  });
 })();
 
 // ===== SMOOTH NAV SCROLL =====
@@ -3793,6 +4594,218 @@ FrameScheduler.onScroll('nav-state', ({ scrollY }) => {
   window._heroShader = { state, syncReveal, params };
 })();
 
+// ===== CAIMIAO FLUID FIELD: SAME TWO-PASS LANGUAGE AS THE TOP HERO =====
+(function initCaimiaoFluidField() {
+  const canvas = document.getElementById('caimiaoFluidCanvas');
+  const container = canvas?.parentElement;
+  if (
+    !canvas ||
+    !container ||
+    typeof THREE === 'undefined' ||
+    window.matchMedia('(prefers-reduced-motion: reduce)').matches
+  ) return;
+
+  const vertexShader = `
+    varying vec2 vUv;
+    void main() {
+      vUv = uv;
+      gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
+    }
+  `;
+
+  const fieldFragmentShader = `
+    precision highp float;
+    uniform float uTime;
+    uniform float uAmplitude;
+    varying vec2 vUv;
+
+    void main() {
+      vec2 c = 2.0 * vUv - 1.0;
+      float ds = uAmplitude;
+      c += ds * 0.4 * sin(c.yx + vec2(1.2, 3.4) + uTime);
+      c += ds * 0.2 * sin(5.2 * c.yx + vec2(3.5, 0.4) + uTime);
+      c += ds * 0.3 * sin(3.5 * c.yx + vec2(1.2, 3.1) + uTime);
+      c += ds * 1.6 * sin(0.4 * c.yx + vec2(0.8, 2.4) + uTime);
+
+      float lengthField = length(c);
+      float value = 0.0;
+      for (int i = 0; i < 4; i++) {
+        value = mix(value, float(i) / 3.0, cos(float(i) * lengthField));
+      }
+      gl_FragColor = vec4(clamp(value, 0.0, 1.0), 0.0, 0.0, 1.0);
+    }
+  `;
+
+  const halftoneFragmentShader = `
+    precision highp float;
+    uniform sampler2D uFieldTex;
+    uniform vec2 uFieldRes;
+    uniform vec2 uResolution;
+    uniform float uPixelSize;
+    uniform float uGooeyness;
+    uniform float uContrast;
+    uniform float uBias;
+    varying vec2 vUv;
+
+    float smoothMinimum(float a, float b, float strength) {
+      if (strength <= 0.001) return min(a, b);
+      float h = max(strength - abs(a - b), 0.0) / strength;
+      return min(a, b) - h * h * strength * 0.25;
+    }
+
+    void main() {
+      vec2 pixelCoord = vUv * uResolution;
+      vec2 baseCell = floor(pixelCoord / uPixelSize);
+      float minDistance = 1.0e5;
+      float smoothStrength = uGooeyness * 1.5;
+
+      for (int dx = -1; dx <= 1; dx++) {
+        for (int dy = -1; dy <= 1; dy++) {
+          vec2 cell = baseCell + vec2(float(dx), float(dy));
+          if (mod(cell.x + cell.y, 2.0) > 0.5) continue;
+
+          vec2 center = (cell + 0.5) * uPixelSize;
+          vec2 fieldUv = (cell + 0.5) / uFieldRes;
+          float luma = texture2D(uFieldTex, fieldUv).r;
+          float value = clamp((luma - 0.5 + uBias) * uContrast + 0.5, 0.0, 1.0);
+          float radius = value * uPixelSize * 0.6 + uPixelSize * 0.05;
+          float distanceToDot = length(pixelCoord - center) - radius;
+          minDistance = smoothMinimum(
+            minDistance,
+            distanceToDot,
+            smoothStrength * uPixelSize
+          );
+        }
+      }
+
+      float antialias = max(fwidth(minDistance), 0.0001);
+      float shape = 1.0 - smoothstep(-antialias, antialias, minDistance);
+      gl_FragColor = vec4(vec3(1.0), shape * 0.72);
+    }
+  `;
+
+  const params = {
+    amplitude: 1.5,
+    timeSpeed: 0.0056,
+    pixelSize: RuntimeProfile.constrained ? 5 : 3.5,
+    gooeyness: 0.08,
+    contrast: 0.86,
+    bias: -0.22,
+    maxDpr: 1
+  };
+
+  const renderer = new THREE.WebGLRenderer({
+    canvas,
+    alpha: true,
+    antialias: false,
+    powerPreference: RuntimeProfile.constrained ? 'low-power' : 'high-performance'
+  });
+  renderer.setClearColor(0, 0);
+
+  const camera = new THREE.OrthographicCamera(-1, 1, 1, -1, 0, 1);
+  const geometry = new THREE.PlaneGeometry(2, 2);
+  const fieldTarget = new THREE.WebGLRenderTarget(1, 1, {
+    minFilter: THREE.NearestFilter,
+    magFilter: THREE.NearestFilter,
+    format: THREE.RedFormat,
+    type: THREE.UnsignedByteType,
+    depthBuffer: false,
+    stencilBuffer: false
+  });
+
+  const fieldMaterial = new THREE.ShaderMaterial({
+    vertexShader,
+    fragmentShader: fieldFragmentShader,
+    uniforms: {
+      uTime: { value: 0 },
+      uAmplitude: { value: params.amplitude }
+    }
+  });
+  const halftoneMaterial = new THREE.ShaderMaterial({
+    vertexShader,
+    fragmentShader: halftoneFragmentShader,
+    transparent: true,
+    depthWrite: false,
+    uniforms: {
+      uFieldTex: { value: fieldTarget.texture },
+      uFieldRes: { value: new THREE.Vector2(1, 1) },
+      uResolution: { value: new THREE.Vector2(1, 1) },
+      uPixelSize: { value: params.pixelSize },
+      uGooeyness: { value: params.gooeyness },
+      uContrast: { value: params.contrast },
+      uBias: { value: params.bias }
+    }
+  });
+
+  const fieldScene = new THREE.Scene();
+  const halftoneScene = new THREE.Scene();
+  fieldScene.add(new THREE.Mesh(geometry, fieldMaterial));
+  halftoneScene.add(new THREE.Mesh(geometry, halftoneMaterial));
+
+  function resize() {
+    const width = container.clientWidth;
+    const height = container.clientHeight;
+    if (!width || !height) return;
+    const dpr = Math.min(window.devicePixelRatio || 1, params.maxDpr);
+    renderer.setPixelRatio(dpr);
+    renderer.setSize(width, height, false);
+    const pixelWidth = Math.max(1, Math.round(width * dpr));
+    const pixelHeight = Math.max(1, Math.round(height * dpr));
+    const fieldWidth = Math.ceil(pixelWidth / params.pixelSize) + 1;
+    const fieldHeight = Math.ceil(pixelHeight / params.pixelSize) + 1;
+    fieldTarget.setSize(fieldWidth, fieldHeight);
+    halftoneMaterial.uniforms.uResolution.value.set(pixelWidth, pixelHeight);
+    halftoneMaterial.uniforms.uFieldRes.value.set(fieldWidth, fieldHeight);
+  }
+
+  function render(frameTime) {
+    const normalizedFrame = Math.min(frameTime / (1000 / 60), 3);
+    fieldMaterial.uniforms.uTime.value += params.timeSpeed * normalizedFrame;
+    renderer.setRenderTarget(fieldTarget);
+    renderer.render(fieldScene, camera);
+    renderer.setRenderTarget(null);
+    renderer.render(halftoneScene, camera);
+  }
+
+  let running = false;
+  let visible = false;
+  let lastRenderTime = 0;
+  const renderInterval = 1000 / (RuntimeProfile.constrained ? 24 : 60);
+
+  function start() {
+    if (running) return;
+    running = true;
+    FrameScheduler.add('caimiao-fluid-shader', ({ now, delta }) => {
+      if (!running || !visible || document.hidden) return false;
+      if (lastRenderTime && now - lastRenderTime < renderInterval) return true;
+      const frameTime = lastRenderTime ? now - lastRenderTime : delta;
+      lastRenderTime = now;
+      render(frameTime);
+      return true;
+    });
+  }
+
+  function stop() {
+    running = false;
+    lastRenderTime = 0;
+    FrameScheduler.remove('caimiao-fluid-shader');
+  }
+
+  const resizeObserver = new ResizeObserver(resize);
+  resizeObserver.observe(container);
+  const visibilityObserver = new IntersectionObserver(([entry]) => {
+    visible = entry.isIntersecting;
+    if (visible) start(); else stop();
+  }, { threshold: 0 });
+  visibilityObserver.observe(container);
+
+  resize();
+  renderer.setRenderTarget(fieldTarget);
+  renderer.render(fieldScene, camera);
+  renderer.setRenderTarget(null);
+  renderer.render(halftoneScene, camera);
+})();
+
 // ===== HERO POINTER: PSEUDO 3D LIGHTING =====
 (function() {
   const heroSection = document.querySelector('.hero');
@@ -3896,7 +4909,7 @@ FrameScheduler.onScroll('nav-state', ({ scrollY }) => {
   const heroSection = document.querySelector('.hero');
   const heroFade = document.getElementById('heroFade');
   const heroOverlay = document.getElementById('heroOverlay');
-  const workSection = document.querySelector('.my-work');
+  const workSection = document.querySelector('#selected-work');
   if (!heroSection || !workSection) return;
 
   let heroH = heroSection.offsetHeight;

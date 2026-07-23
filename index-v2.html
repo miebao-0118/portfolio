@@ -2236,6 +2236,134 @@ html.performance-lite .about-badge-card {
 
 .caimiao-case-layer {
   z-index: 8;
+  grid-template-columns: minmax(0, 1fr) minmax(132px, 15.5vw) minmax(0, 1fr);
+  gap: clamp(2rem, 5vw, 6.5rem);
+  padding: clamp(3rem, 4.8vw, 6rem) clamp(2rem, 6vw, 8rem);
+}
+
+.caimiao-case-copy,
+.caimiao-case-media {
+  height: min(72vh, 720px);
+}
+
+.caimiao-case-copy {
+  grid-column: 1;
+}
+
+.caimiao-case-media {
+  grid-column: 3;
+  width: min(34vw, 540px);
+  justify-self: start;
+  pointer-events: auto;
+}
+
+.caimiao-case-step {
+  justify-content: flex-start;
+  padding-top: clamp(0.5rem, 4vh, 3.25rem);
+}
+
+.caimiao-case-step[hidden] {
+  display: none;
+}
+
+.caimiao-case-kicker {
+  margin: 1.2rem 0 0;
+  color: rgba(23, 56, 74, 0.66);
+  letter-spacing: 0.14em;
+}
+
+.caimiao-case-title {
+  max-width: none;
+  font-size: clamp(3rem, 5.05vw, 5.8rem);
+  line-height: 0.92;
+}
+
+.caimiao-case-title span {
+  display: block;
+}
+
+.caimiao-case-title span + span {
+  margin-top: 0.22em;
+  font-size: 0.47em;
+  font-weight: 620;
+  letter-spacing: -0.025em;
+}
+
+.caimiao-case-description {
+  display: grid;
+  max-width: min(34vw, 500px);
+  margin: clamp(1.5rem, 3vh, 2.5rem) 0 0;
+  gap: clamp(0.8rem, 1.75vh, 1.4rem);
+  color: rgba(23, 56, 74, 0.74);
+  font-size: clamp(0.88rem, 1vw, 1.06rem);
+  line-height: 1.78;
+}
+
+.caimiao-case-description p {
+  margin: 0;
+}
+
+.caimiao-case-media--triptych {
+  display: grid;
+  grid-template-columns: minmax(0, 1.08fr) minmax(0, 0.86fr);
+  grid-template-rows: minmax(0, 1fr) minmax(0, 1fr);
+  gap: clamp(0.75rem, 1.25vw, 1.15rem);
+  align-content: center;
+}
+
+.caimiao-case-media--triptych .caimiao-media-group {
+  position: relative;
+  inset: auto;
+  display: block;
+  min-height: 0;
+}
+
+.caimiao-media-group--identity {
+  grid-row: 1 / span 2;
+}
+
+.caimiao-media-frame {
+  border-radius: clamp(14px, 1.45vw, 24px);
+  background: #fff;
+  box-shadow: 0 20px 54px rgba(83, 124, 133, 0.18);
+}
+
+.caimiao-media-group--identity .caimiao-media-frame img {
+  object-position: 54% center;
+}
+
+.caimiao-media-group--growth .caimiao-media-frame img,
+.caimiao-media-group--profile .caimiao-media-frame img {
+  object-position: center top;
+}
+
+@media (max-width: 1024px) {
+  .caimiao-case-layer {
+    grid-template-columns: minmax(0, 1fr) minmax(96px, 13vw) minmax(0, 1fr);
+    gap: clamp(1.25rem, 3vw, 2.75rem);
+    padding-inline: clamp(1.25rem, 3.5vw, 3rem);
+  }
+
+  .caimiao-case-copy,
+  .caimiao-case-media { height: min(68vh, 610px); }
+  .caimiao-case-media { width: min(35vw, 430px); }
+  .caimiao-case-description { max-width: 31vw; font-size: 0.84rem; }
+}
+
+@media (max-width: 768px) {
+  .caimiao-case-layer {
+    grid-template-columns: minmax(0, 1fr) minmax(74px, 16vw) minmax(0, 1fr);
+    gap: 0.75rem;
+    padding: 5rem 1rem 1.5rem;
+  }
+
+  .caimiao-case-copy,
+  .caimiao-case-media { height: min(63vh, 530px); }
+  .caimiao-case-media { width: 38vw; }
+  .caimiao-case-title { font-size: clamp(1.6rem, 7.1vw, 2.35rem); }
+  .caimiao-case-description { max-width: 38vw; margin-top: 1rem; gap: 0.55rem; font-size: 0.66rem; line-height: 1.58; }
+  .caimiao-case-kicker { margin-bottom: 0.55rem; font-size: 0.5rem; }
+  .caimiao-case-media--triptych { gap: 0.45rem; }
 }
 
 .caimiao-ocean-world {
@@ -2347,6 +2475,316 @@ html.performance-lite .about-badge-card {
   .caimiao-journey.is-static .caimiao-river-reveal {
     clip-path: inset(0);
     transform: translateX(-50%);
+  }
+}
+
+/* ===== CAIMIAO SHARED THREE.JS WATER / CASE GALLERY ===== */
+.caimiao-river-world {
+  overflow: hidden;
+  transform-origin: 50% 50%;
+}
+
+.caimiao-water-portal {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  overflow: hidden;
+  background: #147eb8;
+  clip-path: inset(100% 42% 0 42%);
+  will-change: clip-path, transform, opacity;
+}
+
+.caimiao-water-canvas,
+.caimiao-water-fallback {
+  position: absolute;
+  inset: 0;
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+.caimiao-water-canvas {
+  z-index: 2;
+  opacity: 0;
+  transition: opacity 300ms ease;
+}
+
+.caimiao-water-fallback {
+  z-index: 1;
+  object-fit: cover;
+  object-position: center;
+  filter: saturate(0.9) brightness(1.04);
+  transition: opacity 300ms ease;
+}
+
+.caimiao-water-portal.has-webgl-water .caimiao-water-canvas {
+  opacity: 1;
+}
+
+.caimiao-water-portal.has-webgl-water .caimiao-water-fallback {
+  opacity: 0;
+}
+
+.caimiao-river-shutters {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  pointer-events: none;
+}
+
+.caimiao-river-shutter {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 42%;
+  background: var(--caimiao-yellow);
+  will-change: transform, opacity;
+}
+
+.caimiao-river-shutter--left {
+  left: 0;
+  transform-origin: 100% 50%;
+}
+
+.caimiao-river-shutter--right {
+  right: 0;
+  transform-origin: 0 50%;
+}
+
+.caimiao-boat {
+  display: block;
+  width: clamp(82px, 7.8vw, 132px);
+  aspect-ratio: 1;
+}
+
+.caimiao-boat img {
+  position: relative;
+  z-index: 2;
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
+.caimiao-boat-wake {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  z-index: 1;
+  width: 118%;
+  height: 36%;
+  border: 2px solid rgba(225, 249, 255, 0.7);
+  border-radius: 50%;
+  opacity: 0;
+  transform: translate(-50%, -50%) scale(0.62);
+  animation: caimiaoBoatWake 3.2s ease-out infinite;
+  pointer-events: none;
+}
+
+.caimiao-boat-wake--inner {
+  width: 88%;
+  height: 27%;
+  animation-delay: 1.55s;
+}
+
+@keyframes caimiaoBoatWake {
+  0% { opacity: 0; transform: translate(-50%, -50%) scale(0.58); }
+  18% { opacity: 0.5; }
+  72%, 100% { opacity: 0; transform: translate(-50%, -50%) scale(1.35); }
+}
+
+.caimiao-case-layer {
+  z-index: 8;
+  grid-template-columns: minmax(0, 1fr) minmax(132px, 16vw) minmax(0, 1fr);
+  gap: clamp(2.4rem, 5vw, 6.5rem);
+  padding: clamp(3.5rem, 5vw, 6.4rem) clamp(2rem, 5.2vw, 7rem);
+}
+
+.caimiao-case-copy,
+.caimiao-case-media {
+  height: min(76vh, 760px);
+}
+
+.caimiao-case-step {
+  justify-content: space-between;
+  padding: 0;
+}
+
+.caimiao-case-heading {
+  width: min(37vw, 620px);
+}
+
+.caimiao-case-eyebrow {
+  margin: 0 0 clamp(1.2rem, 2.4vh, 2rem);
+  color: rgba(23, 56, 74, 0.58);
+  font-size: clamp(0.72rem, 0.85vw, 0.92rem);
+  font-weight: 720;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.caimiao-case-title {
+  max-width: none;
+  font-size: clamp(3.3rem, 5.25vw, 6.2rem);
+  line-height: 0.9;
+}
+
+.caimiao-case-title .caimiao-case-title-main {
+  color: #e9ad23;
+}
+
+.caimiao-case-title .caimiao-case-title-sub {
+  margin-top: 0.22em;
+  color: #178e72;
+  font-size: 0.46em;
+  font-weight: 690;
+  line-height: 1.05;
+}
+
+.caimiao-case-kicker {
+  margin: clamp(1rem, 2vh, 1.65rem) 0 0;
+  color: rgba(23, 56, 74, 0.68);
+}
+
+.caimiao-case-role {
+  display: grid;
+  margin-top: clamp(1rem, 2.2vh, 1.75rem);
+  gap: 0.42rem;
+  color: rgba(23, 56, 74, 0.74);
+  font-size: clamp(0.82rem, 0.92vw, 1rem);
+  line-height: 1.55;
+}
+
+.caimiao-case-role p,
+.caimiao-case-award {
+  margin: 0;
+}
+
+.caimiao-case-award {
+  margin-top: 0.85rem;
+  color: #d47e51;
+  font-size: clamp(0.78rem, 0.9vw, 0.96rem);
+  font-weight: 720;
+}
+
+.caimiao-case-description {
+  width: min(38vw, 630px);
+  max-width: none;
+  margin: clamp(2.4rem, 7vh, 5.8rem) 0 0;
+  gap: clamp(0.72rem, 1.4vh, 1.15rem);
+  font-size: clamp(0.82rem, 0.94vw, 1rem);
+  line-height: 1.7;
+}
+
+.caimiao-case-media {
+  position: relative;
+  width: min(36vw, 590px);
+  justify-self: start;
+  overflow: visible;
+}
+
+.caimiao-media-set {
+  position: absolute;
+  top: 50%;
+  right: 0;
+  left: 0;
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  grid-template-rows: auto auto;
+  gap: clamp(0.65rem, 1vw, 1rem);
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(-50%);
+  will-change: transform, opacity;
+}
+
+.caimiao-media-card {
+  display: block;
+  min-width: 0;
+  overflow: hidden;
+  border-radius: clamp(13px, 1.3vw, 22px);
+  background: #fff;
+  box-shadow: 0 20px 50px rgba(63, 111, 128, 0.16);
+}
+
+.caimiao-media-card--wide {
+  grid-column: 1 / -1;
+  aspect-ratio: 16 / 9;
+}
+
+.caimiao-media-card--square {
+  aspect-ratio: 1;
+}
+
+.caimiao-media-card img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 500ms cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.caimiao-media-card:hover img {
+  transform: scale(1.025);
+}
+
+.caimiao-flight-clouds {
+  position: absolute;
+  top: -10vh;
+  right: 0;
+  left: 0;
+  z-index: 9;
+  display: block;
+  width: 100%;
+  height: 126vh;
+  opacity: 0;
+  filter: blur(0.25px) drop-shadow(0 18px 36px rgba(226, 246, 255, 0.14));
+  mix-blend-mode: screen;
+  pointer-events: none;
+  will-change: transform, opacity;
+}
+
+@media (max-width: 1024px) {
+  .caimiao-case-heading,
+  .caimiao-case-description { width: 35vw; }
+  .caimiao-case-media { width: 35vw; }
+  .caimiao-case-role { font-size: 0.76rem; }
+  .caimiao-case-description { font-size: 0.78rem; }
+}
+
+@media (max-width: 768px) {
+  .caimiao-water-portal { clip-path: inset(100% 40% 0 40%); }
+  .caimiao-river-shutter { width: 40%; }
+  .caimiao-boat { width: clamp(68px, 18vw, 96px); }
+  .caimiao-case-layer {
+    grid-template-columns: minmax(0, 1fr) minmax(74px, 20vw) minmax(0, 1fr);
+    gap: 0.7rem;
+    padding: 4.5rem 0.85rem 1.2rem;
+  }
+  .caimiao-case-copy,
+  .caimiao-case-media { height: min(68vh, 570px); }
+  .caimiao-case-heading,
+  .caimiao-case-description { width: 36vw; }
+  .caimiao-case-media { width: 37vw; }
+  .caimiao-case-title { font-size: clamp(1.55rem, 7vw, 2.4rem); }
+  .caimiao-case-eyebrow { margin-bottom: 0.7rem; font-size: 0.5rem; }
+  .caimiao-case-kicker { margin-top: 0.65rem; font-size: 0.48rem; }
+  .caimiao-case-role { margin-top: 0.7rem; gap: 0.25rem; font-size: 0.5rem; line-height: 1.42; }
+  .caimiao-case-award { margin-top: 0.5rem; font-size: 0.52rem; }
+  .caimiao-case-description { margin-top: 1.5rem; gap: 0.45rem; font-size: 0.5rem; line-height: 1.5; }
+  .caimiao-media-set { gap: 0.4rem; }
+  .caimiao-media-card { border-radius: 10px; }
+  .caimiao-flight-clouds { top: -4vh; height: 116vh; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .caimiao-boat-wake { animation: none; }
+  .caimiao-journey.is-static .caimiao-water-portal {
+    clip-path: inset(0 40% 0 40%);
+  }
+  .caimiao-journey.is-static .caimiao-media-set:first-child {
+    opacity: 1;
+    visibility: visible;
   }
 }
 
@@ -3013,48 +3451,84 @@ html.performance-lite .about-badge-card {
     </div>
 
     <div class="caimiao-river-world">
-      <div class="caimiao-river-reveal" aria-hidden="true">
-        <img class="caimiao-river" src="assets/caimiao-journey/river.png" alt="">
+      <div class="caimiao-water-portal" aria-hidden="true">
+        <img class="caimiao-water-fallback" src="assets/caimiao-journey/ocean-v2.png" alt="">
+        <canvas class="caimiao-water-canvas" id="caimiaoWaterCanvas"></canvas>
       </div>
-      <img class="caimiao-boat" src="assets/caimiao-journey/boat.png" alt="" aria-hidden="true">
+      <div class="caimiao-river-shutters" aria-hidden="true">
+        <span class="caimiao-river-shutter caimiao-river-shutter--left"></span>
+        <span class="caimiao-river-shutter caimiao-river-shutter--right"></span>
+      </div>
+      <div class="caimiao-boat" aria-hidden="true">
+        <span class="caimiao-boat-wake caimiao-boat-wake--outer"></span>
+        <span class="caimiao-boat-wake caimiao-boat-wake--inner"></span>
+        <img src="assets/caimiao-journey/boat.png" alt="">
+      </div>
 
       <div class="caimiao-case-layer">
         <div class="caimiao-case-copy">
           <article class="caimiao-case-step" data-caimiao-step="0">
-            <p class="caimiao-case-kicker">Project overview</p>
-            <h2 class="caimiao-case-title">项目名称占位</h2>
-            <p class="caimiao-case-description">项目介绍文案待补充。这里暂时用于确认标题、正文与河流中线之间的版式关系。</p>
-          </article>
-          <article class="caimiao-case-step" data-caimiao-step="1">
-            <p class="caimiao-case-kicker">Product experience</p>
-            <h2 class="caimiao-case-title">内容模块占位</h2>
-            <p class="caimiao-case-description">图片介绍文案待补充。页面滚动时，小船保持在视觉中段，左右内容随旅程自然切换。</p>
-          </article>
-          <article class="caimiao-case-step" data-caimiao-step="2">
-            <p class="caimiao-case-kicker">Visual system</p>
-            <h2 class="caimiao-case-title">展示说明占位</h2>
-            <p class="caimiao-case-description">项目说明待补充。第三组内容结束后，浅蓝河流会逐步延展并连接到大海。</p>
+            <div class="caimiao-case-heading">
+              <p class="caimiao-case-eyebrow">财苗小程序 UI</p>
+              <h2 class="caimiao-case-title">
+                <span class="caimiao-case-title-main">财苗APP</span>
+                <span class="caimiao-case-title-sub">专注儿童电商</span>
+              </h2>
+              <p class="caimiao-case-kicker">2021 / UI/UX</p>
+              <div class="caimiao-case-role">
+                <p>负责 APP 主视觉，参与产品的功能与交互设计；</p>
+                <p>负责需求对接拆解与实际评估，保证落地效果；</p>
+                <p>负责线上线下运营活动内容视觉。</p>
+              </div>
+              <p class="caimiao-case-award">2021 站酷编辑推荐</p>
+            </div>
+            <div class="caimiao-case-description">
+              <p>财苗的第一目标是，保证功能输出的完整性和用户体验，达到孩子零花钱管理的初衷并且尽可能的寻找种子用户。功能上与家长端契合，完成孩子与家长之间的闭环。</p>
+              <p>需要能够产出优质内容的老师或者学者，结合财苗和当下的主流针对当前各个家长的痛点进行内容产出，结合线下线上推广吸引更多的用户。</p>
+              <p>后期，财苗将会以售出关于孩子的课程，与教育机构合作达到闭环，产生价值。</p>
+            </div>
           </article>
         </div>
 
         <div class="caimiao-case-media" aria-label="财苗项目图片展示">
-          <a class="caimiao-media-group" data-caimiao-step="0" href="project.html?work=caimiao&amp;view=brand" aria-label="打开财苗品牌项目">
-            <span class="caimiao-media-frame"><img src="project/caimiao/1.jpg" alt="财苗品牌视觉展示" loading="lazy" decoding="async"></span>
-          </a>
-          <a class="caimiao-media-group" data-caimiao-step="1" href="project.html?work=caimiao&amp;view=experience" aria-label="打开财苗产品体验">
-            <span class="caimiao-media-frame"><img src="project/caimiao/25.jpg" alt="财苗成长页面展示" loading="lazy" decoding="async"></span>
-          </a>
-          <a class="caimiao-media-group" data-caimiao-step="2" href="project.html?work=caimiao&amp;view=application" aria-label="打开财苗品牌应用">
-            <span class="caimiao-media-frame"><img src="project/caimiao/26.jpg" alt="财苗个人页面展示" loading="lazy" decoding="async"></span>
-          </a>
+          <div class="caimiao-media-set" data-caimiao-gallery="0">
+            <a class="caimiao-media-card caimiao-media-card--wide" href="project.html?work=caimiao&amp;view=brand" aria-label="打开财苗产品展示">
+              <img src="assets/caimiao-work/caimiao-phone.png" alt="财苗手机端产品展示" loading="lazy" decoding="async">
+            </a>
+            <a class="caimiao-media-card caimiao-media-card--square" href="project.html?work=caimiao&amp;view=brand" aria-label="打开财苗字体系统">
+              <img src="assets/caimiao-work/caimiao-type.png" alt="财苗品牌字体系统" loading="lazy" decoding="async">
+            </a>
+            <a class="caimiao-media-card caimiao-media-card--square" href="project.html?work=caimiao&amp;view=brand" aria-label="打开财苗色彩系统">
+              <img src="assets/caimiao-work/caimiao-palette.png" alt="财苗品牌色彩系统" loading="lazy" decoding="async">
+            </a>
+          </div>
+          <div class="caimiao-media-set" data-caimiao-gallery="1" aria-hidden="true">
+            <a class="caimiao-media-card caimiao-media-card--wide" href="project.html?work=caimiao&amp;view=experience" aria-label="打开财苗产品体验">
+              <img src="project/caimiao/5.jpg" alt="财苗产品体验展示" loading="lazy" decoding="async">
+            </a>
+            <a class="caimiao-media-card caimiao-media-card--square" href="project.html?work=caimiao&amp;view=experience" aria-label="打开财苗界面展示">
+              <img src="project/caimiao/4.jpg" alt="财苗界面展示一" loading="lazy" decoding="async">
+            </a>
+            <a class="caimiao-media-card caimiao-media-card--square" href="project.html?work=caimiao&amp;view=experience" aria-label="打开财苗界面展示">
+              <img src="project/caimiao/6.jpg" alt="财苗界面展示二" loading="lazy" decoding="async">
+            </a>
+          </div>
+          <div class="caimiao-media-set" data-caimiao-gallery="2" aria-hidden="true">
+            <a class="caimiao-media-card caimiao-media-card--wide" href="project.html?work=caimiao&amp;view=application" aria-label="打开财苗视觉应用">
+              <img src="project/caimiao/9.jpg" alt="财苗视觉应用展示" loading="lazy" decoding="async">
+            </a>
+            <a class="caimiao-media-card caimiao-media-card--square" href="project.html?work=caimiao&amp;view=application" aria-label="打开财苗视觉应用">
+              <img src="project/caimiao/10.jpg" alt="财苗视觉应用一" loading="lazy" decoding="async">
+            </a>
+            <a class="caimiao-media-card caimiao-media-card--square" href="project.html?work=caimiao&amp;view=application" aria-label="打开财苗视觉应用">
+              <img src="project/caimiao/11.jpg" alt="财苗视觉应用二" loading="lazy" decoding="async">
+            </a>
+          </div>
         </div>
       </div>
     </div>
 
-    <div class="caimiao-ocean-world" aria-hidden="true">
-      <img class="caimiao-ocean" src="assets/caimiao-journey/ocean-v2.png" alt="">
-    </div>
-    <img class="caimiao-flight-clouds" src="assets/caimiao-journey/flight-clouds-v5.png" alt="" aria-hidden="true">
+    <canvas class="caimiao-flight-clouds" id="caimiaoFlightCloudsCanvas" aria-hidden="true"></canvas>
     <img class="caimiao-flyer" src="assets/caimiao-journey/flyer.png" alt="" aria-hidden="true">
 
     <div class="caimiao-flight-copy caimiao-flight-copy--left">
@@ -3999,6 +4473,248 @@ revealElements.forEach(el => revealObserver.observe(el));
   });
 })();
 
+// ===== CAIMIAO SHARED THREE.JS WATER SURFACE =====
+(function initCaimiaoWaterSurface() {
+  const canvas = document.getElementById('caimiaoWaterCanvas');
+  const portal = canvas?.closest('.caimiao-water-portal');
+  const journey = canvas?.closest('.caimiao-journey');
+  if (!canvas || !portal || !journey || typeof THREE === 'undefined') return;
+
+  if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+
+  let renderer;
+  try {
+    renderer = new THREE.WebGLRenderer({
+      canvas,
+      alpha: false,
+      antialias: false,
+      powerPreference: RuntimeProfile.constrained ? 'low-power' : 'high-performance'
+    });
+  } catch (error) {
+    console.warn('Caimiao water WebGL fallback enabled.', error);
+    return;
+  }
+
+  renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 1));
+  renderer.outputColorSpace = THREE.SRGBColorSpace;
+  renderer.setClearColor(0x147eb8, 1);
+
+  const scene = new THREE.Scene();
+  scene.background = new THREE.Color(0x147eb8);
+  const camera = new THREE.PerspectiveCamera(46, 1, 0.1, 220);
+  const geometry = new THREE.PlaneGeometry(
+    92,
+    150,
+    RuntimeProfile.constrained ? 42 : 78,
+    RuntimeProfile.constrained ? 58 : 104
+  );
+  geometry.rotateX(-Math.PI / 2);
+
+  const uniforms = {
+    uTime: { value: 0 },
+    uDeep: { value: new THREE.Color(0x0870aa) },
+    uShallow: { value: new THREE.Color(0x61c8e9) },
+    uFoam: { value: new THREE.Color(0xd9f8ff) }
+  };
+
+  const material = new THREE.ShaderMaterial({
+    uniforms,
+    vertexShader: `
+      precision highp float;
+      uniform float uTime;
+      varying vec3 vWorld;
+      varying float vWave;
+      varying vec2 vUvWater;
+
+      void main() {
+        vec3 transformed = position;
+        float broad = sin(transformed.x * 0.24 + transformed.z * 0.15 + uTime * 0.34);
+        float crossWave = sin(transformed.x * -0.31 + transformed.z * 0.22 + uTime * 0.27);
+        float detail = sin(transformed.x * 0.78 + transformed.z * -0.58 + uTime * 0.52);
+        float ripple = broad * 0.28 + crossWave * 0.18 + detail * 0.055;
+        transformed.y += ripple;
+        vec4 world = modelMatrix * vec4(transformed, 1.0);
+        vWorld = world.xyz;
+        vWave = ripple;
+        vUvWater = uv;
+        gl_Position = projectionMatrix * viewMatrix * world;
+      }
+    `,
+    fragmentShader: `
+      precision highp float;
+      uniform float uTime;
+      uniform vec3 uDeep;
+      uniform vec3 uShallow;
+      uniform vec3 uFoam;
+      varying vec3 vWorld;
+      varying float vWave;
+      varying vec2 vUvWater;
+
+      void main() {
+        vec3 normal = normalize(cross(dFdx(vWorld), dFdy(vWorld)));
+        if (normal.y < 0.0) normal *= -1.0;
+        vec3 lightDir = normalize(vec3(-0.45, 0.9, 0.25));
+        float light = clamp(dot(normal, lightDir), 0.0, 1.0);
+        float crest = smoothstep(0.17, 0.47, vWave);
+        float fine = sin((vUvWater.x * 54.0) + (vUvWater.y * 41.0) - uTime * 0.38) * 0.5 + 0.5;
+        float shimmer = pow(light, 6.0) * (0.35 + fine * 0.32);
+        float depthMix = clamp(0.42 + vWave * 0.55 + light * 0.24, 0.0, 1.0);
+        vec3 color = mix(uDeep, uShallow, depthMix);
+        color = mix(color, uFoam, crest * 0.2 + shimmer * 0.34);
+        float vignette = smoothstep(0.9, 0.22, distance(vUvWater, vec2(0.5)));
+        color *= mix(0.86, 1.04, vignette);
+        gl_FragColor = vec4(color, 1.0);
+      }
+    `,
+    side: THREE.DoubleSide
+  });
+
+  const water = new THREE.Mesh(geometry, material);
+  scene.add(water);
+
+  let viewProgress = 0;
+  let visible = true;
+  let running = false;
+
+  const applyView = () => {
+    const eased = viewProgress * viewProgress * (3 - 2 * viewProgress);
+    camera.position.set(0, 16 + eased * 42, 20 + eased * 18);
+    camera.lookAt(0, 0, -13 + eased * 5);
+  };
+
+  const render = now => {
+    uniforms.uTime.value = now * 0.001;
+    renderer.render(scene, camera);
+  };
+
+  const resize = () => {
+    const rect = portal.getBoundingClientRect();
+    if (!rect.width || !rect.height) return;
+    renderer.setSize(Math.round(rect.width), Math.round(rect.height), false);
+    camera.aspect = rect.width / rect.height;
+    camera.updateProjectionMatrix();
+    applyView();
+    render(performance.now());
+    portal.classList.add('has-webgl-water');
+  };
+
+  const start = () => {
+    if (running) return;
+    running = true;
+    FrameScheduler.add('caimiao-water', ({ now }) => {
+      if (!visible || document.hidden) return false;
+      render(now);
+      return true;
+    });
+  };
+
+  const stop = () => {
+    running = false;
+    FrameScheduler.remove('caimiao-water');
+  };
+
+  const observer = new IntersectionObserver(([entry]) => {
+    visible = entry.isIntersecting;
+    if (visible) start(); else stop();
+  }, { rootMargin: '25% 0px' });
+  observer.observe(journey);
+
+  const resizeObserver = new ResizeObserver(resize);
+  resizeObserver.observe(portal);
+
+  canvas.addEventListener('webglcontextlost', event => {
+    event.preventDefault();
+    stop();
+    portal.classList.remove('has-webgl-water');
+  });
+
+  window.caimiaoWaterSurface = {
+    setView(progress) {
+      viewProgress = Math.max(0, Math.min(1, Number(progress) || 0));
+      applyView();
+      render(performance.now());
+    },
+    isReady: true
+  };
+
+  resize();
+  start();
+})();
+
+// ===== CAIMIAO PROCEDURAL FLIGHT CLOUDS =====
+(function initCaimiaoFlightClouds() {
+  const canvas = document.getElementById('caimiaoFlightCloudsCanvas');
+  if (!canvas) return;
+  const context = canvas.getContext('2d');
+  if (!context) return;
+
+  const seeded = seed => {
+    let value = seed >>> 0;
+    return () => {
+      value = (value * 1664525 + 1013904223) >>> 0;
+      return value / 4294967296;
+    };
+  };
+
+  const drawPuff = (x, y, radius, alpha, stretch) => {
+    context.save();
+    context.translate(x, y);
+    context.scale(stretch, 1);
+    const gradient = context.createRadialGradient(
+      -radius * 0.16,
+      -radius * 0.2,
+      radius * 0.06,
+      0,
+      0,
+      radius
+    );
+    gradient.addColorStop(0, `rgba(255,255,255,${Math.min(0.96, alpha + 0.22)})`);
+    gradient.addColorStop(0.34, `rgba(247,253,255,${alpha})`);
+    gradient.addColorStop(0.72, `rgba(232,246,255,${alpha * 0.44})`);
+    gradient.addColorStop(1, 'rgba(224,244,255,0)');
+    context.fillStyle = gradient;
+    context.beginPath();
+    context.arc(0, 0, radius, 0, Math.PI * 2);
+    context.fill();
+    context.restore();
+  };
+
+  const draw = () => {
+    const rect = canvas.getBoundingClientRect();
+    if (!rect.width || !rect.height) return;
+    const dpr = Math.min(window.devicePixelRatio || 1, 1.5);
+    canvas.width = Math.round(rect.width * dpr);
+    canvas.height = Math.round(rect.height * dpr);
+    context.setTransform(dpr, 0, 0, dpr, 0, 0);
+    context.clearRect(0, 0, rect.width, rect.height);
+    context.globalCompositeOperation = 'source-over';
+
+    const random = seeded(202107);
+    const sides = [-1, 1];
+    sides.forEach(side => {
+      for (let band = 0; band < 7; band += 1) {
+        const centerY = rect.height * (0.1 + band * 0.135) + (random() - 0.5) * rect.height * 0.06;
+        const edgeX = side < 0 ? rect.width * (0.03 + random() * 0.09) : rect.width * (0.97 - random() * 0.09);
+        const bodyRadius = Math.max(42, rect.width * (0.055 + random() * 0.035));
+        drawPuff(edgeX, centerY, bodyRadius * 1.42, 0.18 + random() * 0.18, 1.55);
+
+        const count = RuntimeProfile.constrained ? 9 : 15;
+        for (let index = 0; index < count; index += 1) {
+          const inward = random() * rect.width * (0.12 + random() * 0.08);
+          const x = edgeX + side * -1 * inward;
+          const y = centerY + (random() - 0.5) * bodyRadius * 1.18;
+          const radius = bodyRadius * (0.34 + random() * 0.72);
+          drawPuff(x, y, radius, 0.18 + random() * 0.48, 0.86 + random() * 0.55);
+        }
+      }
+    });
+  };
+
+  const resizeObserver = new ResizeObserver(draw);
+  resizeObserver.observe(canvas);
+  draw();
+})();
+
 // ===== CAIMIAO REFINED JOURNEY: CENTERED SUBJECT / MOVING WORLD =====
 (function initCaimiaoRefinedJourney() {
   const journey = document.querySelector('.caimiao-journey');
@@ -4021,14 +4737,13 @@ revealElements.forEach(el => revealObserver.observe(el));
   const airflow = q('.caimiao-hero-airflow');
   const cloudTransition = q('.caimiao-cloud-transition');
   const riverWorld = q('.caimiao-river-world');
-  const riverReveal = q('.caimiao-river-reveal');
-  const river = q('.caimiao-river');
+  const waterPortal = q('.caimiao-water-portal');
+  const leftShutter = q('.caimiao-river-shutter--left');
+  const rightShutter = q('.caimiao-river-shutter--right');
   const boat = q('.caimiao-boat');
   const caseLayer = q('.caimiao-case-layer');
   const steps = qa('.caimiao-case-step');
-  const mediaGroups = qa('.caimiao-media-group');
-  const oceanWorld = q('.caimiao-ocean-world');
-  const ocean = q('.caimiao-ocean');
+  const mediaSets = qa('.caimiao-media-set');
   const flyer = q('.caimiao-flyer');
   const flightClouds = q('.caimiao-flight-clouds');
   const flightCopy = qa('.caimiao-flight-copy');
@@ -4051,9 +4766,13 @@ revealElements.forEach(el => revealObserver.observe(el));
   gsap.set(paleGround, { autoAlpha: 0 });
   gsap.set(cloudTransition, { yPercent: 38, scale: 1.05 });
   gsap.set(riverWorld, { autoAlpha: 1, scale: 1, yPercent: 0 });
-  gsap.set(riverReveal, { autoAlpha: 0, yPercent: -7 });
+  gsap.set(waterPortal, {
+    autoAlpha: 1,
+    clipPath: isMobile ? 'inset(100% 40% 0% 40%)' : 'inset(100% 42% 0% 42%)'
+  });
+  gsap.set([leftShutter, rightShutter], { autoAlpha: 1, xPercent: 0, yPercent: 0, scaleX: 1 });
   gsap.set(steps, { autoAlpha: 0, x: -32, y: 12 });
-  gsap.set(mediaGroups, { autoAlpha: 0, x: 38, y: 14 });
+  gsap.set(mediaSets, { autoAlpha: 0, x: 38, y: 14 });
   gsap.set(boat, {
     autoAlpha: 0,
     xPercent: -50,
@@ -4062,8 +4781,6 @@ revealElements.forEach(el => revealObserver.observe(el));
     rotation: 90,
     scale: 0.82
   });
-  gsap.set(oceanWorld, { autoAlpha: 0, yPercent: 106, scale: 1 });
-  gsap.set(ocean, { xPercent: isMobile ? -50 : 0, yPercent: 0, scale: 1.18 });
   gsap.set(flyer, {
     autoAlpha: 0,
     xPercent: -50,
@@ -4073,7 +4790,7 @@ revealElements.forEach(el => revealObserver.observe(el));
     scaleX: -0.76,
     scaleY: 0.76
   });
-  gsap.set(flightClouds, { autoAlpha: 0, xPercent: -50, yPercent: 24, scale: 1.02 });
+  gsap.set(flightClouds, { autoAlpha: 0, yPercent: 20, scale: 1.02 });
   gsap.set(flightCopy, { autoAlpha: 0, y: 28 });
   gsap.set(exitWisps, { autoAlpha: 0, xPercent: -18, yPercent: 24, scale: 1.08 });
   gsap.set(exitBank, { autoAlpha: 0, yPercent: 48, scale: 1.06 });
@@ -4122,13 +4839,11 @@ revealElements.forEach(el => revealObserver.observe(el));
     .to(cloudTransition, { autoAlpha: 0, duration: 5, ease: 'power1.inOut' }, 'sky+=18.5')
 
     .addLabel('river', 20.8)
-    .to(riverReveal, {
-      autoAlpha: 1,
-      yPercent: 0,
+    .to(waterPortal, {
+      clipPath: isMobile ? 'inset(0% 40% 0% 40%)' : 'inset(0% 42% 0% 42%)',
       duration: 8,
       ease: 'power2.out'
     }, 'river')
-    .to(river, { yPercent: -24, duration: 70 }, 'river')
     .to(boat, {
       autoAlpha: 1,
       y: 0,
@@ -4141,58 +4856,100 @@ revealElements.forEach(el => revealObserver.observe(el));
     .to(boat, { x: 4, y: 5, rotation: 92, duration: 12 }, 'river+=39')
     .to(boat, { x: -3, y: 0, rotation: 90, duration: 12 }, 'river+=51');
 
-  const addCasePair = (index, enterAt, leaveAt) => {
-    const step = steps[index];
-    const media = mediaGroups[index];
-    if (!step || !media) return;
-
-    story
-      .to(step, {
-        autoAlpha: 1,
-        x: 0,
-        y: 0,
-        duration: 2.6,
-        ease: 'power3.out'
-      }, enterAt)
-      .to(media, {
-        autoAlpha: 1,
-        x: 0,
-        y: 0,
-        duration: 2.8,
-        ease: 'power3.out'
-      }, enterAt + 0.35)
-      .to(step, { autoAlpha: 0, x: -24, y: -8, duration: 1.8, ease: 'power2.inOut' }, leaveAt)
-      .to(media, { autoAlpha: 0, x: 26, y: -10, duration: 1.8, ease: 'power2.inOut' }, leaveAt + 0.15);
-  };
-
-  addCasePair(0, 43, 58);
-  addCasePair(1, 61, 76);
-  addCasePair(2, 79, 94);
+  const primaryCase = steps[0];
+  const waterView = { progress: 0 };
 
   story
-    .addLabel('droneOut', 95)
+    .addLabel('caseStart', 38)
+    .to(primaryCase, {
+      autoAlpha: 1,
+      x: 0,
+      y: 0,
+      duration: 2.6,
+      ease: 'power3.out'
+    }, 'caseStart')
+    .to(mediaSets[0], {
+      autoAlpha: 1,
+      x: 0,
+      y: 0,
+      duration: 2.7,
+      ease: 'power3.out'
+    }, 'caseStart+=1')
+    .to(mediaSets[0], {
+      autoAlpha: 0,
+      x: 24,
+      y: -12,
+      duration: 1.8,
+      ease: 'power2.inOut'
+    }, 56)
+    .to(mediaSets[1], {
+      autoAlpha: 1,
+      x: 0,
+      y: 0,
+      duration: 2.4,
+      ease: 'power3.out'
+    }, 57.5)
+    .to(mediaSets[1], {
+      autoAlpha: 0,
+      x: 24,
+      y: -12,
+      duration: 1.8,
+      ease: 'power2.inOut'
+    }, 72)
+    .to(mediaSets[2], {
+      autoAlpha: 1,
+      x: 0,
+      y: 0,
+      duration: 2.4,
+      ease: 'power3.out'
+    }, 73.5)
+    .to(mediaSets[2], {
+      autoAlpha: 0,
+      x: 24,
+      y: -12,
+      duration: 1.8,
+      ease: 'power2.inOut'
+    }, 91);
+
+  story
+    .addLabel('droneOut', 94)
     .to(caseLayer, { autoAlpha: 0, duration: 3 }, 'droneOut')
     .to(boat, {
       autoAlpha: 0,
-      y: -72,
-      scale: 0.34,
-      duration: 4.2,
-      ease: 'power2.in'
+      y: -38,
+      scale: 0.08,
+      duration: 8,
+      ease: 'power3.in'
     }, 'droneOut')
-    .to(riverWorld, {
-      scale: 0.48,
-      yPercent: -16,
+    .to(waterPortal, {
+      clipPath: 'inset(0% 0% 0% 0%)',
+      duration: 12,
+      ease: 'power2.inOut'
+    }, 'droneOut')
+    .to(leftShutter, {
+      xPercent: 78,
+      scaleX: 0.25,
+      duration: 9,
+      ease: 'power2.inOut'
+    }, 'droneOut')
+    .to(rightShutter, {
+      xPercent: -78,
+      scaleX: 0.25,
+      duration: 9,
+      ease: 'power2.inOut'
+    }, 'droneOut')
+    .to([leftShutter, rightShutter], {
+      yPercent: -112,
       autoAlpha: 0,
       duration: 7,
-      ease: 'power2.inOut'
-    }, 'droneOut+=1')
-    .to(oceanWorld, {
-      autoAlpha: 1,
-      yPercent: 0,
-      duration: 11,
-      ease: 'power2.out'
-    }, 'droneOut+=8')
-    .to(oceanWorld, { borderRadius: '0%', duration: 7, ease: 'power2.inOut' }, 'droneOut+=15')
+      ease: 'power3.inOut'
+    }, 'droneOut+=7')
+    .to(waterView, {
+      progress: 0.62,
+      duration: 14,
+      ease: 'power2.inOut',
+      onUpdate: () => window.caimiaoWaterSurface?.setView(waterView.progress)
+    }, 'droneOut')
     .to(flyer, {
       autoAlpha: 1,
       y: 0,
@@ -4203,8 +4960,7 @@ revealElements.forEach(el => revealObserver.observe(el));
     }, 'droneOut+=13')
 
     .addLabel('oceanFlight', 116)
-    .to(ocean, { yPercent: -58, duration: 35 }, 'droneOut+=10')
-    .to(flightClouds, { autoAlpha: 0.52, yPercent: -32, duration: 29 }, 'oceanFlight')
+    .to(flightClouds, { autoAlpha: 0.72, yPercent: -28, duration: 29 }, 'oceanFlight')
     .to(flightCopy, {
       autoAlpha: 1,
       y: 0,
@@ -4217,7 +4973,12 @@ revealElements.forEach(el => revealObserver.observe(el));
     .to(flightCopy, { autoAlpha: 0, y: -22, duration: 4 }, 'oceanFlight+=20')
 
     .addLabel('highAltitude', 141)
-    .to(ocean, { scale: 1, duration: 13, ease: 'power2.inOut' }, 'highAltitude')
+    .to(waterView, {
+      progress: 1,
+      duration: 13,
+      ease: 'power2.inOut',
+      onUpdate: () => window.caimiaoWaterSurface?.setView(waterView.progress)
+    }, 'highAltitude')
     .to(flyer, { scaleX: -0.76, scaleY: 0.76, y: -6, duration: 13, ease: 'power2.inOut' }, 'highAltitude')
     .to(flightClouds, { scale: 1.16, yPercent: -42, duration: 13, ease: 'power1.inOut' }, 'highAltitude')
     .to(exitWisps, {
